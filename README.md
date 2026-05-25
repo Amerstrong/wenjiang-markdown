@@ -19,8 +19,8 @@
   <a href="README_EN.md">English</a>
 </p>
 
-[![Downloads](https://img.shields.io/github/downloads/xiaoyu12657/wenjiang-markdown/total?color=blue)](https://github.com/xiaoyu12657/wenjiang-markdown/releases)
-[![GitHub stars](https://img.shields.io/github/stars/xiaoyu12657/wenjiang-markdown)](https://github.com/xiaoyu12657/wenjiang-markdown)
+[![Downloads](https://img.shields.io/github/downloads/Amerstrong/wenjiang-markdown/total?color=blue)](https://github.com/Amerstrong/wenjiang-markdown/releases)
+[![GitHub stars](https://img.shields.io/github/stars/Amerstrong/wenjiang-markdown)](https://github.com/Amerstrong/wenjiang-markdown)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
@@ -71,56 +71,44 @@ Markdown ────> Pandoc + 优化模板 ────> Word (完美格式、
                         - 行内代码高亮（玫红字灰底）
 ```
 
-### 效果对比
+### 效果对比（真实截图）
 
-**转换前（Pandoc 默认 / 复制粘贴）：**
-```text
-def hello(): print("混乱的格式")
-```
+**① GPT 中的原始代码（完整缩进 + 语法高亮）：**
 
-**转换后（文匠）：**
-```python
-def hello():
-    print("完美的灰底代码块")
-```
-👉 [查看实际效果截图](examples/screenshots/)
+![AI中的Python代码内容](screenshots/AI代码内容.PNG)
+
+**② 粘贴到文匠进行一键转换：**
+
+![文匠转换界面](screenshots/代码测试粘贴到了文匠.PNG)
+
+**③ 转换结果对比：**
+
+| 直接复制粘贴 ❌ | 用文匠转换 ✅ |
+|:-:|:-:|
+| ![直接粘贴效果](screenshots/不用文匠直接复制粘贴的效果.PNG) | ![文匠转换效果](screenshots/使用文匠转换后的效果.PNG) |
 
 ---
 
 ## 📥 下载
 
-当前版本：**v1.61**
+当前版本：**v1.6.1**
 
-- [立即下载 (GitHub Releases)](https://github.com/xiaoyu12657/wenjiang-markdown/releases)
-- [本地备用下载 (百度网盘)](链接)
-- [Windows 版本完整安装包](链接) - `文匠_v1.61_完整版.zip` (67MB)
+- [⬇️ GitHub Release 官方下载](https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip) — `wenjiang_markdown_v1.61_win10+.zip`
+- [☁️ 百度网盘备用下载](https://pan.baidu.com/s/1Z3_p_ovXKT8gTfJTN2XMkA?pwd=3bwp) — 提取码：`3bwp`
+- [📦 查看所有版本发布记录](https://github.com/Amerstrong/wenjiang-markdown/releases)
 
-系统要求：Windows 10 / 11
+系统要求：Windows 10 / 11（64位）
 
 ---
 
 ## 🚀 快速开始
 
-### 1. GUI 客户端使用 (4步)
+### GUI 客户端使用（4步，推荐）
 
-1. 从[下载](#📥-下载)部分下载 `文匠_v1.61.exe` 或完整压缩包。
-2. 双击运行 `文匠_v1.61.exe`（绿色软件，无需安装）。
-3. 选择需要转换的 `.md` 文件。
-4. 点击“转换”按钮，即可在同目录下生成排版完美的 `.docx` 文档。
-
-### 2. 命令行版本（高级用户）
-
-如果你倾向于在终端中操作或需要进行自动化集成，可以直接使用命令行：
-
-```bash
-# 方法一：使用文匠内置模板和 Pandoc 命令行
-pandoc input.md -o output.docx \
-  --reference-doc=templates/office_basic.docx \
-  --highlight-style=tango
-
-# 方法二：直接使用文匠命令行工具
-wenjiang input.md output.docx
-```
+1. 点击 [⬇️ 下载最新版](https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip) 并解压。
+2. 双击运行 `文匠.exe`（绿色软件，无需安装）。
+3. 将 GPT 内容或 Markdown 文件粘贴 / 拖入输入框。
+4. 点击 **「转换内容」** 按钮，即可在指定目录下生成排版完美的 `.docx` 文档。
 
 ---
 
@@ -149,7 +137,7 @@ wenjiang input.md output.docx
 - ✅ **脚本与文档**：Bash, PowerShell, Markdown, LaTeX
 - ✅ 更多语言持续测试并完美支持中...
 
-👉 [查看测试报告](docs/test-report.md)
+👉 [查看完整测试报告](CODE_TEST_REPORT.md)
 
 ---
 
