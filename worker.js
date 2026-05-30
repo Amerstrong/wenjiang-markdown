@@ -260,6 +260,7 @@ export default {
       const scope = url.searchParams.get('scope') || 'repo,user';
       // 使用 Decap CMS 传过来的 state 校验码以防止 CSRF
       const state = url.searchParams.get('state') || Math.random().toString(36).substring(2, 15);
+      console.log("[OAuth Auth] CMS State:", url.searchParams.get('state'), "Final State:", state);
       
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${encodeURIComponent(scope)}&state=${state}`;
       return Response.redirect(authUrl, 302);
@@ -271,7 +272,8 @@ export default {
     // ────────────────────────────────────────
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code');
-      const state = url.searchParams.get('state'); // 提取 GitHub 返回的 state 校验码
+      const state = url.searchParams.get('state'); // 提取 GitHub 返回 of state 校验码
+      console.log("[OAuth Callback] GitHub State:", state);
       const client_id = env.GITHUB_CLIENT_ID;
       const client_secret = env.GITHUB_CLIENT_SECRET;
 
@@ -310,6 +312,7 @@ export default {
           provider: 'github',
           state: state
         };
+        console.log("[OAuth Callback] Payload to CMS:", JSON.stringify(payload));
 
         return new Response(renderHTML('success', payload), {
           headers: { 'Content-Type': 'text/html; charset=utf-8' }
