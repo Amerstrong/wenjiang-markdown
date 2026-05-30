@@ -258,7 +258,8 @@ export default {
       }
 
       const scope = url.searchParams.get('scope') || 'repo,user';
-      const state = Math.random().toString(36).substring(2, 15);
+      // 使用 Decap CMS 传过来的 state 校验码以防止 CSRF
+      const state = url.searchParams.get('state') || Math.random().toString(36).substring(2, 15);
       
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${encodeURIComponent(scope)}&state=${state}`;
       return Response.redirect(authUrl, 302);
@@ -270,6 +271,7 @@ export default {
     // ────────────────────────────────────────
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code');
+      const state = url.searchParams.get('state'); // 提取 GitHub 返回的 state 校验码
       const client_id = env.GITHUB_CLIENT_ID;
       const client_secret = env.GITHUB_CLIENT_SECRET;
 
@@ -305,7 +307,8 @@ export default {
 
         const payload = {
           token: tokenData.access_token,
-          provider: 'github'
+          provider: 'github',
+          state: state
         };
 
         return new Response(renderHTML('success', payload), {
