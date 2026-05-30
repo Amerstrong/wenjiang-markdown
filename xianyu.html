@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文匠 Wenjiang · 闲鱼专属 · GPT内容转Word排版工具</title>
+  <meta name="description" content="文匠 Wenjiang 闲鱼专属页。GPT/DeepSeek/Gemini内容一键转Word，完全离线，永久授权。免费试用3次，满意后在闲鱼下单激活。">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #080810;
+      --bg2: #0d0d1a;
+      --card: #111120;
+      --card2: #161628;
+      --border: #1e1e35;
+      --border2: #252540;
+      --accent: #7c3aed;
+      --accent2: #a78bfa;
+      --accent3: #c4b5fd;
+      --text: #e8e8f0;
+      --text2: #9898b0;
+      --text3: #6868808;
+      --green: #4ade80;
+      --green-bg: rgba(34,197,94,.1);
+      --orange: #fb923c;
+      --orange-bg: rgba(251,146,60,.08);
+      --orange-border: rgba(251,146,60,.25);
+      --grad: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #818cf8 100%);
+      --grad2: linear-gradient(135deg, #6d28d9, #8b5cf6);
+      --glow: 0 0 60px rgba(124, 58, 237, .25);
+      --glow2: 0 0 100px rgba(124, 58, 237, .15);
+      --r: 16px;
+      --r2: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans SC', 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ BACKGROUND ═══ */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .bg-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: .5; animation: orbFloat 20s ease-in-out infinite;
+    }
+    .bg-orb-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,58,237,.25) 0%, transparent 70%);
+      top: -200px; left: -100px;
+    }
+    .bg-orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(167,139,250,.15) 0%, transparent 70%);
+      top: 40%; right: -150px; animation-delay: -8s; animation-duration: 25s;
+    }
+    .bg-orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 70%);
+      bottom: 10%; left: 20%; animation-delay: -14s; animation-duration: 18s;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(.95); }
+    }
+
+    /* ═══ LAYOUT ═══ */
+    .container {
+      max-width: 960px; margin: 0 auto; padding: 0 24px;
+      position: relative; z-index: 1;
+    }
+
+    /* ═══ NAV ═══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(24px) saturate(180%);
+      background: rgba(8, 8, 16, .85);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 960px; margin: 0 auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 900;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -.5px;
+    }
+    .nav-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 50px;
+      background: rgba(251,146,60,.1); border: 1px solid rgba(251,146,60,.3);
+      color: var(--orange); font-size: .75rem; font-weight: 700; letter-spacing: .5px;
+    }
+    .nav-badge::before { content: '🐟'; font-size: .85rem; }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      padding: 130px 0 70px; text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 18px; border-radius: 50px;
+      background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.3);
+      color: var(--accent2); font-size: .8rem; font-weight: 700;
+      letter-spacing: .5px; margin-bottom: 28px;
+      animation: fadeUp .7s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900; line-height: 1.15; margin-bottom: 16px;
+      letter-spacing: -1px;
+      animation: fadeUp .7s ease .08s both;
+    }
+    .hero h1 .grad-text {
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--text2);
+      max-width: 560px; margin: 0 auto 12px;
+      animation: fadeUp .7s ease .15s both;
+    }
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin: 20px auto 36px; max-width: 540px;
+      animation: fadeUp .7s ease .2s both;
+    }
+    .hero-tag {
+      padding: 5px 14px; border-radius: 50px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border2);
+      font-size: .82rem; color: var(--text2);
+    }
+    .hero-tag.green { background: var(--green-bg); border-color: rgba(74,222,128,.25); color: var(--green); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══ XIANYU BANNER ═══ */
+    .xianyu-banner {
+      margin: 0 auto 56px; max-width: 700px;
+      background: linear-gradient(135deg, rgba(251,146,60,.08), rgba(251,146,60,.04));
+      border: 1px solid var(--orange-border);
+      border-radius: var(--r2); padding: 24px 28px;
+      display: flex; align-items: flex-start; gap: 16px;
+      animation: fadeUp .7s ease .25s both;
+    }
+    .xianyu-banner-icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+    .xianyu-banner-body h3 {
+      font-size: 1rem; font-weight: 800; color: var(--orange); margin-bottom: 6px;
+    }
+    .xianyu-banner-body p { font-size: .88rem; color: var(--text2); line-height: 1.6; }
+    .xianyu-banner-body strong { color: var(--text); }
+
+    /* ═══ SECTION ═══ */
+    section { padding: 72px 0; }
+    .section-head { text-align: center; margin-bottom: 48px; }
+    .section-tag {
+      display: inline-block; padding: 5px 14px; border-radius: 50px;
+      background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2);
+      color: var(--accent2); font-size: .72rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800;
+      letter-spacing: -.5px; margin-bottom: 10px;
+    }
+    .section-desc { color: var(--text2); max-width: 500px; margin: 0 auto; font-size: .95rem; }
+
+    /* ═══ FLOW STEPS ═══ */
+    .flow-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0; position: relative;
+    }
+    .flow-step {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 32px 24px; text-align: center;
+      position: relative; transition: all .4s; overflow: hidden;
+    }
+    .flow-step:first-child { border-radius: var(--r2) 0 0 var(--r2); }
+    .flow-step:last-child { border-radius: 0 var(--r2) var(--r2) 0; }
+    .flow-step + .flow-step { border-left: none; }
+    .flow-step::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad); opacity: 0; transition: opacity .4s;
+    }
+    .flow-step:hover::before { opacity: 1; }
+    .flow-step:hover { background: var(--card2); transform: translateY(-3px); z-index: 2;
+      box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+    .flow-step-num {
+      width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 16px;
+      background: var(--grad); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900; color: #fff;
+      box-shadow: 0 4px 20px rgba(124,58,237,.4);
+    }
+    .flow-step-icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .flow-step h3 { font-size: .95rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .flow-step p { font-size: .82rem; color: var(--text2); line-height: 1.6; }
+    .flow-step .step-highlight {
+      display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 6px;
+      background: rgba(124,58,237,.15); color: var(--accent2);
+      font-size: .76rem; font-weight: 700;
+    }
+
+    /* Mobile flow */
+    @media (max-width: 640px) {
+      .flow-grid { grid-template-columns: 1fr; }
+      .flow-step { border-radius: 0 !important; border-left: 1px solid var(--border); }
+      .flow-step:first-child { border-radius: var(--r2) var(--r2) 0 0 !important; }
+      .flow-step:last-child { border-radius: 0 0 var(--r2) var(--r2) !important; }
+      .flow-step + .flow-step { border-left: 1px solid var(--border); border-top: none; }
+    }
+
+    /* ═══ FEATURE CARDS ═══ */
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
+    }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 28px 24px; transition: all .4s;
+    }
+    .feat-card:hover {
+      border-color: rgba(124,58,237,.4); transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,.3);
+    }
+    .feat-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .feat-card h3 { font-size: .95rem; font-weight: 800; margin-bottom: 6px; }
+    .feat-card p { font-size: .83rem; color: var(--text2); line-height: 1.6; }
+
+    /* ═══ DOWNLOAD SECTION ═══ */
+    .download-box {
+      max-width: 620px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 40px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .download-box::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--grad); opacity: .04; pointer-events: none;
+    }
+    .download-box h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+    .download-box p { color: var(--text2); font-size: .9rem; margin-bottom: 28px; line-height: 1.6; }
+    .download-specs {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .spec-chip {
+      padding: 5px 14px; border-radius: 50px;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border2);
+      font-size: .78rem; color: var(--text2);
+    }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 40px; border-radius: 14px;
+      background: var(--grad); color: #fff;
+      font-size: 1rem; font-weight: 800;
+      text-decoration: none; transition: all .3s;
+      box-shadow: var(--glow);
+      cursor: pointer; border: none; font-family: inherit;
+    }
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 80px rgba(124,58,237,.45);
+    }
+    .trial-note {
+      margin-top: 18px; padding: 12px 16px; border-radius: 10px;
+      background: var(--green-bg); border: 1px solid rgba(74,222,128,.2);
+      font-size: .82rem; color: var(--green);
+    }
+
+    /* ═══ ACTIVATION SECTION ═══ */
+    .activate-box {
+      max-width: 580px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden;
+    }
+    .activate-header {
+      padding: 24px 32px 20px;
+      background: linear-gradient(135deg, rgba(124,58,237,.12), rgba(124,58,237,.05));
+      border-bottom: 1px solid var(--border);
+    }
+    .activate-header h3 {
+      font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .activate-header p { font-size: .85rem; color: var(--text2); }
+    .activate-body { padding: 28px 32px; }
+    .input-wrap { margin-bottom: 16px; }
+    .input-wrap label {
+      display: block; font-size: .8rem; font-weight: 700;
+      color: var(--text2); margin-bottom: 8px;
+    }
+    .input-wrap input {
+      width: 100%; padding: 13px 16px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text); font-size: .95rem;
+      font-family: inherit; transition: border-color .2s; outline: none;
+      letter-spacing: 1px;
+    }
+    .input-wrap input:focus { border-color: var(--accent2); background: rgba(124,58,237,.06); }
+    .input-wrap input::placeholder { color: var(--text2); opacity: .5; letter-spacing: 0; }
+    .btn-query {
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: var(--grad); color: #fff; border: none;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      font-family: inherit; transition: all .25s;
+      box-shadow: 0 4px 20px rgba(124,58,237,.35);
+    }
+    .btn-query:hover { box-shadow: 0 0 50px rgba(124,58,237,.5); transform: translateY(-1px); }
+    .btn-query:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* Query states */
+    .query-result { margin-top: 20px; display: none; }
+    .result-success {
+      background: var(--green-bg); border: 1px solid rgba(74,222,128,.25);
+      border-radius: 12px; padding: 20px;
+    }
+    .result-success .result-label { font-size: .75rem; color: var(--green); font-weight: 700; margin-bottom: 10px; }
+    .result-code {
+      font-size: 1rem; font-weight: 900; color: var(--text);
+      letter-spacing: 2px; word-break: break-all; font-family: 'Courier New', monospace;
+      background: rgba(0,0,0,.3); padding: 12px 14px; border-radius: 8px; margin-bottom: 12px;
+    }
+    .btn-copy-code {
+      width: 100%; padding: 11px; border-radius: 10px;
+      background: var(--green-bg); border: 1px solid rgba(74,222,128,.3);
+      color: var(--green); font-size: .88rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .btn-copy-code:hover { background: rgba(34,197,94,.2); }
+    .result-waiting {
+      background: rgba(124,58,237,.06); border: 1px solid rgba(124,58,237,.2);
+      border-radius: 12px; padding: 20px; text-align: center;
+    }
+    .spinner {
+      width: 36px; height: 36px; margin: 0 auto 12px;
+      border: 3px solid var(--border2); border-top-color: var(--accent2);
+      border-radius: 50%; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .result-waiting p { font-size: .88rem; color: var(--text2); line-height: 1.6; }
+    .result-not-found {
+      background: rgba(248,113,113,.05); border: 1px solid rgba(248,113,113,.2);
+      border-radius: 12px; padding: 20px; text-align: center;
+    }
+    .result-not-found .nf-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .result-not-found p { font-size: .88rem; color: #f87171; line-height: 1.6; }
+    .result-not-found .nf-hint { color: var(--text2); margin-top: 8px; font-size: .82rem; }
+    .copy-flash {
+      font-size: .78rem; color: var(--green); text-align: center;
+      margin-top: 8px; height: 18px; transition: opacity .3s;
+    }
+    .copy-flash.hidden { opacity: 0; }
+
+    /* ═══ COMPLIANCE BOX ═══ */
+    .compliance-box {
+      max-width: 700px; margin: 0 auto;
+      background: var(--orange-bg); border: 1px solid var(--orange-border);
+      border-radius: var(--r2); padding: 28px 32px;
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .compliance-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .compliance-body h4 { font-size: 1rem; font-weight: 800; color: var(--orange); margin-bottom: 10px; }
+    .compliance-body ul { list-style: none; }
+    .compliance-body li {
+      font-size: .87rem; color: var(--text2); padding: 4px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .compliance-body li::before { content: '›'; color: var(--orange); font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+    .compliance-body li strong { color: var(--text); }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 0;
+      text-align: center; margin-top: 40px; position: relative; z-index: 1;
+    }
+    footer p { font-size: .78rem; color: var(--text2); line-height: 2; }
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ═══ SCROLL REVEAL ═══ */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ CHANNEL TAG ═══ */
+    .channel-row {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 36px; animation: fadeUp .7s ease .3s both;
+    }
+    .channel-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 18px; border-radius: 50px;
+      font-size: .82rem; font-weight: 700; cursor: default;
+    }
+    .channel-chip.xianyu {
+      background: rgba(251,146,60,.1); border: 1px solid rgba(251,146,60,.3); color: var(--orange);
+    }
+    .channel-chip.website {
+      background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.3); color: var(--accent2);
+    }
+
+    @media (max-width: 640px) {
+      .download-box { padding: 28px 20px; }
+      .activate-header, .activate-body { padding-left: 20px; padding-right: 20px; }
+      .compliance-box { flex-direction: column; }
+      .flow-step { border-radius: 0 !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-canvas">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">文匠 Wenjiang</div>
+      <div class="nav-badge">闲鱼专属页</div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">🐟 闲鱼 · 官方认证卖家</div>
+      <h1>GPT 内容 → Word<br><span class="grad-text">一键精准还原排版</span></h1>
+      <p class="hero-sub">AI内容粘贴生成 .docx 仅是基础功能，更支持单个/批量 Markdown 与 TXT 文本拖拽极速转换！</p>
+      <div class="hero-tags">
+        <span class="hero-tag green">✓ 完全离线</span>
+        <span class="hero-tag green">✓ 永久授权</span>
+        <span class="hero-tag green">✓ 无需注册</span>
+        <span class="hero-tag">支持本地单个/批量 MD 转换</span>
+        <span class="hero-tag">支持 TXT 文本拖拽直转</span>
+        <span class="hero-tag" style="color: #f87171; border-color: rgba(248,113,113,.25); background: rgba(248,113,113,.05);">✕ 不支持 Win 7</span>
+        <span class="hero-tag">支持 Win 10/11</span>
+      </div>
+
+      <!-- 双渠道说明 -->
+      <div class="channel-row">
+        <span class="channel-chip xianyu">🐟 闲鱼下单 → 本页激活</span>
+        <span class="channel-chip website">🌐 网站直接下单 → 自动激活</span>
+      </div>
+
+      <!-- 闲鱼合规说明条 -->
+      <div class="xianyu-banner">
+        <div class="xianyu-banner-icon">💬</div>
+        <div class="xianyu-banner-body">
+          <h3>本页为闲鱼买家专属 · 购买请在闲鱼完成</h3>
+          <p>
+            试用 3 次后，满意请直接在闲鱼拍下商品，<strong>无需在本页付款</strong>。
+            拍下后将软件显示的「机器码」私信发给卖家，卖家确认订单后即为您激活，全程安全透明。
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 购买流程 -->
+  <section id="flow">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-tag">购买流程</div>
+        <h2 class="section-title">4 步完成购买 · 简单清晰</h2>
+        <p class="section-desc">全程在闲鱼内完成交易，安全有保障</p>
+      </div>
+      <div class="flow-grid reveal">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-icon">💬</div>
+          <h3>私信领取下载链接</h3>
+          <p>在闲鱼私信卖家，获取试用版下载地址（百度网盘 / 夸克网盘）</p>
+          <span class="step-highlight">免费领取</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-icon">🧪</div>
+          <h3>免费试用 3 次</h3>
+          <p>解压即用，粘贴 AI 内容，点击转换，亲自验证效果是否满意</p>
+          <span class="step-highlight">满意再买</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-icon">🛒</div>
+          <h3>在闲鱼拍下商品</h3>
+          <p>满意后直接在闲鱼下单，打开软件，将显示的「<strong>机器码</strong>」私信发给卖家</p>
+          <span class="step-highlight">闲鱼有保障</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-icon">🔑</div>
+          <h3>收码永久激活</h3>
+          <p>卖家确认订单后发送激活码，粘贴进软件即可永久使用，无限制</p>
+          <span class="step-highlight">永久有效</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 功能亮点 -->
+  <section id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-tag">核心功能</div>
+        <h2 class="section-title">为什么选择文匠 Wenjiang？</h2>
+      </div>
+      <div class="feat-grid reveal">
+        <div class="feat-card">
+          <div class="feat-icon">⚡</div>
+          <h3>AI内容粘贴即转</h3>
+          <p>直接粘贴 ChatGPT/DeepSeek/Gemini 等 AI 输出内容，立刻生成排版完好的 Word 文档（这只是基础功能）。</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📄</div>
+          <h3>单个 MD 文件转换</h3>
+          <p>支持本地单个 Markdown 文件的快捷导入转换，一键生成结构清晰的 .docx 文档。</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📚</div>
+          <h3>批量 MD 文件生成</h3>
+          <p>支持将多个 Markdown 文件批量导入，秒级生成对应的多个 Word 文档，高效省心。</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📥</div>
+          <h3>TXT 拖拽直转 Word</h3>
+          <p>普通文本文件 (.txt) 扔到文匠里也能快速转换为排版完整的 Word，告别繁琐的手工排版。</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📊</div>
+          <h3>保留表格与代码块</h3>
+          <p>支持真实表格映射与代码块格式保留，代码样式不丢失，表格支持二次编辑，彻底告别乱码。</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔒</div>
+          <h3>完全离线与安全</h3>
+          <p>无需网络连接，100% 本地运行，完全不用担心机密数据泄露。解压即用，一次购买永久授权。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 下载试用 -->
+  <section id="download">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-tag">免费试用</div>
+        <h2 class="section-title">先试后买 · 3 次免费体验</h2>
+      </div>
+      <div class="download-box reveal">
+        <h3>🚀 下载试用版</h3>
+        <p>试用 3 次，完全不满意直接删除，<br>零风险体验软件效果</p>
+        <div class="download-specs">
+          <span class="spec-chip">📦 文件大小 82 MB</span>
+          <span class="spec-chip">🖥 解压即用</span>
+          <span class="spec-chip">⚡ 无需安装</span>
+          <span class="spec-chip">🖥 支持 Win 10 / 11</span>
+          <span class="spec-chip" style="color: #f87171; border-color: rgba(248,113,113,.2); background: rgba(248,113,113,.05);">⚠️ 不支持 Win 7</span>
+        </div>
+        <a href="https://pan.baidu.com/s/1Z3_p_ovXKT8gTfJTN2XMkA?pwd=3bwp"
+           id="btn-baidu-download"
+           class="btn-download" target="_blank" rel="noopener">
+          📥 百度网盘下载（提取码：3bwp）
+        </a>
+        <div class="trial-note">
+          ✅ 试用版限 3 次转换，满意后在闲鱼拍下即可激活，无限使用
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 激活查询 -->
+  <section id="activate">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-tag">激活查询</div>
+        <h2 class="section-title">已在闲鱼下单？在此查询激活码</h2>
+        <p class="section-desc">卖家确认订单并激活后，输入机器码即可自动查询</p>
+      </div>
+      <div class="activate-box reveal">
+        <div class="activate-header">
+          <h3>🔑 激活码查询</h3>
+          <p>打开软件 → 点击「查看机器码」→ 复制到下方输入框</p>
+        </div>
+        <div class="activate-body">
+          <div class="input-wrap">
+            <label for="mc-input">您的机器码（软件内可查看）</label>
+            <input type="text" id="mc-input"
+              placeholder="例：A1B2C3D4E5F6G7H8"
+              maxlength="64" autocomplete="off" spellcheck="false">
+          </div>
+          <button class="btn-query" id="btn-query" onclick="queryActivation()">
+            🔍 查询激活状态
+          </button>
+
+          <!-- 结果区域 -->
+          <div class="query-result" id="result-success">
+            <div class="result-success">
+              <div class="result-label">🎉 激活码已生成，请复制到软件中</div>
+              <div class="result-code" id="result-code-display">—</div>
+              <button class="btn-copy-code" id="btn-copy-code" onclick="copyCode()">📋 复制激活码</button>
+              <div class="copy-flash hidden" id="copy-flash">✅ 已复制到剪贴板</div>
+              <div style="margin-top:14px;font-size:.8rem;color:var(--text2);text-align:center;line-height:1.7">
+                复制后 → 打开软件 → 点击「已有激活码」→ 粘贴 → 确认激活 ✅
+              </div>
+            </div>
+          </div>
+
+          <div class="query-result" id="result-waiting">
+            <div class="result-waiting">
+              <div class="spinner"></div>
+              <p>卖家正在处理您的订单…<br>通常在确认收款后 5 分钟内完成激活<br>
+                <span style="color:var(--accent2);font-weight:700">请稍后再刷新查询</span></p>
+            </div>
+          </div>
+
+          <div class="query-result" id="result-not-found">
+            <div class="result-not-found">
+              <div class="nf-icon">🔍</div>
+              <p>暂未查询到此机器码的激活记录</p>
+              <p class="nf-hint">
+                请确认：① 机器码输入无误（区分大小写）<br>
+                ② 已在<strong style="color:var(--text)">闲鱼完成下单</strong>并将机器码私信给卖家<br>
+                ③ 卖家确认后请等待 5 分钟再查询
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 合规提示 -->
+  <section id="safety">
+    <div class="container">
+      <div class="compliance-box reveal">
+        <div class="compliance-icon">🛡️</div>
+        <div class="compliance-body">
+          <h4>安全提示 · 谨防诈骗</h4>
+          <ul>
+            <li><strong>付款请在闲鱼 App 内完成</strong>，不要在任何其他平台支付</li>
+            <li>卖家<strong>不会要求您扫描任何二维码</strong>转账给陌生账号</li>
+            <li>卖家<strong>不会要求您填写银行卡或个人信息</strong></li>
+            <li>遇到任何异常要求，请立即在闲鱼平台<strong>举报</strong>并联系客服</li>
+            <li>本页面仅提供下载和激活服务，<strong>不收取任何费用</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>
+        <a href="/" rel="noopener">文匠 Wenjiang 官网</a> ·
+        <a href="/activate.html" rel="noopener">官网渠道激活</a> ·
+        <a href="/privacy.html" rel="noopener">隐私政策</a>
+      </p>
+      <p style="margin-top:8px">
+        © 2025-2026 沃境坊工作室 · 本页为闲鱼交易专属页 · 
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener" style="color:var(--text2);">鲁ICP备2025138763号</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const API = 'https://api.wojingfang.cn';
+    let currentCode = '';
+
+    // ── 激活查询 ──
+    async function queryActivation() {
+      const mc = document.getElementById('mc-input').value.trim().toUpperCase();
+      if (!mc) {
+        shakInput();
+        return;
+      }
+      currentCode = mc;
+
+      const btn = document.getElementById('btn-query');
+      btn.disabled = true;
+      btn.textContent = '查询中…';
+      hideAllResults();
+
+      try {
+        const res = await fetch(`${API}/query?code=${encodeURIComponent(mc)}`);
+        const data = await res.json();
+
+        if (data.success && data.activation) {
+          document.getElementById('result-code-display').textContent = data.activation;
+          showResult('result-success');
+        } else if (data.status === 'pending' || data.msg?.includes('等待') || data.msg?.includes('处理')) {
+          showResult('result-waiting');
+        } else {
+          // No record at all
+          showResult('result-not-found');
+        }
+      } catch (e) {
+        showResult('result-not-found');
+      }
+
+      btn.disabled = false;
+      btn.textContent = '🔍 查询激活状态';
+    }
+
+    function hideAllResults() {
+      ['result-success', 'result-waiting', 'result-not-found'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+    }
+
+    function showResult(id) {
+      hideAllResults();
+      const el = document.getElementById(id);
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function copyCode() {
+      const code = document.getElementById('result-code-display').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const flash = document.getElementById('copy-flash');
+        flash.classList.remove('hidden');
+        setTimeout(() => flash.classList.add('hidden'), 3000);
+      });
+    }
+
+    function shakInput() {
+      const inp = document.getElementById('mc-input');
+      inp.style.borderColor = '#f87171';
+      inp.style.animation = 'none';
+      setTimeout(() => {
+        inp.style.borderColor = '';
+        inp.focus();
+      }, 600);
+    }
+
+    // Enter key
+    document.getElementById('mc-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') queryActivation();
+    });
+
+    // ── Scroll Reveal ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

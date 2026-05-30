@@ -1,0 +1,90 @@
+# robots.txt — wojingfang.cn
+# 文匠wenjiang_markdown | 沃境坊工作室
+
+# ——————————————————————————————
+# 1. 默认规则：允许所有合法爬虫抓取全站
+# ——————————————————————————————
+User-agent: *
+Allow: /
+Disallow: /worker.js
+
+# ——————————————————————————————
+# 2. 百度专项规则（优先级最高）
+# ——————————————————————————————
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Baiduspider-image
+Allow: /
+
+User-agent: Baiduspider-video
+Allow: /
+
+User-agent: Baiduspider-news
+Allow: /
+
+# ——————————————————————————————
+# 3. 其他主流搜索引擎
+# ——————————————————————————————
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+# ——————————————————————————————
+# 4. 主流 AI 联网搜索爬虫（GEO 优化）
+# 允许 DeepSeek / Perplexity / Claude / GPT / Bytespider 抓取
+# ——————————————————————————————
+
+# OpenAI GPT 联网搜索
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Bytedance / 字节跳动（今日头条、豆包等）
+User-agent: Bytespider
+Allow: /
+
+# Apple
+User-agent: Applebot
+Allow: /
+
+# Amazon Alexa
+User-agent: Amazonbot
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# ——————————————————————————————
+# 5. Sitemap 声明
+# ——————————————————————————————
+Sitemap: https://wojingfang.cn/sitemap.xml

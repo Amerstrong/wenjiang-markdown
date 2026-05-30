@@ -1,0 +1,51 @@
+backend:
+  name: github
+  repo: Amerstrong/wenjiang-markdown
+  branch: main
+  base_url: https://api.wojingfang.cn
+  auth_endpoint: auth
+
+# 媒体文件存储位置
+media_folder: "images"
+public_folder: "/images"
+
+# 内容集合
+collections:
+  # ─── 博客文章 ───
+  - name: "blog"
+    label: "博客文章"
+    label_singular: "文章"
+    folder: "blog"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "blog/{{slug}}.html"
+    fields:
+      - { label: "标题", name: "title", widget: "string", hint: "文章标题，用于页面 <title>" }
+      - { label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "摘要", name: "summary", widget: "text", hint: "100字以内，用于列表页和 meta description" }
+      - { label: "正文（Markdown）", name: "body", widget: "markdown" }
+      - label: "标签"
+        name: "tags"
+        widget: "list"
+        allow_add: true
+        hint: "如：GPT转Word、Markdown、排版技巧"
+
+  # ─── 产品公告 ───
+  - name: "notices"
+    label: "产品公告"
+    label_singular: "公告"
+    folder: "notices"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - label: "类型"
+        name: "type"
+        widget: "select"
+        options:
+          - { label: "版本更新", value: "update" }
+          - { label: "重要公告", value: "notice" }
+          - { label: "活动信息", value: "promo" }
+      - { label: "内容", name: "body", widget: "markdown" }
+      - { label: "是否显示", name: "visible", widget: "boolean", default: true }

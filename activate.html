@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文匠 Wenjiang · 激活中心</title>
+  <meta name="description" content="文匠Pro 授权激活页面，完成付款后等待激活码自动下发。">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;
+      --accent:#6c5ce7;--accent2:#a78bfa;--accent3:#818cf8;
+      --text:#e4e4e7;--text2:#a1a1aa;
+      --green:#4ade80;--green-bg:rgba(34,197,94,.1);--green-border:rgba(34,197,94,.25);
+      --red:#f87171;--yellow:#facc15;
+      --grad:linear-gradient(135deg,#6c5ce7,#a78bfa,#818cf8);
+      --glow:0 0 40px rgba(108,92,231,.3)
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Noto Sans SC',system-ui,sans-serif;
+      background:var(--bg);color:var(--text);
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:flex-start;
+      padding:24px 16px 48px;overflow-x:hidden
+    }
+    .bg-glow{
+      position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+      background:radial-gradient(circle at 30% 40%,rgba(108,92,231,.08) 0%,transparent 50%),
+                 radial-gradient(circle at 70% 60%,rgba(167,139,250,.06) 0%,transparent 50%);
+      animation:bgFloat 20s ease-in-out infinite;z-index:0;pointer-events:none
+    }
+    @keyframes bgFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(-3%,3%)}}
+    .logo{
+      font-size:1.4rem;font-weight:900;margin-bottom:28px;margin-top:8px;
+      background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      position:relative;z-index:1
+    }
+    .card{
+      width:100%;max-width:480px;background:var(--card);
+      border:1px solid var(--border);border-radius:20px;
+      padding:32px;position:relative;z-index:1;
+      box-shadow:0 8px 40px rgba(0,0,0,.4)
+    }
+
+    /* ── Stepper ── */
+    .stepper{display:flex;align-items:center;margin-bottom:28px;gap:0}
+    .step-item{display:flex;flex-direction:column;align-items:center;flex:1}
+    .step-circle{
+      width:32px;height:32px;border-radius:50%;
+      border:2px solid var(--border);background:var(--card);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;font-weight:700;color:var(--text2);
+      transition:all .4s;position:relative;z-index:1
+    }
+    .step-circle.active{background:var(--grad);border-color:var(--accent2);color:#fff;box-shadow:var(--glow)}
+    .step-circle.done{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+    .step-label{font-size:.7rem;color:var(--text2);margin-top:6px;text-align:center;white-space:nowrap}
+    .step-label.active{color:var(--accent2)}
+    .step-label.done{color:var(--green)}
+    .step-line{flex:1;height:2px;background:var(--border);margin:0 -2px;margin-bottom:18px;transition:background .4s}
+    .step-line.done{background:var(--green)}
+
+    /* ── Pages ── */
+    .page{display:none;animation:fadeUp .35s ease both}
+    .page.active{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    h2{font-size:1.25rem;font-weight:800;margin-bottom:6px}
+    .subtitle{color:var(--text2);font-size:.875rem;margin-bottom:20px;line-height:1.5}
+
+    /* Machine code box */
+    .mc-box{
+      background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.25);
+      border-radius:12px;padding:14px 16px;margin-bottom:20px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px
+    }
+    .mc-label{font-size:.75rem;color:var(--accent2);font-weight:600;white-space:nowrap}
+    .mc-value{font-size:.85rem;font-weight:700;color:var(--text);word-break:break-all;flex:1;text-align:center}
+    .mc-copy{
+      background:rgba(108,92,231,.2);border:1px solid rgba(108,92,231,.3);
+      color:var(--accent2);border-radius:8px;padding:6px 12px;
+      font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;
+      transition:all .2s
+    }
+    .mc-copy:hover{background:rgba(108,92,231,.35)}
+
+    /* Manual input */
+    .input-group{margin-bottom:16px}
+    .input-group label{display:block;font-size:.8rem;color:var(--text2);margin-bottom:6px;font-weight:600}
+    .input-group input{
+      width:100%;background:rgba(255,255,255,.05);
+      border:1px solid var(--border);border-radius:10px;
+      color:var(--text);padding:12px 14px;font-size:.95rem;
+      font-family:inherit;transition:border-color .2s;outline:none
+    }
+    .input-group input:focus{border-color:var(--accent2)}
+
+    /* QR codes */
+    .qr-row{display:flex;gap:16px;margin-bottom:20px}
+    .qr-card{
+      flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);
+      border-radius:14px;padding:16px;text-align:center;transition:all .3s
+    }
+    .qr-card:hover{border-color:rgba(108,92,231,.4)}
+    .qr-card img{width:100%;max-width:200px;border-radius:8px;display:block;margin:0 auto 10px;image-rendering: -webkit-optimize-contrast;}
+    .qr-title{font-size:.8rem;font-weight:700;margin-bottom:4px}
+    .qr-title.wx{color:#1aad19}
+    .qr-title.ali{color:#1677ff}
+    .qr-price{font-size:1.1rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+    /* Tip box */
+    .tip-box{
+      background:rgba(250,204,21,.07);border:1px solid rgba(250,204,21,.2);
+      border-radius:10px;padding:12px 14px;font-size:.8rem;
+      color:var(--yellow);margin-bottom:20px;line-height:1.6
+    }
+
+    /* Buttons */
+    .btn{
+      width:100%;padding:14px;border:none;border-radius:12px;
+      font-size:1rem;font-weight:700;cursor:pointer;
+      font-family:inherit;transition:all .25s;margin-bottom:10px
+    }
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:var(--glow)}
+    .btn-primary:hover{box-shadow:0 0 60px rgba(108,92,231,.5);transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-outline{
+      background:transparent;border:1px solid var(--border);color:var(--text2);
+      font-size:.875rem;padding:10px
+    }
+    .btn-outline:hover{border-color:var(--text2);color:var(--text)}
+    .btn-green{background:linear-gradient(135deg,#22c55e,#4ade80);color:#fff}
+    .btn-green:hover{box-shadow:0 0 40px rgba(34,197,94,.4);transform:translateY(-1px)}
+
+    /* Waiting page */
+    .wait-animation{
+      width:64px;height:64px;margin:0 auto 20px;
+      border:3px solid var(--border);border-top-color:var(--accent2);
+      border-radius:50%;animation:spin 1s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .wait-title{font-size:1.1rem;font-weight:800;text-align:center;margin-bottom:8px}
+    .wait-sub{color:var(--text2);font-size:.875rem;text-align:center;margin-bottom:24px;line-height:1.6}
+    .progress-bar{background:var(--border);border-radius:50px;height:6px;margin-bottom:8px;overflow:hidden}
+    .progress-fill{height:100%;background:var(--grad);border-radius:50px;transition:width .5s ease;width:0%}
+    .progress-label{font-size:.75rem;color:var(--text2);text-align:center}
+    .attempts-log{
+      background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:10px;padding:12px 14px;margin-top:20px;
+      font-size:.78rem;color:var(--text2);max-height:80px;overflow-y:auto;line-height:1.7
+    }
+
+    /* Success page */
+    .success-icon{font-size:3rem;text-align:center;margin-bottom:16px;animation:pop .4s ease}
+    @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+    .success-title{font-size:1.3rem;font-weight:900;text-align:center;
+      background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .success-sub{color:var(--text2);font-size:.875rem;text-align:center;margin-bottom:20px}
+    .code-box{
+      background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.3);
+      border-radius:12px;padding:20px;text-align:center;margin-bottom:20px
+    }
+    .code-label{font-size:.75rem;color:var(--accent2);font-weight:600;margin-bottom:8px}
+    .code-value{
+      font-size:1rem;font-weight:900;color:var(--text);
+      letter-spacing:2px;word-break:break-all;line-height:1.6;
+      font-family:'Courier New',monospace
+    }
+    .copy-notice{
+      font-size:.8rem;color:var(--green);text-align:center;
+      margin-top:8px;opacity:0;transition:opacity .3s
+    }
+    .copy-notice.show{opacity:1}
+    .auto-notice{
+      background:var(--green-bg);border:1px solid var(--green-border);
+      border-radius:10px;padding:12px 14px;font-size:.82rem;
+      color:var(--green);margin-bottom:16px;text-align:center
+    }
+
+    /* Error page */
+    .error-icon{font-size:2.5rem;text-align:center;margin-bottom:12px}
+    .error-title{font-size:1.1rem;font-weight:800;text-align:center;color:var(--red);margin-bottom:8px}
+    .error-sub{color:var(--text2);font-size:.875rem;text-align:center;margin-bottom:20px;line-height:1.6}
+
+    /* Responsive */
+    @media(max-width:400px){
+      .card{padding:22px 16px}
+      .qr-row{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="logo">✅ 文匠 Wenjiang</div>
+
+<div class="card">
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-label active" id="sl1">确认信息</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-label" id="sl2">完成付款</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-label" id="sl3">等待激活</div>
+    </div>
+    <div class="step-line" id="line3"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc4">4</div>
+      <div class="step-label" id="sl4">激活完成</div>
+    </div>
+  </div>
+
+  <!-- Page 1: 确认机器码 -->
+  <div class="page active" id="page1">
+    <h2>确认您的设备信息</h2>
+    <p class="subtitle">激活码将绑定到您的设备，请核实机器码正确。</p>
+
+    <div id="mc-auto-area">
+      <div class="mc-box">
+        <span class="mc-label">机器码</span>
+        <span class="mc-value" id="mc-display">—</span>
+        <button class="mc-copy" onclick="copyMachineCode()" id="mc-copy-btn">复制</button>
+      </div>
+      <p style="font-size:.78rem;color:var(--text2);margin-bottom:20px;line-height:1.5">
+        ⚠️ 付款时<strong style="color:var(--text)">无需填写机器码</strong>，系统已自动记录，请直接扫码付款。
+      </p>
+    </div>
+
+    <div id="mc-manual-area" style="display:none">
+      <div class="input-group">
+        <label>请输入软件中显示的机器码</label>
+        <input type="text" id="mc-input" placeholder="例如：A1B2C3D4E5F6G7H8" maxlength="64">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="goToStep2()">下一步：扫码付款 →</button>
+  </div>
+
+  <!-- Page 2: 扫码付款 -->
+  <div class="page" id="page2">
+    <h2>扫码付款 · ¥19.9</h2>
+    <p class="subtitle">永久授权激活，无限使用。限时特惠：买一赠二（共送 3 台设备授权码）！</p>
+
+    <div class="qr-row">
+      <div class="qr-card">
+        <div class="qr-title wx">微信支付</div>
+        <img src="wechat_pay.png" alt="微信收款码">
+        <div class="qr-price">¥19.9</div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-title ali">支付宝</div>
+        <img src="alipay.jpg" alt="支付宝收款码">
+        <div class="qr-price">¥19.9</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      💡 <strong>支付与福利说明：</strong><br>
+      只需支付 <strong>¥19.9</strong> 即可获取永久激活码，无限次使用。<strong>限时特惠买一赠二</strong>（付款后系统将自动下发 3 枚独立设备激活码，自用、送亲友皆宜）。<br>
+      请保存上方二维码识别付款。付款时<strong>无需填写机器码</strong>，系统已自动记录。<br>
+      付款完成后，点击下方按钮，等待激活码自动生成。
+    </div>
+
+    <button class="btn btn-primary" id="btn-paid" onclick="onPaidClick()">✅ 我已完成付款，等待激活</button>
+    <button class="btn btn-outline" onclick="goToStep1()">← 返回修改机器码</button>
+  </div>
+
+  <!-- Page 3: 等待激活 -->
+  <div class="page" id="page3">
+    <div class="wait-animation" id="wait-spinner"></div>
+    <div class="wait-title">正在等待激活...</div>
+    <div class="wait-sub" id="wait-sub">已提交订单，商家确认后将自动下发激活码<br>通常需要 1~5 分钟，请勿关闭此页面</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">第 0 次查询...</div>
+    <div class="attempts-log" id="attempts-log">等待查询...</div>
+    <button class="btn btn-outline" style="margin-top:20px" onclick="onTimeout()">等太久？手动输入激活码</button>
+  </div>
+
+  <!-- Page 4: 激活成功 -->
+  <div class="page" id="page4">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">激活成功！</div>
+    <div class="success-sub">激活码已生成，请复制后在软件中输入</div>
+    <div class="code-box">
+      <div class="code-label">您的激活码</div>
+      <div class="code-value" id="activation-code-display">—</div>
+    </div>
+    <div class="copy-notice" id="copy-notice">✅ 已复制到剪贴板</div>
+    <button class="btn btn-green" onclick="copyActivationCode()">📋 复制激活码</button>
+    <div class="auto-notice" id="auto-notice" style="display:none">
+      ✅ 软件已自动检测到激活码，请在软件中确认激活
+    </div>
+    <p style="font-size:.8rem;color:var(--text2);text-align:center;margin-top:16px;line-height:1.6">
+      复制激活码 → 打开软件 → 点击"已有激活码" → 粘贴 → 确认激活
+    </p>
+  </div>
+
+  <!-- Page 5: 错误/超时 -->
+  <div class="page" id="page5">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">等待超时</div>
+    <div class="error-sub">查询超过限制次数，如已付款请联系客服<br>或手动输入激活码（收到后）</div>
+    <div class="input-group">
+      <label>手动输入激活码</label>
+      <input type="text" id="manual-code-input" placeholder="粘贴激活码">
+    </div>
+    <button class="btn btn-primary" onclick="onManualCode()">确认激活</button>
+    <div style="margin-top:16px;text-align:center">
+      <span style="font-size:.8rem;color:var(--text2)">售后邮箱：</span>
+      <a href="mailto:xiaoyu12657@qq.com" style="color:var(--accent2);font-size:.8rem">xiaoyu12657@qq.com</a>
+    </div>
+    <button class="btn btn-outline" style="margin-top:12px" onclick="goToStep3()">← 继续等待</button>
+  </div>
+</div>
+
+<script>
+const WORKER_URL = 'https://api.wojingfang.cn';
+const MAX_ATTEMPTS = 30; // 30 × 20s = 10分钟
+const POLL_INTERVAL = 20000; // 20秒
+
+let machineCode = '';
+let pollTimer = null;
+let attemptCount = 0;
+let currentActivationCode = '';
+
+// ── Init ──
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const mc = params.get('mc') || params.get('code') || '';
+  if (mc) {
+    machineCode = mc.trim().toUpperCase();
+    document.getElementById('mc-display').textContent = machineCode;
+    document.getElementById('mc-auto-area').style.display = '';
+    document.getElementById('mc-manual-area').style.display = 'none';
+  } else {
+    document.getElementById('mc-auto-area').style.display = 'none';
+    document.getElementById('mc-manual-area').style.display = '';
+  }
+  // 🚀 新增：网页打开时自动检查一次是否已激活
+  if (machineCode) checkExistingActivation();
+})();
+
+async function checkExistingActivation() {
+  try {
+    const res = await fetch(`${WORKER_URL}/query?code=${encodeURIComponent(machineCode)}`, { mode: 'cors' });
+    const data = await res.json();
+    if (data.success && data.activation) {
+      showSuccess(data.activation); // 如果已经激活过，直接跳到成功页
+    }
+  } catch(e) {}
+}
+
+// ── Steps ──
+function setStep(n) {
+  [1,2,3,4].forEach(i => {
+    const done = i < n, active = i === n;
+    const c = document.getElementById('sc'+i);
+    const l = document.getElementById('sl'+i);
+    c.className = 'step-circle' + (done?' done':active?' active':'');
+    l.className = 'step-label' + (done?' done':active?' active':'');
+    if (done) c.textContent = '✓';
+    else c.textContent = i;
+    if (i < 4) {
+      document.getElementById('line'+i).className = 'step-line' + (i < n ? ' done' : '');
+    }
+  });
+  [1,2,3,4,5].forEach(i => {
+    document.getElementById('page'+i).className = 'page' + (i === (n===4?4:n===5?5:n) ? ' active' : '');
+  });
+}
+
+function goToStep1() { setStep(1); }
+function goToStep3() {
+  setStep(3);
+  document.getElementById('page3').className = 'page active';
+  startPolling();
+}
+
+function goToStep2() {
+  let mc = machineCode;
+  if (!mc) {
+    mc = document.getElementById('mc-input').value.trim().toUpperCase();
+    if (!mc) { alert('请输入机器码'); return; }
+    machineCode = mc;
+  }
+  setStep(2);
+}
+
+// ── Copy machine code ──
+function copyMachineCode() {
+  navigator.clipboard.writeText(machineCode).then(() => {
+    const btn = document.getElementById('mc-copy-btn');
+    btn.textContent = '已复制';
+    setTimeout(() => btn.textContent = '复制', 2000);
+  });
+}
+
+// ── On paid click ──
+async function onPaidClick() {
+  const btn = document.getElementById('btn-paid');
+  btn.disabled = true;
+  btn.textContent = '提交中...';
+
+  try {
+    const res = await fetch(WORKER_URL + '/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ machineCode })
+    });
+    const data = await res.json();
+    console.log('Submit:', data);
+  } catch(e) {
+    console.warn('Submit failed, will still poll:', e);
+  }
+
+  // Go to waiting page
+  setStep(3);
+  startPolling();
+}
+
+// ── Polling ──
+function startPolling() {
+  attemptCount = 0;
+  clearInterval(pollTimer);
+  pollOnce();
+  pollTimer = setInterval(pollOnce, POLL_INTERVAL);
+}
+
+async function pollOnce() {
+  attemptCount++;
+  const pct = Math.min((attemptCount / MAX_ATTEMPTS) * 100, 95);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `第 ${attemptCount} 次查询 / 最多 ${MAX_ATTEMPTS} 次`;
+  appendLog(`[${timestamp()}] 第 ${attemptCount} 次查询...`);
+
+  try {
+    const res = await fetch(`${WORKER_URL}/query?code=${encodeURIComponent(machineCode)}`);
+    const data = await res.json();
+    if (data.success && data.activation) {
+      clearInterval(pollTimer);
+      showSuccess(data.activation);
+      return;
+    } else {
+      appendLog(`  → ${data.msg || '等待中'}`);
+    }
+  } catch(e) {
+    appendLog(`  → 网络错误: ${e.message}`);
+  }
+
+  if (attemptCount >= MAX_ATTEMPTS) {
+    clearInterval(pollTimer);
+    onTimeout();
+  }
+}
+
+function showSuccess(code) {
+  currentActivationCode = code;
+  document.getElementById('activation-code-display').textContent = code;
+  document.getElementById('progress-fill').style.width = '100%';
+  // Auto show success after small delay
+  setTimeout(() => {
+    setStep(4);
+    document.getElementById('page4').className = 'page active';
+  }, 300);
+}
+
+function onTimeout() {
+  clearInterval(pollTimer);
+  document.getElementById('page3').className = 'page';
+  document.getElementById('page5').className = 'page active';
+}
+
+function goToStep3Back() {
+  document.getElementById('page5').className = 'page';
+  document.getElementById('page3').className = 'page active';
+  startPolling();
+}
+
+// ── Copy activation code ──
+function copyActivationCode() {
+  navigator.clipboard.writeText(currentActivationCode).then(() => {
+    const n = document.getElementById('copy-notice');
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 3000);
+  });
+}
+
+function onManualCode() {
+  const code = document.getElementById('manual-code-input').value.trim();
+  if (!code) { alert('请输入激活码'); return; }
+  showSuccess(code);
+}
+
+// ── Helpers ──
+function appendLog(msg) {
+  const el = document.getElementById('attempts-log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function timestamp() {
+  const d = new Date();
+  return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
+}
+</script>
+</body>
+</html>

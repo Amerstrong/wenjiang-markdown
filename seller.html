@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文匠 · 卖家激活后台</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #080810; --card: #111120; --border: #1e1e35; --border2: #252540;
+      --accent: #7c3aed; --accent2: #a78bfa;
+      --text: #e8e8f0; --text2: #9898b0;
+      --green: #4ade80; --green-bg: rgba(34,197,94,.1); --green-border: rgba(74,222,128,.25);
+      --red: #f87171; --red-bg: rgba(248,113,113,.08);
+      --orange: #fb923c;
+      --grad: linear-gradient(135deg, #7c3aed, #a78bfa, #818cf8);
+      --glow: 0 0 40px rgba(124,58,237,.3);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 24px 16px 60px;
+      overflow-x: hidden;
+    }
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(circle at 25% 30%, rgba(124,58,237,.1) 0%, transparent 50%),
+                  radial-gradient(circle at 75% 70%, rgba(167,139,250,.07) 0%, transparent 50%);
+    }
+    .wrap { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+
+    /* Login screen */
+    .login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+    }
+    .login-box {
+      width: 100%; max-width: 380px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px 32px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .login-logo {
+      font-size: 1.4rem; font-weight: 900; margin-bottom: 6px;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .login-sub { font-size: .82rem; color: var(--text2); margin-bottom: 28px; }
+    .login-box input {
+      width: 100%; padding: 13px 16px; margin-bottom: 14px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text); font-size: 1rem;
+      font-family: inherit; outline: none; transition: border-color .2s;
+      text-align: center; letter-spacing: 4px;
+    }
+    .login-box input:focus { border-color: var(--accent2); }
+    .login-box input::placeholder { letter-spacing: 0; }
+    .btn { width: 100%; padding: 13px; border: none; border-radius: 12px;
+      font-size: .95rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all .25s; }
+    .btn-primary { background: var(--grad); color: #fff; box-shadow: var(--glow); }
+    .btn-primary:hover { box-shadow: 0 0 60px rgba(124,58,237,.5); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .login-error {
+      margin-top: 10px; font-size: .8rem; color: var(--red);
+      min-height: 20px; opacity: 0; transition: opacity .3s;
+    }
+    .login-error.show { opacity: 1; }
+
+    /* Main panel */
+    .panel { display: none; }
+    .panel.visible { display: block; }
+
+    /* Header */
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; padding-top: 8px;
+    }
+    .panel-logo {
+      font-size: 1.25rem; font-weight: 900;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .panel-role {
+      font-size: .75rem; color: var(--text2); padding: 4px 12px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border2); border-radius: 50px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1rem; font-weight: 800; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--grad);
+      box-shadow: 0 0 8px rgba(124,58,237,.6);
+    }
+
+    /* Inputs */
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: .78rem; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
+    .field input, .field textarea {
+      width: 100%; padding: 12px 14px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text); font-size: .95rem;
+      font-family: inherit; outline: none; transition: border-color .2s; resize: none;
+      letter-spacing: .5px;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--accent2); background: rgba(124,58,237,.06); }
+    .field input::placeholder, .field textarea::placeholder { color: var(--text2); opacity: .4; letter-spacing: 0; }
+
+    /* Result box */
+    .result-box {
+      margin-top: 18px; border-radius: 12px; padding: 18px 20px;
+      display: none; animation: fadeIn .3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-box.success {
+      background: var(--green-bg); border: 1px solid var(--green-border);
+    }
+    .result-box.error {
+      background: var(--red-bg); border: 1px solid rgba(248,113,113,.25);
+    }
+    .result-label { font-size: .75rem; font-weight: 700; margin-bottom: 10px; }
+    .result-box.success .result-label { color: var(--green); }
+    .result-box.error .result-label { color: var(--red); }
+    .result-code-wrap {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .result-code {
+      flex: 1; font-size: .95rem; font-weight: 900; color: var(--text);
+      letter-spacing: 2px; word-break: break-all;
+      font-family: 'Courier New', monospace;
+      background: rgba(0,0,0,.3); padding: 10px 14px; border-radius: 8px;
+    }
+    .btn-copy {
+      padding: 10px 18px; border-radius: 8px; border: none;
+      background: var(--green-bg); border: 1px solid var(--green-border);
+      color: var(--green); font-size: .82rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all .2s; white-space: nowrap;
+    }
+    .btn-copy:hover { background: rgba(34,197,94,.2); }
+    .copy-tip { font-size: .75rem; color: var(--green); margin-top: 8px; min-height: 18px; opacity: 0; transition: opacity .3s; }
+    .copy-tip.show { opacity: 1; }
+    .result-error-msg { font-size: .88rem; color: var(--red); }
+
+    /* Stats row */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .stat-num { font-size: 1.8rem; font-weight: 900;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: .72rem; color: var(--text2); margin-top: 4px; }
+
+    /* Orders table */
+    .orders-wrap { overflow-x: auto; }
+    .orders-table {
+      width: 100%; border-collapse: collapse; font-size: .82rem;
+    }
+    .orders-table th {
+      text-align: left; padding: 10px 12px;
+      color: var(--text2); font-weight: 700; font-size: .72rem;
+      letter-spacing: .5px; text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+    .orders-table td {
+      padding: 12px; border-bottom: 1px solid rgba(30,30,53,.6);
+      color: var(--text);
+      vertical-align: middle;
+    }
+    .orders-table tr:last-child td { border-bottom: none; }
+    .orders-table tr:hover td { background: rgba(124,58,237,.04); }
+    .tag-done {
+      display: inline-block; padding: 2px 10px; border-radius: 50px;
+      background: var(--green-bg); border: 1px solid var(--green-border);
+      color: var(--green); font-size: .7rem; font-weight: 700;
+    }
+    .tag-pending {
+      display: inline-block; padding: 2px 10px; border-radius: 50px;
+      background: rgba(251,146,60,.1); border: 1px solid rgba(251,146,60,.25);
+      color: var(--orange); font-size: .7rem; font-weight: 700;
+    }
+    .mc-text {
+      font-family: 'Courier New', monospace; font-size: .78rem;
+      color: var(--accent2); letter-spacing: .5px;
+    }
+    .code-text {
+      font-family: 'Courier New', monospace; font-size: .72rem;
+      color: var(--text2); letter-spacing: .5px;
+    }
+    .empty-orders {
+      text-align: center; padding: 32px; color: var(--text2); font-size: .88rem;
+    }
+    .btn-refresh {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 8px;
+      background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.25);
+      color: var(--accent2); font-size: .78rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .btn-refresh:hover { background: rgba(124,58,237,.2); }
+    .btn-refresh.spinning svg { animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Loading spinner */
+    .mini-spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid var(--border2); border-top-color: var(--accent2);
+      border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- ── LOGIN ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🔐 文匠 Wenjiang</div>
+    <div class="login-sub">卖家激活管理后台</div>
+    <input type="password" id="pw-input" placeholder="输入后台密码" maxlength="64"
+           autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" onclick="doLogin()">进入后台</button>
+    <div class="login-error" id="login-error">密码错误，请重试</div>
+  </div>
+</div>
+
+<!-- ── PANEL ── -->
+<div class="wrap">
+<div class="panel" id="panel">
+
+  <!-- Header -->
+  <div class="panel-header">
+    <div class="panel-logo">文匠 · 激活管理</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="panel-role">卖家后台</span>
+      <button class="btn-refresh" onclick="doLogout()" style="color:var(--text2)">退出</button>
+    </div>
+  </div>
+
+  <!-- 统计 -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">—</div>
+      <div class="stat-label">总激活数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-today">—</div>
+      <div class="stat-label">今日激活</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-pending">—</div>
+      <div class="stat-label">待处理</div>
+    </div>
+  </div>
+
+  <!-- 一键激活 -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>一键激活</div>
+
+    <div class="field">
+      <label>机器码（从闲鱼私信复制）</label>
+      <input type="text" id="act-mc" placeholder="粘贴用户发来的机器码"
+             maxlength="64" autocomplete="off" spellcheck="false"
+             oninput="this.value = this.value.toUpperCase()"
+             onkeydown="if(event.key==='Enter')doActivate()">
+    </div>
+    <div class="field">
+      <label>备注（可选，如闲鱼订单号）</label>
+      <input type="text" id="act-note" placeholder="例：闲鱼 2025053012345" maxlength="100">
+    </div>
+
+    <button class="btn btn-primary" id="btn-activate" onclick="doActivate()">
+      🚀 生成激活码并激活
+    </button>
+
+    <!-- 成功结果 -->
+    <div class="result-box success" id="act-result-ok">
+      <div class="result-label">✅ 激活成功！复制激活码发给用户</div>
+      <div class="result-code-wrap">
+        <div class="result-code" id="act-code-display">—</div>
+        <button class="btn-copy" onclick="copyActivationCode()">📋 复制</button>
+      </div>
+      <div class="copy-tip" id="act-copy-tip">已复制到剪贴板 ✓</div>
+    </div>
+
+    <!-- 失败结果 -->
+    <div class="result-box error" id="act-result-err">
+      <div class="result-label">❌ 激活失败</div>
+      <div class="result-error-msg" id="act-err-msg">—</div>
+    </div>
+  </div>
+
+  <!-- 激活记录 -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="dot"></span>激活记录
+      </div>
+      <button class="btn-refresh" id="btn-refresh" onclick="loadOrders()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 2v6h-6M3 22v-6h6M3.51 9a9 9 0 0114.85-3.36L21 8M3 16l2.64 2.36A9 9 0 0020.49 15"/>
+        </svg>
+        刷新
+      </button>
+    </div>
+
+    <div class="orders-wrap" id="orders-wrap">
+      <div class="empty-orders">加载中…</div>
+    </div>
+  </div>
+
+</div><!-- end .panel -->
+</div><!-- end .wrap -->
+
+<script>
+const API = 'https://api.wojingfang.cn';
+let adminKey = '';
+let currentActivationCode = '';
+
+// ── 登录 ──
+function doLogin() {
+  const pw = document.getElementById('pw-input').value.trim();
+  if (!pw) return;
+  adminKey = pw;
+
+  const btn = document.querySelector('.login-box .btn');
+  btn.disabled = true;
+  btn.textContent = '验证中…';
+
+  // 用一次真实请求验证密码
+  fetch(`${API}/admin/orders`, {
+    headers: { 'X-Auth-Key': adminKey }
+  }).then(r => {
+    if (r.status === 403) {
+      throw new Error('密码错误');
+    }
+    return r.json();
+  }).then(data => {
+    // 登录成功
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('panel').classList.add('visible');
+    renderOrders(data);
+    updateStats(data);
+  }).catch(err => {
+    const errEl = document.getElementById('login-error');
+    errEl.textContent = err.message || '连接失败，请检查网络';
+    errEl.classList.add('show');
+    setTimeout(() => errEl.classList.remove('show'), 3000);
+    btn.disabled = false;
+    btn.textContent = '进入后台';
+  });
+}
+
+function doLogout() {
+  adminKey = '';
+  document.getElementById('panel').classList.remove('visible');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+
+// ── 一键激活 ──
+async function doActivate() {
+  const mc = document.getElementById('act-mc').value.trim().toUpperCase();
+  const note = document.getElementById('act-note').value.trim();
+  if (!mc) {
+    document.getElementById('act-mc').focus();
+    document.getElementById('act-mc').style.borderColor = '#f87171';
+    setTimeout(() => document.getElementById('act-mc').style.borderColor = '', 1000);
+    return;
+  }
+
+  const btn = document.getElementById('btn-activate');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="mini-spinner"></span> 生成中…';
+
+  // 隐藏之前结果
+  document.getElementById('act-result-ok').style.display = 'none';
+  document.getElementById('act-result-err').style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/admin/activate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Key': adminKey
+      },
+      body: JSON.stringify({ machineCode: mc, note })
+    });
+    const data = await res.json();
+
+    if (data.success && data.activationCode) {
+      currentActivationCode = data.activationCode;
+      document.getElementById('act-code-display').textContent = data.activationCode;
+      document.getElementById('act-result-ok').style.display = 'block';
+      // 清空输入
+      document.getElementById('act-mc').value = '';
+      document.getElementById('act-note').value = '';
+      // 刷新列表
+      loadOrders();
+    } else {
+      document.getElementById('act-err-msg').textContent = data.msg || '激活失败，请重试';
+      document.getElementById('act-result-err').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('act-err-msg').textContent = '网络错误：' + e.message;
+    document.getElementById('act-result-err').style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🚀 生成激活码并激活';
+}
+
+function copyActivationCode() {
+  if (!currentActivationCode) return;
+  navigator.clipboard.writeText(currentActivationCode).then(() => {
+    const tip = document.getElementById('act-copy-tip');
+    tip.classList.add('show');
+    setTimeout(() => tip.classList.remove('show'), 3000);
+  });
+}
+
+// ── 加载订单 ──
+async function loadOrders() {
+  const btn = document.getElementById('btn-refresh');
+  btn.classList.add('spinning');
+
+  try {
+    const res = await fetch(`${API}/admin/orders`, {
+      headers: { 'X-Auth-Key': adminKey }
+    });
+    const data = await res.json();
+    renderOrders(data);
+    updateStats(data);
+  } catch (e) {
+    document.getElementById('orders-wrap').innerHTML =
+      `<div class="empty-orders" style="color:var(--red)">加载失败：${e.message}</div>`;
+  }
+
+  btn.classList.remove('spinning');
+}
+
+function renderOrders(orders) {
+  const wrap = document.getElementById('orders-wrap');
+  if (!orders || orders.length === 0) {
+    wrap.innerHTML = '<div class="empty-orders">暂无激活记录</div>';
+    return;
+  }
+
+  // 最新在前
+  const sorted = [...orders].sort((a, b) =>
+    new Date(b.activateTime || b.submitTime || 0) - new Date(a.activateTime || a.submitTime || 0)
+  );
+
+  const rows = sorted.map(o => {
+    const mc   = o.machineCode || '—';
+    const code = o.activationCode || '—';
+    const time = o.activateTime
+      ? new Date(o.activateTime).toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-')
+      : (o.submitTime ? new Date(o.submitTime).toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-') : '—');
+    const status = o.status === 'done'
+      ? '<span class="tag-done">已激活</span>'
+      : '<span class="tag-pending">待处理</span>';
+    const note = o.note
+      ? `<div style="font-size:.7rem;color:var(--text2);margin-top:3px">${escHtml(o.note)}</div>`
+      : '';
+
+    // 来源渠道标签
+    const chMap = {
+      'xianyu':      '🐟 闲鱼',
+      'xianyu-app':  '🐟 闲鱼App',
+      'website':     '🌐 官网',
+      'direct/软件': '💻 软件直接',
+      'manual':      '🔧 手动',
+      'query':       '🔍 直接查询',
+      'unknown':     '❓ 未知',
+    };
+    const channelLabel = chMap[o.channel] || (o.channel ? escHtml(o.channel) : '❓ 未知');
+    const device   = o._uaShort || '';
+    const ip       = o._ip || '';
+    const refShort = o._referer
+      ? (o._referer.replace(/https?:\/\/[^/]+/, '') || o._referer).substring(0, 26)
+      : '';
+
+    const srcCell = [
+      `<div style="font-size:.78rem;font-weight:700;color:var(--accent2)">${channelLabel}</div>`,
+      device   ? `<div style="font-size:.7rem;color:var(--text2);margin-top:2px">${escHtml(device)}</div>` : '',
+      ip       ? `<div style="font-size:.68rem;color:var(--text2);font-family:'Courier New',monospace">${escHtml(ip)}</div>` : '',
+      refShort ? `<div style="font-size:.67rem;color:#3a3a5c;margin-top:1px" title="${escHtml(o._referer||'')}">${escHtml(refShort)}</div>` : '',
+    ].join('');
+
+    return `<tr>
+      <td><span class="mc-text">${escHtml(mc)}</span>${note}</td>
+      <td><span class="code-text">${escHtml(code)}</span></td>
+      <td style="white-space:nowrap;font-size:.78rem;color:var(--text2)">${time}</td>
+      <td>${srcCell}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>机器码 / 备注</th>
+          <th>激活码</th>
+          <th>时间</th>
+          <th>状态</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function updateStats(orders) {
+  if (!orders) return;
+  const total = orders.length;
+  const today = new Date().toDateString();
+  const todayCount = orders.filter(o => {
+    const t = o.activateTime || o.submitTime;
+    return t && new Date(t).toDateString() === today;
+  }).length;
+  const pending = orders.filter(o => o.status !== 'done').length;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-today').textContent = todayCount;
+  document.getElementById('stat-pending').textContent = pending;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Enter key on password
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>
