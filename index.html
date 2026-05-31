@@ -1155,6 +1155,24 @@
           <!-- R2 预留 -->
           <a href="javascript:alert('高速直链通道准备中，请暂用上方网盘下载');" class="price-btn btn-outline"
             style="text-align:center">高速直链下载 (准备中)</a>
+
+          <!-- 最新模板下载 -->
+          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 0.9rem; text-align: left;">
+            <strong style="color:var(--text); display:block; margin-bottom: 6px;">📄 最新配套 Word 模板下载：</strong>
+            <p style="color:var(--text2); font-size:0.85rem; margin-bottom:10px; line-height:1.5;">
+              如果您已安装 Pandoc 或使用自定义工具链，可以直接下载最新的 <code>WenJiangCode.docx</code> 精调排版模板。
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;">
+              <a href="/templates/WenJiangCode.docx" download
+                style="color:var(--accent2); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:700;">
+                💾 立即下载 WenJiangCode.docx
+              </a>
+              <a href="/blog/template-test-report.html" target="_blank"
+                style="color:var(--text2); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-size:0.85rem;">
+                🔍 查看详细模板测试报告 &rarr;
+              </a>
+            </div>
+          </div>
         </div>
 
         <!-- 终身买断版 -->
@@ -1255,6 +1273,10 @@
           <div class="faq-q"><span>🔄</span> V1.X 免费更新是什么意思？</div>
           <div class="faq-a">当前大版本（1.0、1.1、1.2……）的所有更新完全免费。未来若推出 V2.0 重大版本，老用户可享受专属升级优惠，但不强制升级。<br><br><strong
               style="color:var(--accent2)">📦 最新版本 v1.61</strong>：优化了中文目录运行，转换效果更精准稳定。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span>📄</span> 如何下载和使用最新的 Word 样式模板？</div>
+          <div class="faq-a">您可以直接在下载区域或下载弹窗中下载官方精调的 <code>WenJiangCode.docx</code> 模板。该模板通过了 26 项严格 of 排版场景测试（包括 Python 多层缩进、复杂 JSON 嵌套、连续混合排版等），能够为您的代码和 Markdown 转换提供极具权威性的稳定格式支持。具体转换验证指标及已知优化指南，请参见 <a href="/blog/template-test-report.html" style="color:var(--accent2); text-decoration:underline;">文匠 Word 模板开发成果与测试报告</a>。</div>
         </div>
         <div class="faq-item">
           <div class="faq-q"><span>🌐</span> 需要联网激活吗？</div>
@@ -1523,9 +1545,24 @@
           </div>
           <span style="color:var(--accent2)">下载 &rarr;</span>
         </a>
+
+        <!-- Word 模板下载 -->
+        <a href="/templates/WenJiangCode.docx" download
+          style="display:flex; align-items:center; justify-content:space-between; padding:16px; background:rgba(108,92,231,0.05); border:1px solid rgba(108,92,231,0.3); border-radius:12px; text-decoration:none; color:var(--text); transition:all 0.3s;"
+          onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='rgba(108,92,231,0.3)'">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.5rem">📄</span>
+            <div style="text-align:left;">
+              <div style="font-weight:600; color:var(--accent2);">最新配套 Word 模板</div>
+              <div style="font-size:0.8rem; color:var(--text2);">WenJiangCode.docx</div>
+            </div>
+          </div>
+          <span style="color:var(--accent2)">下载 &rarr;</span>
+        </a>
       </div>
       <div style="margin-top:20px; font-size:0.8rem; color:var(--text2); text-align:center;">
-        高速直链通道 (Cloudflare R2) 准备中...
+        <span style="display:block;margin-bottom:6px;">高速直链通道 (Cloudflare R2) 准备中...</span>
+        <a href="/blog/template-test-report.html" target="_blank" style="color:var(--accent2); text-decoration:underline;">查看详细模板测试报告 &rarr;</a>
       </div>
     </div>
   </div>
