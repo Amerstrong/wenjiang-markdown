@@ -1,0 +1,45 @@
+# AI探索者实验室
+
+> 官网：https://wojingfang.cn/
+> 定位：AI 探索者 · AI 与实用工具解决真实生活中的小麻烦
+
+## 网站定位
+
+AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。关注本地大模型、边缘硬件（Jetson / 树莓派）与极简桌面效率工具。所有自研免费 / 开源软件与实战踩坑记录均在此归档。
+
+## 工具库
+
+### FileBeam Lite
+
+- 核心痛点：手机与电脑临时传文件时，登录账号、安装 App 或上传公网云盘都太慢。
+- 核心功能：手机零安装，扫码即用；局域网直连，不经过公网；Windows 免费开源；支持上传与共享下载
+- 运行平台：Windows 10 / 11
+- 价格：Lite 免费 / Pro ¥19.9
+- 官方下载：https://github.com/Amerstrong/FileBeam_Lite/releases/latest
+- 详情页：https://wojingfang.cn/tools/filebeam.html
+### 文匠 Markdown_Office
+
+- 核心痛点：AI 生成的 Markdown 粘进 Word 后丢失标题、表格和代码格式，手工重排非常耗时。
+- 核心功能：完全离线转换；AI 内容一键转 Word；代码块与表格稳定保留；Windows 绿色免安装
+- 运行平台：Windows 10 / 11（64 位）
+- 价格：免费试用 3 次 / ¥19.9 永久授权
+- 官方下载：https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip
+- 详情页：https://wojingfang.cn/tools/wenjiang.html
+
+## 技术专栏
+
+### 从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战
+
+- 发布日期：2026-11-21
+- 栏目：工程自动化
+- 标签：Python, PyInstaller, GitHub, 软件发布
+- 摘要：以 FileBeam Lite 为例，完整拆解 Python Web 工具如何从读取 README、识别工程、打包 EXE、执行启动与上传测试，到生成校验文件并发布 GitHub Release。
+- 直达链接：https://wojingfang.cn/posts/filebeam-python-release-pipeline.html
+
+## 重要页面
+
+- 工具库索引：https://wojingfang.cn/tools/
+- 技术专栏索引：https://wojingfang.cn/posts/
+- 关于AI探索者：https://wojingfang.cn/about.html
+- Sitemap：https://wojingfang.cn/sitemap.xml
+- 联系方式：xiaoyu12657@qq.com

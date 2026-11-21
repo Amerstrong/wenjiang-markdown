@@ -1,0 +1,21 @@
+{
+  "name": "AI探索者实验室",
+  "short_name": "AI探索者",
+  "description": "AI与实用工具解决真实生活中的小麻烦",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2f5ef",
+  "theme_color": "#0d6b55",
+  "icons": [
+    {
+      "src": "/favicon_io/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon_io/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

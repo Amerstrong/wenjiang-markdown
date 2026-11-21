@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 工具如何打包、测试并发布 GitHub Release｜FileBeam 实战</title>
+  <meta name="description" content="以 FileBeam Lite 为例，介绍 Python Web 工具使用 PyInstaller 打包 Windows EXE、执行 HTTP 冒烟测试、生成 SHA256，并通过 GitHub API 发布 Release 的完整流程。">
+  <meta name="keywords" content="Python打包,PyInstaller,GitHub Release,FileBeam,自动化测试,软件发布">
+  <meta name="author" content="AI探索者">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://wojingfang.cn/posts/filebeam-python-release-pipeline.html">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0d6b55">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="AI探索者实验室">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Python 工具如何打包、测试并发布 GitHub Release｜FileBeam 实战">
+  <meta property="og:description" content="以 FileBeam Lite 为例，介绍 Python Web 工具使用 PyInstaller 打包 Windows EXE、执行 HTTP 冒烟测试、生成 SHA256，并通过 GitHub API 发布 Release 的完整流程。">
+  <meta property="og:url" content="https://wojingfang.cn/posts/filebeam-python-release-pipeline.html">
+  <meta property="og:image" content="https://wojingfang.cn/favicon_io/android-chrome-512x512.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Python 工具如何打包、测试并发布 GitHub Release｜FileBeam 实战">
+  <meta name="twitter:description" content="以 FileBeam Lite 为例，介绍 Python Web 工具使用 PyInstaller 打包 Windows EXE、执行 HTTP 冒烟测试、生成 SHA256，并通过 GitHub API 发布 Release 的完整流程。">
+  <meta name="twitter:image" content="https://wojingfang.cn/favicon_io/android-chrome-512x512.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战","description":"以 FileBeam Lite 为例，完整拆解 Python Web 工具如何从读取 README、识别工程、打包 EXE、执行启动与上传测试，到生成校验文件并发布 GitHub Release。","datePublished":"2026-11-21","dateModified":"2026-11-21","articleSection":"工程自动化","keywords":["Python","PyInstaller","GitHub","软件发布"],"url":"https://wojingfang.cn/posts/filebeam-python-release-pipeline.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://wojingfang.cn/posts/filebeam-python-release-pipeline.html"},"inLanguage":"zh-CN","author":{"@type":"Person","name":"AI探索者","url":"https://wojingfang.cn/about.html"},"publisher":{"@type":"Person","name":"AI探索者","url":"https://wojingfang.cn/about.html"}}</script>
+  <style>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f2f5ef;
+  --paper: #fffdf8;
+  --paper-soft: #f7f8f3;
+  --ink: #14231e;
+  --muted: #617069;
+  --line: #d8e0d9;
+  --brand: #0d6b55;
+  --brand-dark: #074738;
+  --brand-soft: #dff1e9;
+  --accent: #dd613b;
+  --accent-soft: #fbe7de;
+  --code-bg: #0d1b18;
+  --white: #ffffff;
+  --shadow: 0 18px 50px rgba(20, 35, 30, 0.08);
+  --shadow-soft: 0 8px 24px rgba(20, 35, 30, 0.06);
+  --radius: 22px;
+  --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    linear-gradient(rgba(13, 107, 85, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 107, 85, 0.035) 1px, transparent 1px),
+    var(--bg);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 8% 4%, rgba(221, 97, 59, 0.11), transparent 28%),
+    radial-gradient(circle at 92% 22%, rgba(13, 107, 85, 0.11), transparent 32%);
+  content: "";
+  pointer-events: none;
+}
+
+a {
+  color: var(--brand);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(221, 97, 59, 0.42);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 200;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--white);
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(216, 224, 217, 0.85);
+  background: rgba(255, 253, 248, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.nav-shell {
+  display: flex;
+  width: min(1180px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brand-mark {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border: 1px solid rgba(13, 107, 85, 0.2);
+  border-radius: 12px;
+  background: var(--brand);
+  box-shadow: 0 8px 18px rgba(13, 107, 85, 0.2);
+}
+
+.brand-mark svg {
+  width: 24px;
+  height: 24px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-copy strong {
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.brand-copy small {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.site-nav a:hover {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+}
+
+.site-nav a[aria-current="page"] {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 24px auto 0;
+  border-radius: 30px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, #0b352c 0%, #10231f 58%, #281c19 100%);
+  background-size: 34px 34px, 34px 34px, auto;
+  box-shadow: 0 28px 70px rgba(7, 39, 31, 0.2);
+  color: #f5fbf7;
+}
+
+.hero::after {
+  position: absolute;
+  top: -170px;
+  right: -120px;
+  width: 430px;
+  height: 430px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(221, 97, 59, 0.33), transparent 65%);
+  content: "";
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 52px;
+  padding: clamp(42px, 7vw, 82px);
+  align-items: center;
+}
+
+.eyebrow,
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before,
+.section-kicker::before {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.hero h1 {
+  max-width: 820px;
+  margin: 18px 0 22px;
+  font-size: clamp(2.2rem, 5.6vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1.08;
+}
+
+.hero h1 .accent {
+  color: #ff8a62;
+}
+
+.hero .lead {
+  max-width: 780px;
+  margin: 0;
+  color: rgba(239, 249, 244, 0.78);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+  line-height: 1.85;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 46px;
+  padding: 11px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--brand);
+  color: var(--white);
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.button:hover {
+  background: var(--brand-dark);
+  box-shadow: 0 10px 26px rgba(13, 107, 85, 0.2);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.button.light {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+}
+
+.button.accent {
+  background: var(--accent);
+}
+
+.button.outline {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.button.small {
+  min-height: 38px;
+  padding: 8px 13px;
+  font-size: 0.86rem;
+}
+
+.hero-terminal {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  background: rgba(3, 18, 14, 0.66);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+  font-family: var(--mono);
+}
+
+.terminal-bar {
+  display: flex;
+  min-height: 41px;
+  padding: 0 14px;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff8a62;
+}
+
+.terminal-dot:nth-child(2) {
+  background: #f3bc50;
+}
+
+.terminal-dot:nth-child(3) {
+  background: #58c98e;
+}
+
+.terminal-title {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.68rem;
+}
+
+.terminal-body {
+  padding: 22px;
+}
+
+.terminal-line {
+  margin: 0 0 12px;
+  color: #c8ded5;
+  font-size: 0.82rem;
+}
+
+.terminal-line .prompt {
+  color: #ff8a62;
+}
+
+.terminal-line .ok {
+  color: #76e2aa;
+}
+
+.signal-map {
+  display: grid;
+  margin: 24px 0 5px;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.signal-device {
+  padding: 18px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.signal-device strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--white);
+  font-size: 1.6rem;
+}
+
+.signal-link {
+  color: #ffb494;
+  font-size: 1.3rem;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.hero-stats {
+  display: grid;
+  margin-top: 34px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hero-stat {
+  padding: 14px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.hero-stat strong {
+  display: block;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.hero-stat span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.72rem;
+}
+
+.section {
+  padding: clamp(58px, 8vw, 94px) 0 0;
+}
+
+.section-head {
+  display: flex;
+  margin-bottom: 28px;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.section-head h2,
+.page-heading h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.7rem, 3.4vw, 2.65rem);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.section-head p {
+  max-width: 590px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.topic-grid,
+.tool-grid,
+.post-grid,
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.topic-card,
+.tool-card,
+.post-card,
+.related-tool,
+.panel,
+.article-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.topic-card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+}
+
+.topic-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  content: "";
+}
+
+.topic-index {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.topic-card h3 {
+  margin: 16px 0 9px;
+  font-size: 1.14rem;
+}
+
+.topic-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.tool-card {
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.tool-card:hover {
+  border-color: rgba(13, 107, 85, 0.34);
+  box-shadow: var(--shadow);
+  transform: translateY(-4px);
+}
+
+.tool-cover {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  border-bottom: 1px solid var(--line);
+  background: #dfe9e3;
+}
+
+.tool-cover img {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.cover-filebeam {
+  display: grid;
+  height: 240px;
+  padding: 34px;
+  place-items: center;
+  background:
+    linear-gradient(135deg, rgba(13, 107, 85, 0.96), rgba(8, 49, 40, 0.98)),
+    var(--brand);
+}
+
+.cover-filebeam .signal-map {
+  width: 100%;
+  margin: 0;
+}
+
+.cover-filebeam .signal-device {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cover-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(9, 35, 29, 0.82);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.tool-body {
+  padding: 22px;
+}
+
+.tag-row {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.tag.warm {
+  background: var(--accent-soft);
+  color: #9e3f25;
+}
+
+.tool-body h3,
+.post-card h3 {
+  margin: 14px 0 9px;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.tool-body h3 a,
+.post-card h3 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tool-body p,
+.post-card p {
+  margin: 0 0 17px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.tool-meta {
+  display: flex;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.tool-meta a {
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.post-card {
+  padding: 24px;
+}
+
+.post-card time {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.post-card .post-footer {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.home-band {
+  margin-top: 62px;
+  padding: 32px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.home-band-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+
+.home-band h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.home-band p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.home-band .button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.page-heading {
+  padding: 66px 0 10px;
+}
+
+.page-heading p {
+  max-width: 760px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  margin: 0 0 20px;
+  padding: 0;
+  gap: 7px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 0.79rem;
+  list-style: none;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  margin-left: 7px;
+  content: "/";
+  opacity: 0.45;
+}
+
+.breadcrumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.detail-hero {
+  display: grid;
+  padding: 22px 0 0;
+  grid-template-columns: minmax(0, 1.22fr) minmax(280px, 0.78fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.detail-copy h1 {
+  margin: 14px 0;
+  font-size: clamp(2rem, 4.5vw, 3.45rem);
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+
+.detail-copy .summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.fact-panel {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.fact-list {
+  display: grid;
+  margin: 0 0 20px;
+  gap: 0;
+}
+
+.fact-list div {
+  display: grid;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  grid-template-columns: 94px 1fr;
+  gap: 12px;
+  font-size: 0.84rem;
+}
+
+.fact-list dt {
+  color: var(--muted);
+}
+
+.fact-list dd {
+  margin: 0;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.detail-cover {
+  overflow: hidden;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.detail-cover img {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.detail-cover figcaption {
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.article-layout {
+  display: grid;
+  margin-top: 38px;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 34px;
+  align-items: start;
+}
+
+.article-content,
+.tool-content {
+  min-width: 0;
+  color: var(--ink);
+}
+
+.content-card {
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.tool-content {
+  padding: clamp(24px, 4vw, 45px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-content h2,
+.tool-content h2 {
+  margin: 48px 0 15px;
+  padding-top: 4px;
+  font-size: clamp(1.38rem, 2.6vw, 1.8rem);
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.article-content h2:first-child,
+.tool-content h2:first-child {
+  margin-top: 0;
+}
+
+.article-content h3,
+.tool-content h3 {
+  margin: 30px 0 10px;
+  font-size: 1.1rem;
+  color: var(--brand-dark);
+}
+
+.article-content p,
+.tool-content p,
+.article-content li,
+.tool-content li {
+  color: #34443e;
+}
+
+.article-content p,
+.tool-content p {
+  margin: 0 0 17px;
+}
+
+.article-content ul,
+.article-content ol,
+.tool-content ul,
+.tool-content ol {
+  margin: 10px 0 20px;
+  padding-left: 1.35rem;
+}
+
+.article-content li,
+.tool-content li {
+  margin-bottom: 7px;
+}
+
+.article-content strong,
+.tool-content strong {
+  color: var(--ink);
+}
+
+.article-content code,
+.tool-content code {
+  padding: 0.15em 0.42em;
+  border: 1px solid #cfe2da;
+  border-radius: 6px;
+  background: #edf6f2;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.article-content pre,
+.tool-content pre {
+  overflow-x: auto;
+  margin: 22px 0;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: #d9e9e2;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+  line-height: 1.62;
+}
+
+.article-content pre code,
+.tool-content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.article-content blockquote,
+.tool-content blockquote {
+  margin: 22px 0;
+  padding: 17px 20px;
+  border-left: 4px solid var(--brand);
+  border-radius: 0 12px 12px 0;
+  background: var(--brand-soft);
+}
+
+.article-content blockquote p:last-child,
+.tool-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.article-content img,
+.tool-content img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  margin: 24px auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+.article-content figure,
+.tool-content figure {
+  margin: 24px 0;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 22px 0;
+}
+
+.article-content table,
+.tool-content table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.9rem;
+}
+
+.article-content th,
+.article-content td,
+.tool-content th,
+.tool-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.article-content th,
+.tool-content th {
+  background: var(--paper-soft);
+}
+
+.article-aside {
+  position: sticky;
+  top: 96px;
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-aside strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.article-aside p,
+.article-aside li {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.article-aside ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.article-header {
+  padding: 28px 0 0;
+}
+
+.article-header h1 {
+  max-width: 900px;
+  margin: 16px 0;
+  font-size: clamp(2rem, 4.8vw, 3.45rem);
+  letter-spacing: -0.045em;
+  line-height: 1.16;
+}
+
+.article-header .dek {
+  max-width: 820px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.article-meta {
+  display: flex;
+  margin-top: 20px;
+  gap: 17px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.73rem;
+}
+
+.answer-box {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid #bad8cb;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e8f6f0, #f7fbf8);
+}
+
+.answer-box strong {
+  color: var(--brand-dark);
+}
+
+.related-tool {
+  display: grid;
+  margin: 42px 0 80px;
+  padding: clamp(24px, 4vw, 38px);
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+  background: linear-gradient(135deg, #0c3e32, #132720);
+  color: var(--white);
+}
+
+.related-tool h2 {
+  margin: 8px 0;
+  color: var(--white);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.related-tool p {
+  max-width: 650px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.related-tool .button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.notice {
+  margin: 22px 0;
+  padding: 17px 19px;
+  border: 1px solid #efd09f;
+  border-radius: 12px;
+  background: #fff7e8;
+  color: #704410;
+  font-size: 0.91rem;
+}
+
+.feature-grid {
+  display: grid;
+  margin: 22px 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.feature-item {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper-soft);
+}
+
+.feature-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.feature-item span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.purchase-grid {
+  display: grid;
+  margin: 24px 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.price-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-soft);
+}
+
+.price-card.featured {
+  border-color: rgba(221, 97, 59, 0.35);
+  background: linear-gradient(145deg, #fff9f5, #fffdf8);
+}
+
+.price-card .price {
+  margin: 6px 0 10px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.price-card ul {
+  margin-bottom: 0;
+}
+
+.qr-grid {
+  display: grid;
+  margin: 22px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.qr-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  text-align: center;
+}
+
+.qr-card img {
+  width: min(100%, 190px);
+  margin: 0 auto 8px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.qr-card span {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.inline-cta {
+  display: flex;
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--brand-soft);
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.inline-cta strong {
+  display: block;
+}
+
+.post-grid {
+  margin-top: 24px;
+}
+
+.about-grid {
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 20px;
+}
+
+.about-panel {
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-panel.dark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.about-panel.dark p,
+.about-panel.dark li {
+  color: rgba(255, 255, 255, 0.67);
+}
+
+.principle-list {
+  display: grid;
+  margin: 22px 0 0;
+  gap: 12px;
+}
+
+.principle {
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper-soft);
+}
+
+.principle strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.site-footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.84);
+}
+
+.footer-inner {
+  display: grid;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 42px 0 28px;
+  grid-template-columns: 1.3fr 0.7fr 0.7fr;
+  gap: 30px;
+}
+
+.footer-brand p,
+.footer-links a,
+.footer-copy {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-links strong {
+  margin-bottom: 3px;
+  font-size: 0.88rem;
+}
+
+.footer-links a {
+  text-decoration: none;
+}
+
+.footer-copy {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 17px 0 28px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .detail-hero,
+  .article-layout,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-grid {
+    gap: 30px;
+  }
+
+  .hero-terminal {
+    max-width: 620px;
+  }
+
+  .topic-grid,
+  .tool-grid,
+  .post-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .article-aside {
+    position: static;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .nav-shell {
+    width: min(100% - 24px, 1180px);
+    padding: 10px 0;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .site-nav {
+    width: 100%;
+    gap: 2px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-nav a {
+    white-space: nowrap;
+  }
+
+  .page-shell {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .hero {
+    margin-top: 12px;
+    border-radius: 22px;
+  }
+
+  .hero-grid {
+    padding: 32px 22px;
+  }
+
+  .hero h1 {
+    letter-spacing: -0.045em;
+  }
+
+  .hero-stats,
+  .topic-grid,
+  .tool-grid,
+  .post-grid,
+  .feature-grid,
+  .purchase-grid,
+  .qr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head,
+  .home-band-grid,
+  .related-tool,
+  .inline-cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-head {
+    display: block;
+  }
+
+  .section-head p {
+    margin-top: 8px;
+  }
+
+  .home-band {
+    padding: 24px;
+  }
+
+  .related-tool {
+    display: block;
+  }
+
+  .related-tool .button {
+    margin-top: 18px;
+  }
+
+  .content-card,
+  .tool-content {
+    padding: 22px 18px;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/" aria-label="AI探索者实验室首页">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M7 9.5 16 4l9 5.5v10L16 25l-9-5.5z" fill="none" stroke="white" stroke-width="1.8"/>
+  <circle cx="16" cy="14.5" r="3.2" fill="#ff8a62"/>
+  <path d="M10.5 19.2 16 22l5.5-2.8M16 17.7V22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+</svg></span>
+      <span class="brand-copy"><strong>AI探索者</strong><small>EXPLORER LAB</small></span>
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      <a href="/">首页</a>
+<a href="/tools/">工具库</a>
+<a href="/posts/" aria-current="page">技术专栏</a>
+<a href="/about.html">关于AI探索者</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="page-shell">
+  <nav aria-label="面包屑">
+    <ol class="breadcrumbs"><li><a href="/">首页</a></li><li><a href="/posts/">技术专栏</a></li><li>工程自动化</li></ol>
+  </nav>
+  <header class="article-header">
+    <div class="tag-row"><span class="tag">工程自动化</span><span class="tag">Python</span><span class="tag">PyInstaller</span><span class="tag">GitHub</span><span class="tag">软件发布</span></div>
+    <h1>从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战</h1>
+    <p class="dek">以 FileBeam Lite 为例，完整拆解 Python Web 工具如何从读取 README、识别工程、打包 EXE、执行启动与上传测试，到生成校验文件并发布 GitHub Release。</p>
+    <div class="article-meta">
+      <time datetime="2026-11-21">2026-11-21</time>
+      <span>约 7 分钟阅读</span>
+      <span>AI探索者</span>
+    </div>
+  </header>
+  <div class="article-layout">
+    <article class="content-card article-content">
+      <div class="answer-box"><strong>核心结论：</strong>以 FileBeam Lite 为例，完整拆解 Python Web 工具如何从读取 README、识别工程、打包 EXE、执行启动与上传测试，到生成校验文件并发布 GitHub Release。</div>
+      <p>很多效率工具一开始只是一个能用 <code>python server.py</code> 运行的脚本。真正交付给别人时，问题会突然变多：对方没有 Python、资源文件没有打包、配置端口不对、缺少 DLL、ZIP 目录结构混乱，或者发布附件与源码版本不一致。</p>
+<p>FileBeam Lite 是一次完整的工程化验证：它从一个 Flask 局域网互传项目，变成了包含 Windows EXE、自动测试、MIT 许可证、SHA256 校验和 GitHub Release 的软件发布包。</p>
+<h2 id="目标不是“生成一个-EXE”而是可复现交付">目标不是“生成一个 EXE”，而是可复现交付</h2>
+<p>一次性手工打包只能证明开发者的电脑上碰巧成功。可复现发布至少需要回答四个问题：</p>
+<ol><li>工具如何判断项目类型与入口文件？</li><li>构建是否在独立副本中完成，是否排除了用户数据？</li><li>打包后的程序能否真正启动并完成关键请求？</li><li>发布附件是否可追溯、可校验，并与对应源码版本匹配？</li></ol>
+<p>为此，发布流水线被拆成以下阶段：</p>
+<pre><code class="language-text">README / 工程清单
+        ↓
+识别项目类型与入口
+        ↓
+复制到隔离构建目录
+        ↓
+PyInstaller 生成 EXE
+        ↓
+启动、首页、上传冒烟测试
+        ↓
+ZIP + SHA256 + manifest
+        ↓
+GitHub Draft Release → 附件上传 → 正式发布</code></pre>
+<h2 id="第一步识别项目而不是盲信-README-命令">第一步：识别项目，而不是盲信 README 命令</h2>
+<p>FileBeam Lite 的目录包含 <code>requirements.txt</code>、<code>server.py</code>、<code>config.json</code> 和 <code>static/</code>。构建器据此判断它是 Python Web 项目，并选择 <code>server.py</code> 作为入口。</p>
+<p>README 适合解释用途和使用方法，但不应该直接变成可执行命令列表。可靠的做法是使用工程文件、入口文件和显式配置做决策：</p>
+<ul><li><code>pyproject.toml</code> / <code>requirements.txt</code> 表示 Python 工程。</li><li><code>package.json</code> 表示 Node / Electron 工程。</li><li><code>go.mod</code>、<code>Cargo.toml</code>、<code>.csproj</code> 分别对应 Go、Rust 和 .NET。</li><li><code>aibag.project.json</code> 可覆盖名称、版本、入口、资源目录和运行数据目录。</li></ul>
+<p>FileBeam 的构建配置只需明确这些边界：</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;FileBeam_Lite&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;project_type&quot;: &quot;python&quot;,
+  &quot;entrypoint&quot;: &quot;server.py&quot;,
+  &quot;runtime_dirs&quot;: [&quot;received&quot;, &quot;shared&quot;],
+  &quot;asset_paths&quot;: [&quot;static&quot;],
+  &quot;data_files&quot;: [&quot;config.json&quot;]
+}</code></pre>
+<p>其中 <code>received</code> 与 <code>shared</code> 是运行时用户数据，必须排除在发布包之外。</p>
+<h2 id="第二步在隔离目录中构建">第二步：在隔离目录中构建</h2>
+<p>PyInstaller 会分析导入关系、收集 Python 运行库、静态资源和依赖 DLL。直接在源码目录构建容易出现三个问题：</p>
+<ul><li>构建缓存与源码混在一起；</li><li>用户接收过的文件被误打包；</li><li>失败版本覆盖上一次可用产物。</li></ul>
+<p>更稳妥的方式是创建带时间戳的独立运行目录：</p>
+<pre><code class="language-text">output/
+└── FileBeam_Lite/
+    └── 1.0.0/
+        └── 20261121T.../
+            ├── build/
+            ├── logs/
+            ├── artifacts/
+            └── manifest.json</code></pre>
+<p>每次构建都有独立日志和发布清单。成功时保留完整产物；失败时也能从日志定位是依赖、打包、测试还是发布阶段出了问题。</p>
+<h2 id="第三步打包后必须启动测试">第三步：打包后必须启动测试</h2>
+<p>“PyInstaller 返回 0”不代表 EXE 能运行。缺少运行库或资源路径错误，通常要在真正启动后才会暴露。</p>
+<p>FileBeam 的测试会分配临时端口，启动打包后的 EXE，然后依次验证：</p>
+<pre><code class="language-text">GET  /api/info   → 服务已就绪，版本正确
+GET  /           → 首页返回 HTTP 200
+POST /api/upload → 小文件上传成功</code></pre>
+<p>这组测试覆盖了四个容易出错的环节：</p>
+<ul><li>Python 运行时与依赖 DLL 是否完整；</li><li><code>static/</code> 是否被正确打进包；</li><li><code>config.json</code> 是否使用了构建时修改后的配置；</li><li>上传目录与 Flask 路由是否仍然可用。</li></ul>
+<p>测试结束后，构建器会停止进程并删除测试上传文件，避免把测试数据放进发布包。</p>
+<h2 id="第四步目录结构和校验文件同样重要">第四步：目录结构和校验文件同样重要</h2>
+<p>最初一次构建出现了双层目录：</p>
+<pre><code class="language-text">FileBeam_Lite/FileBeam_Lite/FileBeam_Lite.exe</code></pre>
+<p>程序能运行，但解压体验不合格。发布 ZIP 应当让用户解压后直接看到：</p>
+<pre><code class="language-text">FileBeam_Lite/
+├── FileBeam_Lite.exe
+├── README.md
+└── _internal/</code></pre>
+<p>同时生成两类校验文件：</p>
+<pre><code class="language-text">FileBeam_Lite-1.0.0-windows-x64.zip
+FileBeam_Lite-1.0.0-windows-x64.zip.sha256
+SHA256SUMS.txt
+RELEASE_NOTES.md</code></pre>
+<p>GitHub Release 页面还会显示服务端计算的文件摘要。只要它与本地 SHA256 一致，就能确认上传过程中文件未被改变。</p>
+<h2 id="第五步Draft-first-发布">第五步：Draft-first 发布</h2>
+<p>直接发布最新版的风险在于附件可能还没上传完成。更安全的顺序是：</p>
+<ol><li>创建 Draft Release；</li><li>上传 ZIP、SHA256 与校验汇总；</li><li>确认附件状态与摘要；</li><li>最后把 Draft 转为正式 Release。</li></ol>
+<p>GitHub 的 Release API 与上传 API 足以完成这个过程。关键凭据应尽量使用仅限目标仓库的 Fine-grained PAT，或直接使用系统 Git Credential Manager 中的登录凭据，不要把 Token 写入源码、README、日志或命令行历史。</p>
+<h2 id="这次实战留下的经验">这次实战留下的经验</h2>
+<ul><li>README 可以作为理解项目的入口，但不能代替确定的构建配置。</li><li>打包成功不等于软件可用，必须启动并通过关键业务请求。</li><li>用户数据目录应在扫描阶段识别，在构建阶段明确排除。</li><li>发布包的 ZIP 目录结构要站在第一次下载软件的人的角度检查。</li><li>Windows 对刚生成的 EXE 与 DLL 可能进行首次扫描，启动测试需要有限重试。</li><li>Draft-first 加 SHA256 可以让发布更安全、更容易追溯。</li></ul>
+<p>FileBeam Lite 的源码和最新发布包已经归档在 <a href="https://github.com/Amerstrong/FileBeam_Lite" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>。这条流水线后续会继续复用于更多本地 AI、边缘设备与桌面效率工具。</p>
+    </article>
+    <aside class="article-aside">
+      <strong>文章信息</strong>
+      <p>工程自动化 · 2026-11-21</p>
+      <strong style="margin-top:18px">适合谁读</strong>
+      <p>想把 Python 脚本变成可下载、可测试、可持续发布桌面工具的开发者。</p>
+      <strong style="margin-top:18px">快速导航</strong>
+      <ul><li><a href="#main">回到文章开头</a></li><li><a href="/posts/">更多技术文章</a></li><li><a href="/tools/">浏览工具库</a></li></ul>
+    </aside>
+  </div>
+  
+<aside class="related-tool" aria-labelledby="related-tool-title">
+  <div>
+    <span class="section-kicker">TOOL FROM THIS NOTE</span>
+    <h2 id="related-tool-title">FileBeam Lite</h2>
+    <p>FileBeam Lite 是一款面向电脑与手机的免费开源局域网文件互传工具。电脑启动服务后，手机扫码即可打开浏览器收发文件，不经过公网中转。</p>
+  </div>
+  <a class="button light" href="/tools/filebeam.html">查看工具详情 →</a>
+</aside>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="brand" href="/">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M7 9.5 16 4l9 5.5v10L16 25l-9-5.5z" fill="none" stroke="white" stroke-width="1.8"/>
+  <circle cx="16" cy="14.5" r="3.2" fill="#ff8a62"/>
+  <path d="M10.5 19.2 16 22l5.5-2.8M16 17.7V22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+</svg></span>
+        <span class="brand-copy"><strong>AI探索者实验室</strong><small>LOCAL · EDGE · OPEN</small></span>
+      </a>
+      <p>记录本地离线 AI、跨设备工具、边缘硬件与自动化脚本的实战过程。</p>
+    </div>
+    <div class="footer-links">
+      <strong>探索</strong>
+      <a href="/tools/">工具库</a>
+      <a href="/posts/">技术专栏</a>
+      <a href="/about.html">关于AI探索者</a>
+    </div>
+    <div class="footer-links">
+      <strong>索引与联系</strong>
+      <a href="/sitemap.xml">Sitemap</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a>
+    </div>
+  </div>
+  <div class="footer-copy">© 2026 AI探索者实验室 · 本站使用无 CDN 的静态 HTML 构建 · woJingFang.cn</div>
+</footer>
+
+</body>
+</html>

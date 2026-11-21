@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文匠 Markdown_Office｜离线 Markdown 转 Word 与代码排版工具</title>
+  <meta name="description" content="文匠 Markdown_Office 是本地离线的 Markdown 转 Word 工具，稳定保留 AI 内容中的标题、表格、列表、代码块和语法高亮，支持免费试用与终身授权。">
+  <meta name="keywords" content="文匠,Wenjiang,Markdown转Word,GPT转Word,DeepSeek转Word,代码块排版,离线文档转换,Word模板">
+  <meta name="author" content="AI探索者">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://wojingfang.cn/tools/wenjiang.html">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0d6b55">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="AI探索者实验室">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="文匠 Markdown_Office｜离线 Markdown 转 Word 与代码排版工具">
+  <meta property="og:description" content="文匠 Markdown_Office 是本地离线的 Markdown 转 Word 工具，稳定保留 AI 内容中的标题、表格、列表、代码块和语法高亮，支持免费试用与终身授权。">
+  <meta property="og:url" content="https://wojingfang.cn/tools/wenjiang.html">
+  <meta property="og:image" content="https://wojingfang.cn/comparison.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="文匠 Markdown_Office｜离线 Markdown 转 Word 与代码排版工具">
+  <meta name="twitter:description" content="文匠 Markdown_Office 是本地离线的 Markdown 转 Word 工具，稳定保留 AI 内容中的标题、表格、列表、代码块和语法高亮，支持免费试用与终身授权。">
+  <meta name="twitter:image" content="https://wojingfang.cn/comparison.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"文匠 Markdown_Office","description":"文匠是一款本地离线运行的 Markdown 转 Word 工具，重点解决 AI 输出内容粘贴到 Word 后标题、表格、代码块和列表格式混乱的问题。","applicationCategory":"文档效率","operatingSystem":"Windows 10 / 11（64 位）","softwareVersion":"1.61","downloadUrl":"https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip","url":"https://wojingfang.cn/tools/wenjiang.html","inLanguage":"zh-CN","isAccessibleForFree":false,"offers":[{"@type":"Offer","name":"免费使用","price":"0","priceCurrency":"CNY","availability":"https://schema.org/InStock"},{"@type":"Offer","name":"免费试用 3 次 / ¥19.9 永久授权","price":"19.9","priceCurrency":"CNY","url":"https://wojingfang.cn/tools/wenjiang.html"}],"author":{"@type":"Person","name":"AI探索者","url":"https://wojingfang.cn/about.html"},"sameAs":["https://github.com/Amerstrong/wenjiang-markdown"],"image":"https://wojingfang.cn/comparison.png"}</script>
+  <style>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f2f5ef;
+  --paper: #fffdf8;
+  --paper-soft: #f7f8f3;
+  --ink: #14231e;
+  --muted: #617069;
+  --line: #d8e0d9;
+  --brand: #0d6b55;
+  --brand-dark: #074738;
+  --brand-soft: #dff1e9;
+  --accent: #dd613b;
+  --accent-soft: #fbe7de;
+  --code-bg: #0d1b18;
+  --white: #ffffff;
+  --shadow: 0 18px 50px rgba(20, 35, 30, 0.08);
+  --shadow-soft: 0 8px 24px rgba(20, 35, 30, 0.06);
+  --radius: 22px;
+  --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    linear-gradient(rgba(13, 107, 85, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 107, 85, 0.035) 1px, transparent 1px),
+    var(--bg);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.7;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 8% 4%, rgba(221, 97, 59, 0.11), transparent 28%),
+    radial-gradient(circle at 92% 22%, rgba(13, 107, 85, 0.11), transparent 32%);
+  content: "";
+  pointer-events: none;
+}
+
+a {
+  color: var(--brand);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(221, 97, 59, 0.42);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 200;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--white);
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(216, 224, 217, 0.85);
+  background: rgba(255, 253, 248, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.nav-shell {
+  display: flex;
+  width: min(1180px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brand-mark {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border: 1px solid rgba(13, 107, 85, 0.2);
+  border-radius: 12px;
+  background: var(--brand);
+  box-shadow: 0 8px 18px rgba(13, 107, 85, 0.2);
+}
+
+.brand-mark svg {
+  width: 24px;
+  height: 24px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-copy strong {
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.brand-copy small {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.site-nav a:hover {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+}
+
+.site-nav a[aria-current="page"] {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 24px auto 0;
+  border-radius: 30px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, #0b352c 0%, #10231f 58%, #281c19 100%);
+  background-size: 34px 34px, 34px 34px, auto;
+  box-shadow: 0 28px 70px rgba(7, 39, 31, 0.2);
+  color: #f5fbf7;
+}
+
+.hero::after {
+  position: absolute;
+  top: -170px;
+  right: -120px;
+  width: 430px;
+  height: 430px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(221, 97, 59, 0.33), transparent 65%);
+  content: "";
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 52px;
+  padding: clamp(42px, 7vw, 82px);
+  align-items: center;
+}
+
+.eyebrow,
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before,
+.section-kicker::before {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.hero h1 {
+  max-width: 820px;
+  margin: 18px 0 22px;
+  font-size: clamp(2.2rem, 5.6vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1.08;
+}
+
+.hero h1 .accent {
+  color: #ff8a62;
+}
+
+.hero .lead {
+  max-width: 780px;
+  margin: 0;
+  color: rgba(239, 249, 244, 0.78);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+  line-height: 1.85;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 46px;
+  padding: 11px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--brand);
+  color: var(--white);
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.button:hover {
+  background: var(--brand-dark);
+  box-shadow: 0 10px 26px rgba(13, 107, 85, 0.2);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.button.light {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+}
+
+.button.accent {
+  background: var(--accent);
+}
+
+.button.outline {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink);
+}
+
+.button.small {
+  min-height: 38px;
+  padding: 8px 13px;
+  font-size: 0.86rem;
+}
+
+.hero-terminal {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  background: rgba(3, 18, 14, 0.66);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+  font-family: var(--mono);
+}
+
+.terminal-bar {
+  display: flex;
+  min-height: 41px;
+  padding: 0 14px;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff8a62;
+}
+
+.terminal-dot:nth-child(2) {
+  background: #f3bc50;
+}
+
+.terminal-dot:nth-child(3) {
+  background: #58c98e;
+}
+
+.terminal-title {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.68rem;
+}
+
+.terminal-body {
+  padding: 22px;
+}
+
+.terminal-line {
+  margin: 0 0 12px;
+  color: #c8ded5;
+  font-size: 0.82rem;
+}
+
+.terminal-line .prompt {
+  color: #ff8a62;
+}
+
+.terminal-line .ok {
+  color: #76e2aa;
+}
+
+.signal-map {
+  display: grid;
+  margin: 24px 0 5px;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.signal-device {
+  padding: 18px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.signal-device strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--white);
+  font-size: 1.6rem;
+}
+
+.signal-link {
+  color: #ffb494;
+  font-size: 1.3rem;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.hero-stats {
+  display: grid;
+  margin-top: 34px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hero-stat {
+  padding: 14px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.hero-stat strong {
+  display: block;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.hero-stat span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.72rem;
+}
+
+.section {
+  padding: clamp(58px, 8vw, 94px) 0 0;
+}
+
+.section-head {
+  display: flex;
+  margin-bottom: 28px;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.section-head h2,
+.page-heading h1 {
+  margin: 8px 0 0;
+  font-size: clamp(1.7rem, 3.4vw, 2.65rem);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.section-head p {
+  max-width: 590px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.topic-grid,
+.tool-grid,
+.post-grid,
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.topic-card,
+.tool-card,
+.post-card,
+.related-tool,
+.panel,
+.article-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.topic-card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+}
+
+.topic-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  content: "";
+}
+
+.topic-index {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.topic-card h3 {
+  margin: 16px 0 9px;
+  font-size: 1.14rem;
+}
+
+.topic-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.tool-card {
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.tool-card:hover {
+  border-color: rgba(13, 107, 85, 0.34);
+  box-shadow: var(--shadow);
+  transform: translateY(-4px);
+}
+
+.tool-cover {
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  border-bottom: 1px solid var(--line);
+  background: #dfe9e3;
+}
+
+.tool-cover img {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.cover-filebeam {
+  display: grid;
+  height: 240px;
+  padding: 34px;
+  place-items: center;
+  background:
+    linear-gradient(135deg, rgba(13, 107, 85, 0.96), rgba(8, 49, 40, 0.98)),
+    var(--brand);
+}
+
+.cover-filebeam .signal-map {
+  width: 100%;
+  margin: 0;
+}
+
+.cover-filebeam .signal-device {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cover-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(9, 35, 29, 0.82);
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.tool-body {
+  padding: 22px;
+}
+
+.tag-row {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.tag.warm {
+  background: var(--accent-soft);
+  color: #9e3f25;
+}
+
+.tool-body h3,
+.post-card h3 {
+  margin: 14px 0 9px;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.tool-body h3 a,
+.post-card h3 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tool-body p,
+.post-card p {
+  margin: 0 0 17px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.tool-meta {
+  display: flex;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.tool-meta a {
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.post-card {
+  padding: 24px;
+}
+
+.post-card time {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.post-card .post-footer {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.home-band {
+  margin-top: 62px;
+  padding: 32px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--white);
+}
+
+.home-band-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+
+.home-band h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.home-band p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.home-band .button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.page-heading {
+  padding: 66px 0 10px;
+}
+
+.page-heading p {
+  max-width: 760px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  margin: 0 0 20px;
+  padding: 0;
+  gap: 7px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 0.79rem;
+  list-style: none;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  margin-left: 7px;
+  content: "/";
+  opacity: 0.45;
+}
+
+.breadcrumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.detail-hero {
+  display: grid;
+  padding: 22px 0 0;
+  grid-template-columns: minmax(0, 1.22fr) minmax(280px, 0.78fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.detail-copy h1 {
+  margin: 14px 0;
+  font-size: clamp(2rem, 4.5vw, 3.45rem);
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+
+.detail-copy .summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.fact-panel {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.fact-list {
+  display: grid;
+  margin: 0 0 20px;
+  gap: 0;
+}
+
+.fact-list div {
+  display: grid;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  grid-template-columns: 94px 1fr;
+  gap: 12px;
+  font-size: 0.84rem;
+}
+
+.fact-list dt {
+  color: var(--muted);
+}
+
+.fact-list dd {
+  margin: 0;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.detail-cover {
+  overflow: hidden;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.detail-cover img {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.detail-cover figcaption {
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.article-layout {
+  display: grid;
+  margin-top: 38px;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 34px;
+  align-items: start;
+}
+
+.article-content,
+.tool-content {
+  min-width: 0;
+  color: var(--ink);
+}
+
+.content-card {
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.tool-content {
+  padding: clamp(24px, 4vw, 45px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-content h2,
+.tool-content h2 {
+  margin: 48px 0 15px;
+  padding-top: 4px;
+  font-size: clamp(1.38rem, 2.6vw, 1.8rem);
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.article-content h2:first-child,
+.tool-content h2:first-child {
+  margin-top: 0;
+}
+
+.article-content h3,
+.tool-content h3 {
+  margin: 30px 0 10px;
+  font-size: 1.1rem;
+  color: var(--brand-dark);
+}
+
+.article-content p,
+.tool-content p,
+.article-content li,
+.tool-content li {
+  color: #34443e;
+}
+
+.article-content p,
+.tool-content p {
+  margin: 0 0 17px;
+}
+
+.article-content ul,
+.article-content ol,
+.tool-content ul,
+.tool-content ol {
+  margin: 10px 0 20px;
+  padding-left: 1.35rem;
+}
+
+.article-content li,
+.tool-content li {
+  margin-bottom: 7px;
+}
+
+.article-content strong,
+.tool-content strong {
+  color: var(--ink);
+}
+
+.article-content code,
+.tool-content code {
+  padding: 0.15em 0.42em;
+  border: 1px solid #cfe2da;
+  border-radius: 6px;
+  background: #edf6f2;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.article-content pre,
+.tool-content pre {
+  overflow-x: auto;
+  margin: 22px 0;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: #d9e9e2;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+  line-height: 1.62;
+}
+
+.article-content pre code,
+.tool-content pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.article-content blockquote,
+.tool-content blockquote {
+  margin: 22px 0;
+  padding: 17px 20px;
+  border-left: 4px solid var(--brand);
+  border-radius: 0 12px 12px 0;
+  background: var(--brand-soft);
+}
+
+.article-content blockquote p:last-child,
+.tool-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.article-content img,
+.tool-content img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  margin: 24px auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+.article-content figure,
+.tool-content figure {
+  margin: 24px 0;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 22px 0;
+}
+
+.article-content table,
+.tool-content table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.9rem;
+}
+
+.article-content th,
+.article-content td,
+.tool-content th,
+.tool-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.article-content th,
+.tool-content th {
+  background: var(--paper-soft);
+}
+
+.article-aside {
+  position: sticky;
+  top: 96px;
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-aside strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.article-aside p,
+.article-aside li {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.article-aside ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.article-header {
+  padding: 28px 0 0;
+}
+
+.article-header h1 {
+  max-width: 900px;
+  margin: 16px 0;
+  font-size: clamp(2rem, 4.8vw, 3.45rem);
+  letter-spacing: -0.045em;
+  line-height: 1.16;
+}
+
+.article-header .dek {
+  max-width: 820px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.04rem;
+}
+
+.article-meta {
+  display: flex;
+  margin-top: 20px;
+  gap: 17px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.73rem;
+}
+
+.answer-box {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid #bad8cb;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e8f6f0, #f7fbf8);
+}
+
+.answer-box strong {
+  color: var(--brand-dark);
+}
+
+.related-tool {
+  display: grid;
+  margin: 42px 0 80px;
+  padding: clamp(24px, 4vw, 38px);
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+  background: linear-gradient(135deg, #0c3e32, #132720);
+  color: var(--white);
+}
+
+.related-tool h2 {
+  margin: 8px 0;
+  color: var(--white);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.related-tool p {
+  max-width: 650px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.related-tool .button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.notice {
+  margin: 22px 0;
+  padding: 17px 19px;
+  border: 1px solid #efd09f;
+  border-radius: 12px;
+  background: #fff7e8;
+  color: #704410;
+  font-size: 0.91rem;
+}
+
+.feature-grid {
+  display: grid;
+  margin: 22px 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.feature-item {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper-soft);
+}
+
+.feature-item strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.feature-item span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.purchase-grid {
+  display: grid;
+  margin: 24px 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.price-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-soft);
+}
+
+.price-card.featured {
+  border-color: rgba(221, 97, 59, 0.35);
+  background: linear-gradient(145deg, #fff9f5, #fffdf8);
+}
+
+.price-card .price {
+  margin: 6px 0 10px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.price-card ul {
+  margin-bottom: 0;
+}
+
+.qr-grid {
+  display: grid;
+  margin: 22px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.qr-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  text-align: center;
+}
+
+.qr-card img {
+  width: min(100%, 190px);
+  margin: 0 auto 8px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.qr-card span {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.inline-cta {
+  display: flex;
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--brand-soft);
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.inline-cta strong {
+  display: block;
+}
+
+.post-grid {
+  margin-top: 24px;
+}
+
+.about-grid {
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 20px;
+}
+
+.about-panel {
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-panel.dark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.about-panel.dark p,
+.about-panel.dark li {
+  color: rgba(255, 255, 255, 0.67);
+}
+
+.principle-list {
+  display: grid;
+  margin: 22px 0 0;
+  gap: 12px;
+}
+
+.principle {
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper-soft);
+}
+
+.principle strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.site-footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.84);
+}
+
+.footer-inner {
+  display: grid;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 42px 0 28px;
+  grid-template-columns: 1.3fr 0.7fr 0.7fr;
+  gap: 30px;
+}
+
+.footer-brand p,
+.footer-links a,
+.footer-copy {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-links strong {
+  margin-bottom: 3px;
+  font-size: 0.88rem;
+}
+
+.footer-links a {
+  text-decoration: none;
+}
+
+.footer-copy {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 17px 0 28px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .detail-hero,
+  .article-layout,
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-grid {
+    gap: 30px;
+  }
+
+  .hero-terminal {
+    max-width: 620px;
+  }
+
+  .topic-grid,
+  .tool-grid,
+  .post-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .article-aside {
+    position: static;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .nav-shell {
+    width: min(100% - 24px, 1180px);
+    padding: 10px 0;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .site-nav {
+    width: 100%;
+    gap: 2px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-nav a {
+    white-space: nowrap;
+  }
+
+  .page-shell {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .hero {
+    margin-top: 12px;
+    border-radius: 22px;
+  }
+
+  .hero-grid {
+    padding: 32px 22px;
+  }
+
+  .hero h1 {
+    letter-spacing: -0.045em;
+  }
+
+  .hero-stats,
+  .topic-grid,
+  .tool-grid,
+  .post-grid,
+  .feature-grid,
+  .purchase-grid,
+  .qr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head,
+  .home-band-grid,
+  .related-tool,
+  .inline-cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-head {
+    display: block;
+  }
+
+  .section-head p {
+    margin-top: 8px;
+  }
+
+  .home-band {
+    padding: 24px;
+  }
+
+  .related-tool {
+    display: block;
+  }
+
+  .related-tool .button {
+    margin-top: 18px;
+  }
+
+  .content-card,
+  .tool-content {
+    padding: 22px 18px;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/" aria-label="AI探索者实验室首页">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M7 9.5 16 4l9 5.5v10L16 25l-9-5.5z" fill="none" stroke="white" stroke-width="1.8"/>
+  <circle cx="16" cy="14.5" r="3.2" fill="#ff8a62"/>
+  <path d="M10.5 19.2 16 22l5.5-2.8M16 17.7V22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+</svg></span>
+      <span class="brand-copy"><strong>AI探索者</strong><small>EXPLORER LAB</small></span>
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      <a href="/">首页</a>
+<a href="/tools/" aria-current="page">工具库</a>
+<a href="/posts/">技术专栏</a>
+<a href="/about.html">关于AI探索者</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="page-shell">
+  <nav aria-label="面包屑">
+    <ol class="breadcrumbs"><li><a href="/">首页</a></li><li><a href="/tools/">工具库</a></li><li>文匠 Markdown_Office</li></ol>
+  </nav>
+  <header class="detail-hero">
+    <div class="detail-copy">
+      <div class="tag-row"><span class="tag">文档效率</span><span class="tag warm">已发布</span></div>
+      <h1>文匠 Markdown_Office</h1>
+      <p class="summary">文匠是一款本地离线运行的 Markdown 转 Word 工具，重点解决 AI 输出内容粘贴到 Word 后标题、表格、代码块和列表格式混乱的问题。</p>
+      <div class="hero-actions">
+        <a class="button accent" href="https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip" target="_blank" rel="noopener noreferrer">从 GitHub 官方下载 →</a>
+        <a class="button outline" href="#details">查看功能与说明</a>
+      </div>
+      
+<figure class="detail-cover">
+  <img src="/comparison.png" alt="文匠 Markdown_Office 转换前后的 Word 标题、代码块与表格效果对比">
+  <figcaption>同一段 Markdown 内容在直接粘贴与文匠转换后的 Word 排版差异</figcaption>
+</figure>
+    </div>
+    <aside class="fact-panel" aria-label="文匠 Markdown_Office关键信息">
+      <div class="tag-row" style="margin-bottom:18px"><span class="tag warm">免费试用 3 次 / ¥19.9 永久授权</span></div>
+      <dl class="fact-list">
+        <div><dt>运行平台</dt><dd>Windows 10 / 11（64 位）</dd></div>
+        <div><dt>当前版本</dt><dd>1.61</dd></div>
+        <div><dt>工具分类</dt><dd>文档效率</dd></div>
+        <div><dt>价格</dt><dd>免费试用 3 次 / ¥19.9 永久授权</dd></div>
+        <div><dt>许可</dt><dd>文档与模板 MIT；应用提供免费试用与授权版</dd></div>
+      </dl>
+      <div class="hero-actions" style="margin-top:0">
+        <a class="button small" href="https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip" target="_blank" rel="noopener noreferrer">从 GitHub 官方下载</a>
+        <a class="button outline small" href="https://github.com/Amerstrong/wenjiang-markdown" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+      </div>
+    </aside>
+  </header>
+  <section class="section" id="details">
+    <div class="article-layout">
+      <article class="tool-content"><h2 id="一句话认识文匠">一句话认识文匠</h2>
+<p><strong>文匠 Markdown_Office</strong> 是一款本地单机运行的 Markdown → Word 格式转换工具。它专门解决 ChatGPT、DeepSeek、Gemini、Kimi 等大语言模型输出内容粘贴至 Word 时出现的标题层级缺失、表格错乱、代码块退化和列表层级混乱问题。</p>
+<p>软件在本地完成 Markdown 语法解析与 OOXML 格式映射，生成结构完整的 <code>.docx</code> 文件。转换过程不上传文档内容，不需要注册账号，也不需要保持联网。</p>
+<div class="feature-grid">
+  <div class="feature-item"><strong>🔒 完全离线运行</strong><span>单机处理文档，原始内容不会上传到第三方服务器。</span></div>
+  <div class="feature-item"><strong>⚡ 一键转换</strong><span>粘贴 Markdown 内容，直接生成排版完成的 Word 文件。</span></div>
+  <div class="feature-item"><strong>🎨 稳定排版</strong><span>针对标题、表格、代码块和列表配置专用 Word 样式。</span></div>
+  <div class="feature-item"><strong>💡 绿色免安装</strong><span>解压即可使用，适合 Windows 10 / 11 日常办公环境。</span></div>
+</div>
+<h2 id="它解决的真实问题">它解决的真实问题</h2>
+<p>AI 让内容生成变得很快，但交付环节经常被格式问题拖慢。直接把 Markdown 内容粘贴到 Word，常见结果是：</p>
+<ul><li><code>#</code>、<code>##</code>、<code>###</code> 不再对应 Word 标题样式，目录结构无法自动生成。</li><li>Markdown 表格变成竖线和横杠组成的普通文本。</li><li>Python、YAML、JSON 等依赖缩进的代码失去等宽字体、底色和边框。</li><li>有序列表、无序列表和嵌套层级被压平，长文档难以阅读。</li><li>行内代码失去强调样式，技术方案和实验报告显得不专业。</li></ul>
+<p>文匠不是简单替换几个 Markdown 符号，而是通过预设 Word 样式模板，把 Markdown 的抽象语法树映射到真实的 Word 标题、表格、代码段落和列表对象。</p>
+<h2 id="转换前后对比">转换前后对比</h2>
+<p>同一段 AI 生成内容，直接粘贴和经文匠转换的效果差异非常明显：</p>
+<p><img src="/comparison.png" alt="文匠 Markdown_Office 转换前后 Word 排版对比" title="文匠 Markdown_Office 转换前后 Word 排版对比" loading="lazy"></p>
+<p>代码内容的原始结构也应被稳定保留：</p>
+<p><img src="/screenshots/AI代码内容.PNG" alt="AI 生成的 Python 代码内容截图" title="AI 生成的 Python 代码内容截图" loading="lazy"></p>
+<p>转换后的文档会继续保留代码缩进、等宽字体、代码底色和表格结构：</p>
+<p><img src="/screenshots/使用文匠转换后的效果.PNG" alt="文匠转换后的 Word 文档效果" title="文匠转换后的 Word 文档效果" loading="lazy"></p>
+<h2 id="核心能力">核心能力</h2>
+<h3 id="AI-内容转-Word">AI 内容转 Word</h3>
+<p>支持 ChatGPT、DeepSeek、Gemini、Kimi、文心等模型输出的 Markdown 内容。标准流程是复制模型原文，粘贴到文匠，点击转换，然后在本地生成 <code>.docx</code> 文件。</p>
+<h3 id="代码块稳定排版">代码块稳定排版</h3>
+<p>文匠内置经过调优的 Word 模板，重点处理 <code>SourceCode</code> 与 <code>Verbatim Char</code> 样式。代码块可使用等宽字体、浅灰背景、细边框和合理行距，减少转换后再次手工调格式的时间。</p>
+<h3 id="标题、表格与列表结构保留">标题、表格与列表结构保留</h3>
+<p>Markdown 标题会映射为 Word 标题样式，表格会转换成真实表格对象，列表则保留层级与编号关系。对于技术方案、实验报告、课程作业和书籍稿件，结构完整性比单纯“能打开”更重要。</p>
+<h3 id="本地离线与隐私边界">本地离线与隐私边界</h3>
+<p>文档解析和转换都在你的电脑上完成。文匠不依赖云端转换服务，也不要求登录账号。对于包含商业信息、个人信息或研究数据的文档，这是选择本地工具的主要原因。</p>
+<h2 id="下载与安装">下载与安装</h2>
+<p>当前官网保留的稳定版本为 <strong>v1.61</strong>，适用于 Windows 10 / 11 64 位系统。</p>
+<div class="inline-cta">
+  <div><strong>GitHub 官方下载</strong><span>直接下载完整压缩包，解压后运行 `文匠.exe`。</span></div>
+  <a class="button accent" href="https://github.com/Amerstrong/wenjiang-markdown/releases/download/v1.6.1/wenjiang_markdown_v1.61_win10+.zip" target="_blank" rel="noopener noreferrer">下载 v1.61 →</a>
+</div>
+<p>备用下载节点：</p>
+<ul><li><a href="https://pan.baidu.com/s/1Z3_p_ovXKT8gTfJTN2XMkA?pwd=3bwp" target="_blank" rel="noopener noreferrer">百度网盘</a>，提取码 <code>3bwp</code></li><li><a href="https://pan.quark.cn/s/1ce1ff8207ec" target="_blank" rel="noopener noreferrer">夸克网盘</a>，提取码 <code>WHdt</code></li><li><a href="https://wwamg.lanzn.com/iilrb3pnoo1g" target="_blank" rel="noopener noreferrer">蓝奏云</a></li><li><a href="https://github.com/Amerstrong/wenjiang-markdown/releases" target="_blank" rel="noopener noreferrer">查看全部 GitHub Release</a></li></ul>
+<p>使用步骤：</p>
+<ol><li>下载压缩包并解压到普通文件夹。</li><li>双击运行文匠程序，不需要安装 Python 或 Pandoc。</li><li>粘贴 AI 生成的 Markdown 原文，或导入 Markdown 文件。</li><li>选择输出目录，点击转换并检查生成的 Word 文档。</li></ol>
+<div class="notice"><strong>安全说明：</strong>软件采用本地打包方式发布，不联网验证文档内容。部分杀毒软件可能对体积较大的 Python 打包程序进行首次扫描，请从本页或 GitHub 官方 Release 下载，并在运行前检查文件来源。</div>
+<h2 id="免费试用与终身授权">免费试用与终身授权</h2>
+<div class="purchase-grid">
+  <div class="price-card">
+    <div class="tag-row"><span class="tag">FREE TRIAL</span></div>
+    <h3>免费试用 3 次</h3>
+    <div class="price">¥0</div>
+    <ul>
+      <li>每次均为完整功能</li>
+      <li>不限制文档字数</li>
+      <li>不会自动扣费或强制订阅</li>
+      <li>试用满意后再决定是否激活</li>
+    </ul>
+  </div>
+  <div class="price-card featured">
+    <div class="tag-row"><span class="tag warm">LIFETIME</span></div>
+    <h3>终身授权版</h3>
+    <div class="price">¥19.9</div>
+    <ul>
+      <li>一次购买，永久激活</li>
+      <li>限时买一赠二，共 3 枚独立设备授权码</li>
+      <li>V1.x 版本内免费更新</li>
+      <li>本地离线运行，无限次使用</li>
+      <li>提供一对一售后支持</li>
+    </ul>
+  </div>
+</div>
+<h2 id="购买、激活与售后">购买、激活与售后</h2>
+<p>付款后请把软件中显示的 12 位机器码发给沃境坊工作室，客服录入后即可获取激活码。已付款并发送机器码的用户，可以直接进入激活中心查询。</p>
+<div class="inline-cta">
+  <div><strong>已经付款并提交机器码？</strong><span>进入独立激活中心查询或手动输入激活码。</span></div>
+  <a class="button" href="/activate.html">打开激活中心 →</a>
+</div>
+<div class="qr-grid">
+  <div class="qr-card"><img src="/qq_pay.png" alt="文匠 QQ 收款码"><span>QQ 收款码 · ¥19.9</span></div>
+  <div class="qr-card"><img src="/alipay.jpg" alt="文匠支付宝收款码"><span>支付宝收款码 · ¥19.9</span></div>
+  <div class="qr-card"><img src="/wechat_pay.png" alt="文匠微信收款码"><span>微信收款码 · ¥19.9</span></div>
+</div>
+<p>售后与问题反馈：</p>
+<ul><li>邮箱：<a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a></li><li>GitHub Issues：<a href="https://github.com/Amerstrong/wenjiang-markdown/issues" target="_blank" rel="noopener noreferrer">Amerstrong/wenjiang-markdown</a></li></ul>
+<h2 id="配套-Word-模板">配套 Word 模板</h2>
+<p>如果你已经安装 Pandoc，或想在文匠软件中获得更强的代码排版效果，可以下载官方精调的 <code>WenJiangCode.docx</code> 模板。</p>
+<ol><li>下载 <a href="/templates/WenJiangCode.docx"><code>WenJiangCode.docx</code></a>。</li><li>将模板复制到文匠软件根目录下的 <code>templates</code> 文件夹。</li><li>保留软件原有的默认模板，不要删除默认样式。</li><li>在软件中切换使用所需模板。</li></ol>
+<p>模板经过多种代码排版场景验证，可用于 Python 多层缩进、复杂 JSON 嵌套、表格和连续混合排版。详细过程可阅读 <a href="/blog/template-test-report.html">文匠 Word 模板开发成果与测试报告</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="永久使用是真的吗">永久使用是真的吗？</h3>
+<p>是的。授权版采用买断方式，已购买版本可以持续在对应设备上运行。V1.x 版本内的常规更新免费；未来若推出 V2.0 重大版本，老用户可享受升级优惠，但不强制升级。</p>
+<h3 id="三个激活码怎么使用">三个激活码怎么使用？</h3>
+<p>购买后获得 3 枚互相独立的设备激活码，每个激活码对应一台设备。可以自用，也可以转赠给家人或朋友。</p>
+<h3 id="需要联网激活吗">需要联网激活吗？</h3>
+<p>软件内的激活验证在本地完成，不要求联网。查询激活码时使用本网站的激活中心。</p>
+<h3 id="可以自定义代码样式吗">可以自定义代码样式吗？</h3>
+<p>可以。文匠使用 Word 样式模板控制代码块、行内代码与正文格式，熟悉 Word 样式的用户可以进一步调整字体、背景、边框和行距。</p>
+<h3 id="软件类产品可以退款吗">软件类产品可以退款吗？</h3>
+<p>软件类产品激活后不支持退款。建议先使用 3 次免费试用，确认功能、系统和文档场景都符合需求后再购买。</p></article>
+      <aside class="article-aside">
+        <strong>快速判断</strong>
+        <p>适合经常把 ChatGPT、DeepSeek、Gemini、Kimi 输出整理成 Word 交付的人。优先选择它的核心理由是离线运行和代码块样式的稳定性。</p>
+        <strong style="margin-top:18px"><a href="https://github.com/Amerstrong/wenjiang-markdown" target="_blank" rel="noopener noreferrer">查看源码</a></strong>
+        <ul>
+          <li>所有下载链接均指向官方发布渠道。</li>
+          <li>本地运行工具不会上传你的文档内容。</li>
+          <li>建议下载后先校验文件来源与版本。</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+  
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="brand" href="/">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M7 9.5 16 4l9 5.5v10L16 25l-9-5.5z" fill="none" stroke="white" stroke-width="1.8"/>
+  <circle cx="16" cy="14.5" r="3.2" fill="#ff8a62"/>
+  <path d="M10.5 19.2 16 22l5.5-2.8M16 17.7V22" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+</svg></span>
+        <span class="brand-copy"><strong>AI探索者实验室</strong><small>LOCAL · EDGE · OPEN</small></span>
+      </a>
+      <p>记录本地离线 AI、跨设备工具、边缘硬件与自动化脚本的实战过程。</p>
+    </div>
+    <div class="footer-links">
+      <strong>探索</strong>
+      <a href="/tools/">工具库</a>
+      <a href="/posts/">技术专栏</a>
+      <a href="/about.html">关于AI探索者</a>
+    </div>
+    <div class="footer-links">
+      <strong>索引与联系</strong>
+      <a href="/sitemap.xml">Sitemap</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a>
+    </div>
+  </div>
+  <div class="footer-copy">© 2026 AI探索者实验室 · 本站使用无 CDN 的静态 HTML 构建 · woJingFang.cn</div>
+</footer>
+
+</body>
+</html>
