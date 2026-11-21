@@ -1,0 +1,11 @@
+name = "div-rice-5371"
+main = "worker.js"
+compatibility_date = "2026-11-21"
+
+[vars]
+GITHUB_CLIENT_ID = "Ov23liwSM4IlLk30XMog"
+
+[[kv_namespaces]]
+binding = "ACTIVATION_KV"
+id = "4745b5ae9f244414af70987cf988e4e7"
+

@@ -4,4 +4,9 @@ __pycache__/
 .DS_Store
 *.log
 .wrangler-kv-import.json
+upload_licenses.py
+licenses.json
+activation_codes.txt
+*secret*
+*.key
 
