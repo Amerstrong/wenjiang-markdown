@@ -9,7 +9,7 @@ status: 免费开源
 version: "1.0.0"
 platform: Windows 10 / 11
 price: "19.9"
-price_label: Lite 免费 / Pro ¥19.9
+price_label: Lite 免费 / Pro 个人终身 ¥19.9
 is_free: true
 license_label: MIT
 download_url: https://github.com/Amerstrong/FileBeam_Lite/releases/latest
@@ -93,7 +93,7 @@ FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校�
 | 传输历史 | 当前浏览器最近记录 | 完整历史与 24 小时 / 3 天 / 7 天 / 会话清理策略 |
 | 自定义固定端口 | 不支持可视化设置 | 支持自定义并固定局域网服务端口 |
 | 使用场景 | 日常照片、PDF、Word 与小文档 | 视频、设计素材、批量图片、开发资源与团队办公 |
-| 授权方式 | 免费开源，MIT 许可证 | 一次购买，永久激活，绑定设备 |
+| 授权方式 | 免费开源，MIT 许可证 | 个人终身买断授权，支持个人多设备使用，重装系统/换机不失效 |
 
 > Lite 版继续免费开放，适合轻量互传；Pro 版面向大文件、批量素材和长期使用场景。购买前建议先确认 Lite 版是否已满足需求。
 
@@ -101,25 +101,53 @@ FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校�
 
 <div class="qr-grid">
   <div class="qr-card">
-    <img src="/assets/alipay-qr.png" alt="AI探索者支付宝经营收款码，FileBeam Pro 价格 19.9 元">
-    <span>支付宝经营码 · FileBeam Pro ¥19.9</span>
+    <img src="/assets/filebeam-alipay-19.9.png" alt="AI探索者支付宝经营收款码，FileBeam Pro 价格 19.9 元">
+    <span>FileBeam Pro ¥19.9 · 支付宝</span>
+  </div>
+  <div class="qr-card">
+    <img src="/assets/wechat-19.9.png" alt="FileBeam Pro 19.9 元微信收款码">
+    <span>FileBeam Pro ¥19.9 · 微信</span>
   </div>
 </div>
 
 购买与激活流程：
 
-1. 下载并运行 FileBeam Lite，点击“升级专业版”，复制软件显示的 12 位机器码。
-2. 使用支付宝扫描上方经营码，支付 `¥19.9`。
-3. 将机器码和付款截图发送至 [xiaoyu12657@qq.com](mailto:xiaoyu12657@qq.com)，或按页面提示提交机器码。
-4. 后台确认付款并下发激活码后，可在 [激活中心](/activate.html) 查询。
-5. 回到 FileBeam Lite 的“升级专业版”窗口，输入激活码并点击验证。
+1. 根据支付方式扫描上方二维码，支付 `¥19.9`。
+2. 将付款截图和联系邮箱发送至 [xiaoyu12657@qq.com](mailto:xiaoyu12657@qq.com)。
+3. 后台核验后下发 FileBeam 激活码，不需要提供硬件机器码。
+4. 打开 FileBeam Lite，进入“升级专业版”，输入激活码并点击验证。
+5. 首次联网验证通过后，客户端在本地用户目录保存带签名的授权凭证，后续离线启动无需再次联网。
 
 <div class="inline-cta">
-  <div><strong>已经付款并提交机器码？</strong><span>前往激活中心查询激活码；若尚未激活，请联系客服处理。</span></div>
-  <a class="button" href="/activate.html">查询激活码 →</a>
+  <div><strong>已经付款但暂未收到激活码？</strong><span>请附付款截图和联系邮箱发送邮件，我们会人工核对并补发。</span></div>
+  <a class="button" href="mailto:xiaoyu12657@qq.com">联系客服 →</a>
 </div>
 
-<div class="notice"><strong>授权说明：</strong>激活码与机器码绑定。请勿在公开页面、聊天群或 Issue 中发布自己的完整机器码和激活码。Lite 客户端只在本地保存本次验证通过的授权记录。</div>
+<div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多设备使用，不绑定单台硬件，重装系统或换机不会失效。同一激活码最多完成 10 次联网激活校验；首次校验成功后可在离线状态继续使用。请勿在公开页面、聊天群或 Issue 中发布自己的完整激活码。</div>
+
+## 双子星捆绑包
+
+如果同时需要跨设备互传和 AI 内容转 Word，可以选择 **¥29.8 双子星捆绑包**：
+
+<div class="purchase-grid">
+  <div class="price-card featured">
+    <div class="tag-row"><span class="tag warm">双子星 BUNDLE</span></div>
+    <h3>FileBeam Pro + 文匠</h3>
+    <div class="price">¥29.8</div>
+    <ul>
+      <li>FileBeam 专业版：个人多设备终身版，重装系统/换机不失效</li>
+      <li>文匠 Markdown_Office：支持绑定 3 台设备的终身版</li>
+      <li>两套软件分别下发独立激活码</li>
+    </ul>
+    <p><a class="button accent" href="/buy.html">查看双子星购买页 →</a></p>
+  </div>
+  <div class="qr-card">
+    <img src="/assets/bundle-alipay-29.8.png" alt="FileBeam 与文匠双子星捆绑包 29.8 元支付宝收款码">
+    <span>双子星捆绑包 ¥29.8 · 支付宝</span>
+  </div>
+</div>
+
+> 微信暂时只提供 FileBeam Pro 19.9 元收款码，复用原有微信收款码；双子星捆绑包请使用支付宝 29.8 元经营码。
 
 ## 免费版功能与边界
 

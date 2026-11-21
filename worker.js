@@ -19,6 +19,86 @@ export default {
     };
 
     // ────────────────────────────────────────
+    // FileBeam activation-code verification
+    // POST /api/activate { activation_code }
+    // No hardware fingerprint; maximum 10 successful checks.
+    // ────────────────────────────────────────
+    if (url.pathname === '/api/activate' && request.method === 'POST') {
+      let activationCode = '';
+      try {
+        const payload = await request.json();
+        activationCode = String(payload.activation_code || '').trim().toUpperCase();
+      } catch {
+        return new Response(JSON.stringify({ valid: false, message: '请求格式错误' }), {
+          status: 400,
+          headers,
+        });
+      }
+
+      if (!activationCode) {
+        return new Response(JSON.stringify({ valid: false, message: '激活码不能为空' }), {
+          status: 400,
+          headers,
+        });
+      }
+
+      const raw = await env.ACTIVATION_KV.get(activationCode);
+      if (!raw) {
+        return new Response(JSON.stringify({ valid: false, message: '激活码不存在' }), {
+          headers,
+        });
+      }
+
+      let license;
+      try {
+        license = JSON.parse(raw);
+      } catch {
+        return new Response(JSON.stringify({ valid: false, message: '授权数据异常' }), {
+          headers,
+        });
+      }
+
+      if (license.type !== 'license') {
+        return new Response(JSON.stringify({ valid: false, message: '激活码类型不正确' }), {
+          headers,
+        });
+      }
+
+      if (['disabled', 'revoked', 'inactive'].includes(String(license.status || '').toLowerCase())) {
+        return new Response(JSON.stringify({ valid: false, message: '激活码已停用' }), {
+          headers,
+        });
+      }
+
+      const maxUses = Math.max(1, Number(license.max_uses || 10));
+      const useCount = Math.max(
+        0,
+        Number(license.use_count ?? license.used_count ?? license.activation_count ?? 0),
+      );
+      if (useCount >= maxUses) {
+        return new Response(JSON.stringify({
+          valid: false,
+          message: '激活码使用次数已达上限',
+          use_count: useCount,
+          max_uses: maxUses,
+        }), { headers });
+      }
+
+      license.use_count = useCount + 1;
+      license.last_used_at = new Date().toISOString();
+      license.max_uses = maxUses;
+      await env.ACTIVATION_KV.put(activationCode, JSON.stringify(license));
+
+      return new Response(JSON.stringify({
+        valid: true,
+        message: '激活成功',
+        use_count: license.use_count,
+        max_uses: maxUses,
+        remaining_uses: Math.max(0, maxUses - license.use_count),
+      }), { headers });
+    }
+
+    // ────────────────────────────────────────
     // 1. 用户提交机器码（付款后点按钮触发）
     // ────────────────────────────────────────
     if (url.pathname === '/submit' && request.method === 'POST') {

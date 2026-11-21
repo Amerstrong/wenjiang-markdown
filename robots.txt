@@ -1,4 +1,4 @@
-# AI探索者实验室 · https://wojingfang.cn
+# AI探索者 · https://wojingfang.cn
 # 允许搜索引擎与 AI 检索爬虫读取公开内容。
 
 User-agent: *

@@ -20,7 +20,7 @@ CONTENT_DIR = ROOT / "content"
 TOOLS_DIR = CONTENT_DIR / "tools"
 POSTS_DIR = CONTENT_DIR / "posts"
 SITE_URL = "https://wojingfang.cn"
-SITE_NAME = "AI探索者实验室"
+SITE_NAME = "AI探索者"
 SITE_AUTHOR = "AI探索者"
 CONTACT_EMAIL = "xiaoyu12657@qq.com"
 
@@ -326,7 +326,7 @@ def footer_html() -> str:
     <div class="footer-brand">
       <a class="brand" href="/">
         <span class="brand-mark">{brand_mark()}</span>
-        <span class="brand-copy"><strong>AI探索者实验室</strong><small>LOCAL · EDGE · OPEN</small></span>
+        <span class="brand-copy"><strong>AI探索者</strong><small>LOCAL · EDGE · OPEN</small></span>
       </a>
       <p>记录本地离线 AI、跨设备工具、边缘硬件与自动化脚本的实战过程。</p>
     </div>
@@ -335,6 +335,7 @@ def footer_html() -> str:
       <a href="/tools/">工具库</a>
       <a href="/posts/">技术专栏</a>
       <a href="/about.html">关于AI探索者</a>
+      <a href="/buy.html">购买授权</a>
     </div>
     <div class="footer-links">
       <strong>索引与联系</strong>
@@ -493,7 +494,7 @@ def build_home(tools: list[Document], posts: list[Document]) -> str:
           <div class="hero-stat"><strong>OPEN</strong><span>免费开源与公开记录</span></div>
         </div>
       </div>
-      <aside class="hero-terminal" aria-label="AI探索者实验室工作方式">
+      <aside class="hero-terminal" aria-label="AI探索者工作方式">
         <div class="terminal-bar">
           <span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span>
           <span class="terminal-title">explorer_lab.log</span>
@@ -570,7 +571,7 @@ def build_home(tools: list[Document], posts: list[Document]) -> str:
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": SITE_NAME,
-        "alternateName": "AI 探索者实验室",
+        "alternateName": "AI 探索者",
         "url": f"{SITE_URL}/",
         "description": "专注本地离线 AI 应用、跨设备效率工具与自动化脚本实战的个人品牌官网。",
         "inLanguage": "zh-CN",
@@ -583,8 +584,8 @@ def build_home(tools: list[Document], posts: list[Document]) -> str:
     }
     return page_html(
         route="",
-        title="AI探索者实验室｜AI与实用工具解决真实生活中的小麻烦",
-        description="AI探索者实验室专注本地离线AI、跨设备效率工具、Jetson与树莓派边缘实践、自动化脚本和免费开源软件，归档FileBeam、文匠及真实工程踩坑记录。",
+        title="AI探索者｜AI与实用工具解决真实生活中的小麻烦",
+        description="AI探索者专注本地离线AI、跨设备效率工具、Jetson与树莓派边缘实践、自动化脚本和免费开源软件，归档FileBeam、文匠及真实工程踩坑记录。",
         keywords="AI探索者,本地离线AI,FileBeam,文匠,Wenjiang,Jetson,树莓派,跨设备文件传输,Markdown转Word,自动化脚本,免费开源工具",
         content=content,
         active="home",
@@ -608,7 +609,7 @@ def build_tools_index(tools: list[Document]) -> str:
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": "AI探索者实验室工具库",
+        "name": "AI探索者工具库",
         "url": f"{SITE_URL}/tools/",
         "description": "收录FileBeam Lite、文匠 Markdown_Office等本地优先、跨设备与效率类软件。",
         "inLanguage": "zh-CN",
@@ -619,8 +620,8 @@ def build_tools_index(tools: list[Document]) -> str:
     }
     return page_html(
         route="tools/",
-        title="工具库｜AI探索者实验室",
-        description="AI探索者实验室工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。",
+        title="工具库｜AI探索者",
+        description="AI探索者工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。",
         keywords="AI工具库,FileBeam Lite,文匠 Markdown_Office,离线工具,局域网互传,Markdown转Word,免费开源软件",
         content=content,
         active="tools",
@@ -755,7 +756,7 @@ def build_tool_detail(tool: Document, posts: list[Document]) -> tuple[str, str]:
   {related_posts_html}
 </div>"""
     schema = tool_schema(tool)
-    title = text_value(tool.meta, "seo_title", f"{name}｜AI探索者实验室")
+    title = text_value(tool.meta, "seo_title", f"{name}｜AI探索者")
     description = text_value(tool.meta, "seo_description", summary)
     keywords = ",".join(text_list(tool.meta, "keywords")) or summary
     image = cover or "/favicon_io/android-chrome-512x512.png"
@@ -792,7 +793,7 @@ def build_posts_index(posts: list[Document]) -> str:
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": "AI探索者实验室技术专栏",
+        "name": "AI探索者技术专栏",
         "url": f"{SITE_URL}/posts/",
         "description": "本地AI、跨设备工具、边缘硬件与自动化发布实战文章索引。",
         "inLanguage": "zh-CN",
@@ -803,8 +804,8 @@ def build_posts_index(posts: list[Document]) -> str:
     }
     return page_html(
         route="posts/",
-        title="技术专栏｜AI探索者实验室",
-        description="AI探索者实验室技术专栏，记录本地离线AI、跨设备工具、Jetson与树莓派、Python打包、GitHub Release和自动化脚本实战。",
+        title="技术专栏｜AI探索者",
+        description="AI探索者技术专栏，记录本地离线AI、跨设备工具、Jetson与树莓派、Python打包、GitHub Release和自动化脚本实战。",
         keywords="AI技术专栏,本地AI,边缘计算,Jetson,树莓派,Python打包,PyInstaller,GitHub Release,自动化脚本,FileBeam",
         content=content,
         active="posts",
@@ -889,7 +890,7 @@ def build_post_detail(post: Document, tools: list[Document]) -> str:
   </div>
   {related_tool_card(related_tool)}
 </div>"""
-    title = text_value(post.meta, "seo_title", f"{post.title}｜AI探索者实验室")
+    title = text_value(post.meta, "seo_title", f"{post.title}｜AI探索者")
     description = text_value(post.meta, "seo_description", summary)
     keywords = ",".join(text_list(post.meta, "keywords")) or ",".join(tags)
     return page_html(
@@ -918,7 +919,7 @@ def build_about() -> str:
       <article class="about-panel">
         <h2>为什么做这个实验室</h2>
         <p>日常里最值得解决的问题通常并不宏大：AI 生成的 Markdown 一粘到 Word 就乱、手机和电脑之间传几张照片还要登录账号、一个脚本跑通一次却无法稳定交付给别人。</p>
-        <p>AI 探索者实验室专注于把这些“小麻烦”拆开，做成可下载、可验证、可长期维护的工具。能够本地完成的事情优先留在本地；必须联网的能力会清楚说明边界。</p>
+        <p>AI 探索者专注于把这些“小麻烦”拆开，做成可下载、可验证、可长期维护的工具。能够本地完成的事情优先留在本地；必须联网的能力会清楚说明边界。</p>
         <p>目前已归档 <a href="/tools/filebeam.html">FileBeam Lite</a> 与 <a href="/tools/wenjiang.html">文匠 Markdown_Office</a>，后续会继续覆盖本地大模型、Jetson、树莓派和自动化脚本。</p>
       </article>
       <aside class="about-panel dark">
@@ -955,7 +956,7 @@ def build_about() -> str:
         "@type": "AboutPage",
         "name": "关于AI探索者",
         "url": f"{SITE_URL}/about.html",
-        "description": "AI探索者实验室专注于本地离线AI、跨设备效率工具、边缘硬件与自动化脚本实战。",
+        "description": "AI探索者专注于本地离线AI、跨设备效率工具、边缘硬件与自动化脚本实战。",
         "mainEntity": {
             "@type": "Person",
             "name": SITE_AUTHOR,
@@ -966,11 +967,121 @@ def build_about() -> str:
     }
     return page_html(
         route="about.html",
-        title="关于AI探索者｜AI探索者实验室",
-        description="了解AI探索者实验室的品牌定位、工作原则与关注方向：本地离线AI、跨设备效率工具、Jetson与树莓派、自动化脚本和免费开源软件。",
-        keywords="AI探索者,关于我们,AI探索者实验室,本地离线AI,跨设备工具,Jetson,树莓派,自动化脚本",
+        title="关于AI探索者｜AI探索者",
+        description="了解AI探索者的品牌定位、工作原则与关注方向：本地离线AI、跨设备效率工具、Jetson与树莓派、自动化脚本和免费开源软件。",
+        keywords="AI探索者,关于我们,AI探索者,本地离线AI,跨设备工具,Jetson,树莓派,自动化脚本",
         content=content,
         active="about",
+        schema=schema,
+    )
+
+
+def build_buy() -> str:
+    content = f"""
+<div class="page-shell">
+  <header class="page-heading">
+    <span class="section-kicker">LICENSES</span>
+    <h1>FileBeam 与文匠授权购买</h1>
+    <p>两套软件可以单独购买，也可以选择双子星捆绑包。付款后请发送付款截图与联系邮箱，我们会下发对应激活码；首次联网校验通过后即可离线使用。</p>
+  </header>
+  <section class="section" aria-labelledby="plans-title">
+    <div class="section-head">
+      <div><span class="section-kicker">CHOOSE A LICENSE</span><h2 id="plans-title">选择适合你的授权</h2></div>
+      <p>FileBeam 不绑定单台硬件；文匠授权仍按原有规则支持 3 台设备。</p>
+    </div>
+    <div class="purchase-grid">
+      <article class="price-card featured">
+        <div class="tag-row"><span class="tag warm">FILEBEAM PRO</span></div>
+        <h3>个人终身买断授权</h3>
+        <div class="price">¥19.9</div>
+        <ul>
+          <li>个人多设备使用，不绑定单台电脑</li>
+          <li>重装系统、更换电脑后授权仍有效</li>
+          <li>同一激活码最多完成 10 次联网激活校验</li>
+          <li>首次联网验证后永久写入本地授权凭证，后续可离线使用</li>
+          <li>包含文件夹批量传输、历史记录、固定端口等 Pro 能力</li>
+        </ul>
+      </article>
+      <article class="price-card">
+        <div class="tag-row"><span class="tag">双子星 BUNDLE</span></div>
+        <h3>FileBeam + 文匠捆绑包</h3>
+        <div class="price">¥29.8</div>
+        <ul>
+          <li>FileBeam Pro：个人多设备终身版，不绑定单台硬件</li>
+          <li>文匠 Markdown_Office：支持绑定 3 台设备的终身版</li>
+          <li>一次付款获得两套独立授权</li>
+          <li>适合同时需要跨设备互传与离线 Markdown 转 Word 的用户</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="payment-title">
+    <div class="section-head">
+      <div><span class="section-kicker">PAYMENT</span><h2 id="payment-title">扫码付款</h2></div>
+      <p>请按商品金额选择二维码，付款备注可填写你的邮箱或订单说明。</p>
+    </div>
+    <div class="qr-grid">
+      <div class="qr-card">
+        <img src="/assets/filebeam-alipay-19.9.png" alt="FileBeam Pro 19.9 元支付宝收款码">
+        <span>FileBeam Pro ¥19.9 · 支付宝</span>
+      </div>
+      <div class="qr-card">
+        <img src="/assets/bundle-alipay-29.8.png" alt="FileBeam 与文匠双子星捆绑包 29.8 元支付宝收款码">
+        <span>双子星捆绑包 ¥29.8 · 支付宝</span>
+      </div>
+      <div class="qr-card">
+        <img src="/assets/wechat-19.9.png" alt="FileBeam Pro 19.9 元微信收款码">
+        <span>FileBeam Pro ¥19.9 · 微信</span>
+      </div>
+    </div>
+    <div class="notice"><strong>微信说明：</strong>目前微信只有 FileBeam Pro 19.9 元收款码，复用原有收款码；双子星捆绑包请使用支付宝 29.8 元经营码。</div>
+  </section>
+  <section class="section" aria-labelledby="activate-title">
+    <div class="answer-box">
+      <strong id="activate-title">购买后如何激活？</strong>
+      <ol>
+        <li>完成付款后，把付款截图和联系邮箱发送至 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>。</li>
+        <li>我们核验后会下发对应产品激活码；双子星捆绑包会分别下发 FileBeam 与文匠激活码。</li>
+        <li>打开 FileBeam Lite，点击“升级专业版”，输入 FileBeam 激活码。</li>
+        <li>激活服务确认激活码有效后，客户端会在本地用户目录写入不可逆哈希与签名凭证。</li>
+        <li>以后即使离线启动也会直接识别本机授权，无需重复输入激活码或绑定硬件。</li>
+      </ol>
+    </div>
+    <div class="inline-cta">
+      <div><strong>已经拿到激活码？</strong><span>回到 FileBeam Lite 的升级窗口完成首次校验。</span></div>
+      <a class="button" href="/tools/filebeam.html">打开 FileBeam 工具页 →</a>
+    </div>
+  </section>
+</div>"""
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "OfferCatalog",
+        "name": "AI探索者软件授权",
+        "url": f"{SITE_URL}/buy.html",
+        "itemListElement": [
+            {
+                "@type": "Offer",
+                "name": "FileBeam Pro 个人终身买断授权",
+                "price": "19.9",
+                "priceCurrency": "CNY",
+                "availability": "https://schema.org/InStock",
+            },
+            {
+                "@type": "Offer",
+                "name": "FileBeam 与文匠双子星捆绑包",
+                "price": "29.8",
+                "priceCurrency": "CNY",
+                "availability": "https://schema.org/InStock",
+            },
+        ],
+    }
+    return page_html(
+        route="buy.html",
+        title="FileBeam 与文匠授权购买｜AI探索者",
+        description="购买 FileBeam Pro 个人多设备终身授权19.9元，或选择 FileBeam 与文匠双子星捆绑包29.8元。支持支付宝与微信扫码付款，激活后离线使用。",
+        keywords="FileBeam Pro购买,FileBeam授权,文匠购买,双子星捆绑包,FileBeam 19.9,文匠29.8,局域网互传软件",
+        content=content,
+        active="",
         schema=schema,
     )
 
@@ -1013,7 +1124,7 @@ def robots_txt() -> str:
     ]
     blocks = [f"User-agent: {agent}\nAllow: /" for agent in agents]
     return (
-        "# AI探索者实验室 · https://wojingfang.cn\n"
+        "# AI探索者 · https://wojingfang.cn\n"
         "# 允许搜索引擎与 AI 检索爬虫读取公开内容。\n\n"
         + "\n\n".join(blocks)
         + f"\n\nSitemap: {SITE_URL}/sitemap.xml\n"
@@ -1043,14 +1154,14 @@ def llms_txt(tools: list[Document], posts: list[Document]) -> str:
             f"- 摘要：{text_value(post.meta, 'summary')}\n"
             f"- 直达链接：{canonical_for(f'posts/{post.slug}.html')}"
         )
-    return f"""# AI探索者实验室
+    return f"""# AI探索者
 
 > 官网：{SITE_URL}/
 > 定位：AI 探索者 · AI 与实用工具解决真实生活中的小麻烦
 
 ## 网站定位
 
-AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。关注本地大模型、边缘硬件（Jetson / 树莓派）与极简桌面效率工具。所有自研免费 / 开源软件与实战踩坑记录均在此归档。
+AI探索者专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。关注本地大模型、边缘硬件（Jetson / 树莓派）与极简桌面效率工具。所有自研免费 / 开源软件与实战踩坑记录均在此归档。
 
 ## 工具库
 
@@ -1065,6 +1176,7 @@ AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileB
 - 工具库索引：{SITE_URL}/tools/
 - 技术专栏索引：{SITE_URL}/posts/
 - 关于AI探索者：{SITE_URL}/about.html
+- 授权购买：{SITE_URL}/buy.html
 - Sitemap：{SITE_URL}/sitemap.xml
 - 联系方式：{CONTACT_EMAIL}
 """
@@ -1216,6 +1328,9 @@ def build() -> None:
 
     outputs.append(("about.html", build_about()))
     generated.append(("about.html", ROOT / "about.html"))
+
+    outputs.append(("buy.html", build_buy()))
+    generated.append(("buy.html", ROOT / "buy.html"))
 
     for relative, content in outputs:
         destination = ROOT / relative

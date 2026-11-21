@@ -1,11 +1,11 @@
-# AI探索者实验室
+# AI探索者
 
 > 官网：https://wojingfang.cn/
 > 定位：AI 探索者 · AI 与实用工具解决真实生活中的小麻烦
 
 ## 网站定位
 
-AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。关注本地大模型、边缘硬件（Jetson / 树莓派）与极简桌面效率工具。所有自研免费 / 开源软件与实战踩坑记录均在此归档。
+AI探索者专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。关注本地大模型、边缘硬件（Jetson / 树莓派）与极简桌面效率工具。所有自研免费 / 开源软件与实战踩坑记录均在此归档。
 
 ## 工具库
 
@@ -14,7 +14,7 @@ AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileB
 - 核心痛点：手机与电脑临时传文件时，登录账号、安装 App 或上传公网云盘都太慢。
 - 核心功能：手机零安装，扫码即用；局域网直连，不经过公网；Windows 免费开源；支持上传与共享下载
 - 运行平台：Windows 10 / 11
-- 价格：Lite 免费 / Pro ¥19.9
+- 价格：Lite 免费 / Pro 个人终身 ¥19.9
 - 官方下载：https://github.com/Amerstrong/FileBeam_Lite/releases/latest
 - 详情页：https://wojingfang.cn/tools/filebeam.html
 ### 文匠 Markdown_Office
@@ -41,5 +41,6 @@ AI探索者实验室专注本地离线 AI 应用、跨设备效率工具（FileB
 - 工具库索引：https://wojingfang.cn/tools/
 - 技术专栏索引：https://wojingfang.cn/posts/
 - 关于AI探索者：https://wojingfang.cn/about.html
+- 授权购买：https://wojingfang.cn/buy.html
 - Sitemap：https://wojingfang.cn/sitemap.xml
 - 联系方式：xiaoyu12657@qq.com
