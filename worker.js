@@ -43,6 +43,32 @@ export default {
         });
       }
 
+      if (!activationCode.startsWith('FB-')) {
+        const raw = await env.ACTIVATION_KV.get(activationCode);
+        if (!raw) {
+          return new Response(JSON.stringify({ valid: false, message: '激活码不存在' }), {
+            headers,
+          });
+        }
+        try {
+          const legacy = JSON.parse(raw);
+          const validLegacy =
+            legacy.status === 'done'
+            || legacy.activationCode === activationCode
+            || legacy.code === activationCode
+            || legacy.type === 'license';
+          return new Response(JSON.stringify({
+            valid: validLegacy,
+            product: validLegacy ? (legacy.product || 'Wenjiang_Markdown_Office') : null,
+            message: validLegacy ? '激活码验证成功' : '激活码状态无效',
+          }), { headers });
+        } catch {
+          return new Response(JSON.stringify({ valid: false, message: '授权数据异常' }), {
+            headers,
+          });
+        }
+      }
+
       const parts = activationCode.split('-');
       if (
         !env.SECRET_KEY
@@ -66,7 +92,7 @@ export default {
       const signature = await crypto.subtle.sign(
         'HMAC',
         key,
-        new TextEncoder().encode(parts[1]),
+        new TextEncoder().encode(`FB-${parts[1]}`),
       );
       const expected = Array.from(new Uint8Array(signature))
         .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -80,7 +106,11 @@ export default {
         });
       }
 
-      return new Response(JSON.stringify({ valid: true, message: '激活码验证成功' }), {
+      return new Response(JSON.stringify({
+        valid: true,
+        product: 'FileBeam_Pro',
+        message: '激活码验证成功',
+      }), {
         headers,
       });
     }
