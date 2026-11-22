@@ -123,7 +123,7 @@ FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校�
   <a class="button" href="mailto:xiaoyu12657@qq.com">联系客服 →</a>
 </div>
 
-<div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多设备使用，不绑定单台硬件，重装系统或换机不会失效。同一激活码最多完成 10 次联网激活校验；首次校验成功后可在离线状态继续使用。请勿在公开页面、聊天群或 Issue 中发布自己的完整激活码。</div>
+<div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多设备使用，不绑定单台硬件，重装系统或换机不会失效。激活接口采用无状态 HMAC 验签，不查询 KV，也不记录使用次数；首次校验成功后可在离线状态继续使用。请勿在公开页面、聊天群或 Issue 中发布自己的完整激活码。</div>
 
 ## 双子星捆绑包
 
