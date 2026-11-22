@@ -6,7 +6,7 @@ tagline: 手机零安装的局域网文件互传工具
 summary: FileBeam Lite 是一款面向电脑与手机的免费开源局域网文件互传工具。电脑启动服务后，手机扫码即可打开浏览器收发文件，不经过公网中转。
 category: 跨设备效率
 status: 免费开源
-version: "1.0.2"
+version: "1.0.3"
 platform: Windows 10 / 11
 price: "19.9"
 price_label: Lite 免费 / Pro 个人终身 ¥19.9

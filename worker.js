@@ -19,9 +19,10 @@ export default {
     };
 
     // ────────────────────────────────────────
-    // FileBeam activation-code verification
+    // FileBeam stateless activation-code verification
     // POST /api/activate { activation_code }
-    // No hardware fingerprint; maximum 10 successful checks.
+    // Format: FB-<8 payload chars>-<8 HMAC-SHA256 chars>
+    // Zero ACTIVATION_KV reads or writes.
     // ────────────────────────────────────────
     if (url.pathname === '/api/activate' && request.method === 'POST') {
       let activationCode = '';
@@ -42,60 +43,46 @@ export default {
         });
       }
 
-      const raw = await env.ACTIVATION_KV.get(activationCode);
-      if (!raw) {
-        return new Response(JSON.stringify({ valid: false, message: '激活码不存在' }), {
+      const parts = activationCode.split('-');
+      if (
+        !env.SECRET_KEY
+        || parts.length !== 3
+        || parts[0] !== 'FB'
+        || parts[1].length !== 8
+        || parts[2].length !== 8
+      ) {
+        return new Response(JSON.stringify({ valid: false, message: '激活码格式不正确' }), {
           headers,
         });
       }
 
-      let license;
-      try {
-        license = JSON.parse(raw);
-      } catch {
-        return new Response(JSON.stringify({ valid: false, message: '授权数据异常' }), {
-          headers,
-        });
-      }
-
-      if (license.type !== 'license') {
-        return new Response(JSON.stringify({ valid: false, message: '激活码类型不正确' }), {
-          headers,
-        });
-      }
-
-      if (['disabled', 'revoked', 'inactive'].includes(String(license.status || '').toLowerCase())) {
-        return new Response(JSON.stringify({ valid: false, message: '激活码已停用' }), {
-          headers,
-        });
-      }
-
-      const maxUses = Math.max(1, Number(license.max_uses || 10));
-      const useCount = Math.max(
-        0,
-        Number(license.use_count ?? license.used_count ?? license.activation_count ?? 0),
+      const key = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(env.SECRET_KEY),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign'],
       );
-      if (useCount >= maxUses) {
-        return new Response(JSON.stringify({
-          valid: false,
-          message: '激活码使用次数已达上限',
-          use_count: useCount,
-          max_uses: maxUses,
-        }), { headers });
+      const signature = await crypto.subtle.sign(
+        'HMAC',
+        key,
+        new TextEncoder().encode(parts[1]),
+      );
+      const expected = Array.from(new Uint8Array(signature))
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('')
+        .slice(0, 8)
+        .toUpperCase();
+
+      if (parts[2] !== expected) {
+        return new Response(JSON.stringify({ valid: false, message: '激活码签名无效' }), {
+          headers,
+        });
       }
 
-      license.use_count = useCount + 1;
-      license.last_used_at = new Date().toISOString();
-      license.max_uses = maxUses;
-      await env.ACTIVATION_KV.put(activationCode, JSON.stringify(license));
-
-      return new Response(JSON.stringify({
-        valid: true,
-        message: '激活成功',
-        use_count: license.use_count,
-        max_uses: maxUses,
-        remaining_uses: Math.max(0, maxUses - license.use_count),
-      }), { headers });
+      return new Response(JSON.stringify({ valid: true, message: '激活码验证成功' }), {
+        headers,
+      });
     }
 
     // ────────────────────────────────────────
