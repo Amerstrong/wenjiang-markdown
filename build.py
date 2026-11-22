@@ -1042,7 +1042,7 @@ def build_buy() -> str:
       <ol>
         <li>完成付款后，把付款截图和联系邮箱发送至 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>。</li>
         <li>我们核验后会下发对应产品激活码；双子星捆绑包会分别下发 FileBeam 与文匠激活码。</li>
-        <li>打开 FileBeam Lite，点击“升级专业版”，输入 FileBeam 激活码。</li>
+        <li>打开 FileBeam Pro 客户端，点击右上角钥匙按钮输入 FileBeam 激活码。</li>
         <li>激活服务确认激活码有效后，客户端会在本地用户目录写入不可逆哈希与签名凭证。</li>
         <li>以后即使离线启动也会直接识别本机授权，无需重复输入激活码或绑定硬件。</li>
       </ol>
