@@ -71,7 +71,7 @@ export default {
 
       const parts = activationCode.split('-');
       if (
-        !env.SECRET_KEY
+        !env.FILEBEAM_SECRET_KEY
         || parts.length !== 3
         || parts[0] !== 'FB'
         || parts[1].length !== 8
@@ -84,7 +84,7 @@ export default {
 
       const key = await crypto.subtle.importKey(
         'raw',
-        new TextEncoder().encode(env.SECRET_KEY),
+        new TextEncoder().encode(env.FILEBEAM_SECRET_KEY),
         { name: 'HMAC', hash: 'SHA-256' },
         false,
         ['sign'],
