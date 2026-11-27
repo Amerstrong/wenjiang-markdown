@@ -28,6 +28,13 @@ AI探索者专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文
 
 ## 技术专栏
 
+### GitHub 忘记密码且触发 2FA 拦截怎么办？账号找回实战与避坑指南
+
+- 发布日期：2026-11-28
+- 栏目：技术随笔
+- 标签：GitHub, 2FA, 账号找回, 密码恢复, 避坑指南
+- 摘要：GitHub 忘记密码且触发 2FA 拦截怎么办？复盘账号找回实战与避坑指南
+- 直达链接：https://wojingfang.cn/posts/github-2fa-account-recovery-guide.html
 ### 从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战
 
 - 发布日期：2026-11-21
