@@ -25,7 +25,7 @@ SITE_AUTHOR = "AI探索者"
 CONTACT_EMAIL = "xiaoyu12657@qq.com"
 ICP_BEIAN = "鲁ICP备2025138763号"
 ICP_URL = "https://beian.miit.gov.cn/"
-LEGAL_NAME = "张店区沃境坊电子商务工作室（个体工商户）"
+LEGAL_NAME = "沃境坊电子商务工作室"
 
 
 @dataclass(slots=True)
