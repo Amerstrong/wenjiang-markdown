@@ -9,12 +9,12 @@ AI探索者专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文
 
 ## 工具库
 
-### FileBeam Lite
+### FileBeam
 
-- 核心痛点：手机与电脑临时传文件时，登录账号、安装 App 或上传公网云盘都太慢。
-- 核心功能：手机零安装，扫码即用；局域网直连，不经过公网；Windows 免费开源；支持上传与共享下载
+- 核心痛点：手机与电脑传文件要登录账号、装 App 或上传公网云盘；大文件与批量素材更麻烦。
+- 核心功能：手机免装 App，扫码即连；局域网直连，不经过公网；免费开箱即用；Pro 原地解锁专业版
 - 运行平台：Windows 10 / 11
-- 价格：Lite 免费 / Pro 个人终身 ¥19.9
+- 价格：基础版免费 / Pro 个人终身 ¥19.9
 - 官方下载：https://github.com/Amerstrong/FileBeam_Lite/releases/latest
 - 详情页：https://wojingfang.cn/tools/filebeam.html
 ### 文匠 Markdown_Office

@@ -1618,3 +1618,81 @@ input {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* FileBeam 激活页专用样式 */
+.checkout-hint {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 12px;
+  background: #eef8f4;
+  color: #23443a;
+  font-size: 0.9rem;
+}
+
+.checkout-hint code {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: #dcefe7;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.plan-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.plan-name {
+  line-height: 1.35;
+}
+
+.plan-rec {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.plan-desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.filebeam-checkout {
+  padding-top: 46px;
+}
+
+.pro-upgrade-list {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pro-upgrade-list li {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+}
+
+.pro-upgrade-list strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.pro-upgrade-list p {
+  margin: 0;
+  color: var(--muted);
+}

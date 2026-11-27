@@ -619,7 +619,7 @@ def build_tools_index(tools: list[Document]) -> str:
         "@type": "CollectionPage",
         "name": "AI探索者工具库",
         "url": f"{SITE_URL}/tools/",
-        "description": "收录FileBeam Lite、文匠 Markdown_Office等本地优先、跨设备与效率类软件。",
+        "description": "收录FileBeam、文匠 Markdown_Office等本地优先、跨设备与效率类软件。",
         "inLanguage": "zh-CN",
         "hasPart": [
             {"@type": "SoftwareApplication", "name": text_value(tool.meta, "name", tool.title), "url": f"{SITE_URL}/tools/{tool.slug}.html"}
@@ -629,8 +629,8 @@ def build_tools_index(tools: list[Document]) -> str:
     return page_html(
         route="tools/",
         title="工具库｜AI探索者",
-        description="AI探索者工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。",
-        keywords="AI工具库,FileBeam Lite,文匠 Markdown_Office,离线工具,局域网互传,Markdown转Word,免费开源软件",
+        description="AI探索者工具库：FileBeam免费开箱即用的局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。",
+        keywords="AI工具库,FileBeam,文匠 Markdown_Office,离线工具,局域网互传,Markdown转Word,免费开源软件",
         content=content,
         active="tools",
         schema=schema,
@@ -784,6 +784,73 @@ def build_tool_detail(tool: Document, posts: list[Document]) -> tuple[str, str]:
     )
 
 
+def build_filebeam_page(tool: Document, posts: list[Document]) -> tuple[str, str]:
+    version = text_value(tool.meta, "version", "1.0.6")
+    summary = text_value(tool.meta, "summary")
+    body_html = render_markdown(tool.body)
+    related_posts = [post for post in posts if text_value(post.meta, "related_tool") == tool.slug]
+    related_posts_html = ""
+    if related_posts:
+        related_posts_html = f"""
+<section class="section" aria-labelledby="related-posts-title">
+  <div class="section-head"><div><span class="section-kicker">RELATED NOTES</span><h2 id="related-posts-title">与 FileBeam 相关的实战记录</h2></div></div>
+  <div class="post-grid">{''.join(post_card(post) for post in related_posts)}</div>
+</section>"""
+    content = f"""
+<div class="page-shell">
+  <nav aria-label="面包屑">
+    <ol class="breadcrumbs"><li><a href="/">首页</a></li><li><a href="/tools/">工具库</a></li><li>FileBeam Pro</li></ol>
+  </nav>
+  <header class="detail-hero filebeam-hero">
+    <div class="detail-copy">
+      <div class="tag-row">{tag_html("跨设备效率")}{tag_html("单包二合一", True)}</div>
+      <h1>FileBeam — 局域网极速文件互传（单包二合一版）</h1>
+      <p class="summary">华为鸿蒙 / Android / iOS 手机 ↔ Windows 电脑双向高速互传 · 手机免装 App · 扫码即连 · 输入激活码原地解锁专业版</p>
+      <div class="hero-actions">
+        <a class="button accent" href="#checkout">立即下单获取激活码 ¥19.9 ↓</a>
+        <a class="button outline" href="#compare">对比免费版与专业版</a>
+        <a class="button light" href="https://github.com/Amerstrong/FileBeam_Lite/releases/latest" target="_blank" rel="noopener noreferrer">GitHub 免费开源版</a>
+      </div>
+    </div>
+    <aside class="fact-panel" aria-label="FileBeam Pro 关键信息">
+      <div class="tag-row" style="margin-bottom:18px">{tag_html("Pro 个人终身 ¥19.9", True)}</div>
+      <dl class="fact-list">
+        <div><dt>当前版本</dt><dd>{html.escape(version)}（单包二合一）</dd></div>
+        <div><dt>运行平台</dt><dd>Windows 10 / 11（解压即用）</dd></div>
+        <div><dt>手机支持</dt><dd>鸿蒙 / Android / iOS（浏览器直连）</dd></div>
+        <div><dt>授权价格</dt><dd>基础版免费 / Pro 个人终身买断 ¥19.9</dd></div>
+        <div><dt>授权方式</dt><dd>一码多机 · 重装换机永久有效 · 离线可用</dd></div>
+      </dl>
+    </aside>
+  </header>
+  <section class="section filebeam-checkout">
+    {checkout_html()}
+  </section>
+  <section class="section">
+    <div class="tool-content">{body_html}</div>
+  </section>
+  {related_posts_html}
+</div>"""
+    schema = tool_schema(tool)
+    title = text_value(tool.meta, "seo_title", "FileBeam Pro｜局域网极速文件互传（单包二合一）")
+    description = text_value(tool.meta, "seo_description", summary)
+    keywords = ",".join(text_list(tool.meta, "keywords")) or summary
+    return (
+        page_html(
+            route=f"tools/{tool.slug}.html",
+            title=title,
+            description=description,
+            keywords=keywords,
+            content=content,
+            active="tools",
+            schema=schema,
+            image="/favicon_io/android-chrome-512x512.png",
+            page_type="product",
+        ),
+        description,
+    )
+
+
 def build_posts_index(posts: list[Document]) -> str:
     ordered = sorted(posts, key=post_date, reverse=True)
     cards = "".join(post_card(post) for post in ordered)
@@ -929,7 +996,7 @@ def build_about() -> str:
         <h2>为什么做这个实验室</h2>
         <p>日常里最值得解决的问题通常并不宏大：AI 生成的 Markdown 一粘到 Word 就乱、手机和电脑之间传几张照片还要登录账号、一个脚本跑通一次却无法稳定交付给别人。</p>
         <p>AI 探索者专注于把这些“小麻烦”拆开，做成可下载、可验证、可长期维护的工具。能够本地完成的事情优先留在本地；必须联网的能力会清楚说明边界。</p>
-        <p>目前已归档 <a href="/tools/filebeam.html">FileBeam Lite</a> 与 <a href="/tools/wenjiang.html">文匠 Markdown_Office</a>，后续会继续覆盖本地大模型、Jetson、树莓派和自动化脚本。</p>
+        <p>目前已归档 <a href="/tools/filebeam.html">FileBeam</a> 与 <a href="/tools/wenjiang.html">文匠 Markdown_Office</a>，后续会继续覆盖本地大模型、Jetson、树莓派和自动化脚本。</p>
       </article>
       <aside class="about-panel dark">
         <span class="section-kicker">OPERATING PRINCIPLES</span>
@@ -991,19 +1058,26 @@ def checkout_html() -> str:
   <div class="checkout-head">
     <span class="section-kicker">ONLINE CHECKOUT</span>
     <h2>在线收银台</h2>
-    <p>选择套餐后点击确认订单，系统将生成模拟订单并进入支付宝电脑网站支付。</p>
+    <p>选择套餐并完成支付宝电脑网站支付，付款后立即下发专属激活码，无需重新下载安装包。</p>
   </div>
+  <div class="checkout-hint">💡 付款后将立即下发 <code>FB-XXXXXXXX-XXXXXXXX</code> 专属激活码。<strong>无需重新下载安装包</strong>，直接在当前软件右上角输入激活码即可原地解锁全部专业版功能。</div>
   <div class="checkout-plan-list">
     <label class="plan-option selected" data-name="FileBeam Pro 终身版" data-price="19.90">
       <input type="radio" name="checkoutPlan" value="filebeam-pro" checked>
       <span class="plan-radio"></span>
-      <span class="plan-name">FileBeam Pro 终身版</span>
+      <span class="plan-copy">
+        <span class="plan-name">FileBeam Pro 终身版 <span class="plan-rec">推荐</span></span>
+        <small class="plan-desc">个人多设备终身授权 · 解锁无限大文件、ZIP 打包、共享库安全锁</small>
+      </span>
       <strong class="plan-price">¥19.90</strong>
     </label>
     <label class="plan-option" data-name="双子星组合包" data-price="29.80">
       <input type="radio" name="checkoutPlan" value="bundle">
       <span class="plan-radio"></span>
-      <span class="plan-name">双子星组合包</span>
+      <span class="plan-copy">
+        <span class="plan-name">双子星组合包（FileBeam Pro + 文匠 Markdown_Office）</span>
+        <small class="plan-desc">立省，两套软件分别下发独立永久激活码</small>
+      </span>
       <strong class="plan-price">¥29.80</strong>
     </label>
   </div>
@@ -1357,7 +1431,10 @@ def build() -> None:
     generated.append(("tools/", output_path))
 
     for tool in tools:
-        page, _description = build_tool_detail(tool, posts)
+        if tool.slug == "filebeam":
+            page, _description = build_filebeam_page(tool, posts)
+        else:
+            page, _description = build_tool_detail(tool, posts)
         path = ROOT / "tools" / f"{tool.slug}.html"
         outputs.append((f"tools/{tool.slug}.html", page))
         generated.append((f"tools/{tool.slug}.html", path))

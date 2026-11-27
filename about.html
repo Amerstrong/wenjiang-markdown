@@ -1648,6 +1648,84 @@ input {
   }
 }
 
+/* FileBeam 激活页专用样式 */
+.checkout-hint {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 12px;
+  background: #eef8f4;
+  color: #23443a;
+  font-size: 0.9rem;
+}
+
+.checkout-hint code {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: #dcefe7;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.plan-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.plan-name {
+  line-height: 1.35;
+}
+
+.plan-rec {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.plan-desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.filebeam-checkout {
+  padding-top: 46px;
+}
+
+.pro-upgrade-list {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pro-upgrade-list li {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+}
+
+.pro-upgrade-list strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.pro-upgrade-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
   </style>
 </head>
 <body>
@@ -1686,7 +1764,7 @@ input {
         <h2>为什么做这个实验室</h2>
         <p>日常里最值得解决的问题通常并不宏大：AI 生成的 Markdown 一粘到 Word 就乱、手机和电脑之间传几张照片还要登录账号、一个脚本跑通一次却无法稳定交付给别人。</p>
         <p>AI 探索者专注于把这些“小麻烦”拆开，做成可下载、可验证、可长期维护的工具。能够本地完成的事情优先留在本地；必须联网的能力会清楚说明边界。</p>
-        <p>目前已归档 <a href="/tools/filebeam.html">FileBeam Lite</a> 与 <a href="/tools/wenjiang.html">文匠 Markdown_Office</a>，后续会继续覆盖本地大模型、Jetson、树莓派和自动化脚本。</p>
+        <p>目前已归档 <a href="/tools/filebeam.html">FileBeam</a> 与 <a href="/tools/wenjiang.html">文匠 Markdown_Office</a>，后续会继续覆盖本地大模型、Jetson、树莓派和自动化脚本。</p>
       </article>
       <aside class="about-panel dark">
         <span class="section-kicker">OPERATING PRINCIPLES</span>

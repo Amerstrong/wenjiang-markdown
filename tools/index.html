@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>工具库｜AI探索者</title>
-  <meta name="description" content="AI探索者工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
-  <meta name="keywords" content="AI工具库,FileBeam Lite,文匠 Markdown_Office,离线工具,局域网互传,Markdown转Word,免费开源软件">
+  <meta name="description" content="AI探索者工具库：FileBeam免费开箱即用的局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
+  <meta name="keywords" content="AI工具库,FileBeam,文匠 Markdown_Office,离线工具,局域网互传,Markdown转Word,免费开源软件">
   <meta name="author" content="AI探索者">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="canonical" href="https://wojingfang.cn/tools/">
@@ -18,14 +18,14 @@
   <meta property="og:site_name" content="AI探索者">
   <meta property="og:type" content="website">
   <meta property="og:title" content="工具库｜AI探索者">
-  <meta property="og:description" content="AI探索者工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
+  <meta property="og:description" content="AI探索者工具库：FileBeam免费开箱即用的局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
   <meta property="og:url" content="https://wojingfang.cn/tools/">
   <meta property="og:image" content="https://wojingfang.cn/favicon_io/android-chrome-512x512.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="工具库｜AI探索者">
-  <meta name="twitter:description" content="AI探索者工具库：FileBeam Lite免费局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
+  <meta name="twitter:description" content="AI探索者工具库：FileBeam免费开箱即用的局域网文件互传、文匠Markdown_Office离线Markdown转Word，以及持续增加的本地效率工具。">
   <meta name="twitter:image" content="https://wojingfang.cn/favicon_io/android-chrome-512x512.png">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"AI探索者工具库","url":"https://wojingfang.cn/tools/","description":"收录FileBeam Lite、文匠 Markdown_Office等本地优先、跨设备与效率类软件。","inLanguage":"zh-CN","hasPart":[{"@type":"SoftwareApplication","name":"FileBeam Lite","url":"https://wojingfang.cn/tools/filebeam.html"},{"@type":"SoftwareApplication","name":"文匠 Markdown_Office","url":"https://wojingfang.cn/tools/wenjiang.html"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"AI探索者工具库","url":"https://wojingfang.cn/tools/","description":"收录FileBeam、文匠 Markdown_Office等本地优先、跨设备与效率类软件。","inLanguage":"zh-CN","hasPart":[{"@type":"SoftwareApplication","name":"FileBeam","url":"https://wojingfang.cn/tools/filebeam.html"},{"@type":"SoftwareApplication","name":"文匠 Markdown_Office","url":"https://wojingfang.cn/tools/wenjiang.html"}]}</script>
   <style>
 *,
 *::before,
@@ -1648,6 +1648,84 @@ input {
   }
 }
 
+/* FileBeam 激活页专用样式 */
+.checkout-hint {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 12px;
+  background: #eef8f4;
+  color: #23443a;
+  font-size: 0.9rem;
+}
+
+.checkout-hint code {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: #dcefe7;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.plan-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.plan-name {
+  line-height: 1.35;
+}
+
+.plan-rec {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.plan-desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.filebeam-checkout {
+  padding-top: 46px;
+}
+
+.pro-upgrade-list {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pro-upgrade-list li {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+}
+
+.pro-upgrade-list strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.pro-upgrade-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
   </style>
 </head>
 <body>
@@ -1693,11 +1771,11 @@ input {
 </div>
   <div class="tool-body">
     <div class="tag-row">
-      <span class="tag">手机零安装，扫码即用</span><span class="tag">局域网直连，不经过公网</span>
-      <span class="tag warm">Lite 免费 / Pro 个人终身 ¥19.9</span>
+      <span class="tag">手机免装 App，扫码即连</span><span class="tag">局域网直连，不经过公网</span>
+      <span class="tag warm">基础版免费 / Pro 个人终身 ¥19.9</span>
     </div>
-    <h3><a href="/tools/filebeam.html">FileBeam Lite</a></h3>
-    <p>FileBeam Lite 是一款面向电脑与手机的免费开源局域网文件互传工具。电脑启动服务后，手机扫码即可打开浏览器收发文件，不经过公网中转。</p>
+    <h3><a href="/tools/filebeam.html">FileBeam</a></h3>
+    <p>FileBeam 是华为鸿蒙 / Android / iOS 手机与 Windows 电脑之间的局域网极速互传工具。免费开箱即用，输入激活码即可原地解锁 Pro 专业版。</p>
     <div class="tool-meta">
       <span>Windows 10 / 11</span>
       <a href="/tools/filebeam.html">查看详情 →</a>

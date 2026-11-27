@@ -1,163 +1,95 @@
 ---
-title: FileBeam Lite
+title: FileBeam Pro
 slug: filebeam
-name: FileBeam Lite
-tagline: 手机零安装的局域网文件互传工具
-summary: FileBeam Lite 是一款面向电脑与手机的免费开源局域网文件互传工具。电脑启动服务后，手机扫码即可打开浏览器收发文件，不经过公网中转。
+name: FileBeam
+tagline: 单包二合一 · 局域网极速文件互传
+summary: FileBeam 是华为鸿蒙 / Android / iOS 手机与 Windows 电脑之间的局域网极速互传工具。免费开箱即用，输入激活码即可原地解锁 Pro 专业版。
 category: 跨设备效率
-status: 免费开源
-version: "1.0.5"
+status: 免费开箱即用 / Pro 原地解锁
+version: "1.0.6"
 platform: Windows 10 / 11
 price: "19.9"
-price_label: Lite 免费 / Pro 个人终身 ¥19.9
+price_label: 基础版免费 / Pro 个人终身 ¥19.9
 is_free: true
-license_label: MIT
+license_label: 基础版 MIT 开源 / Pro 个人终身买断
 download_url: https://github.com/Amerstrong/FileBeam_Lite/releases/latest
 download_label: 下载 FileBeam Lite
 repo_url: https://github.com/Amerstrong/FileBeam_Lite
 featured: true
-pain: 手机与电脑临时传文件时，登录账号、安装 App 或上传公网云盘都太慢。
-quick_take: 适合同一 Wi-Fi 下快速传照片、PDF、Word 和安装包。手机端无需安装 App，数据通过局域网直连；免费 Lite 版单文件上限 10 MB。
-seo_title: FileBeam Lite｜免费开源的手机电脑局域网文件互传工具
-seo_description: FileBeam Lite 是免费开源的局域网文件互传工具，PC 启动服务后手机扫码即用，无需安装 App，文件不经过第三方公网服务器，支持 Windows 10/11。
+pain: 手机与电脑传文件要登录账号、装 App 或上传公网云盘；大文件与批量素材更麻烦。
+quick_take: 同一 Wi-Fi 下手机扫码即连，无需装 App；大文件、文件夹打包与共享库安全锁为 Pro 能力。
+seo_title: FileBeam Pro｜局域网极速文件互传（单包二合一，¥19.9 终身）
+seo_description: FileBeam 支持鸿蒙/Android/iOS 手机与 Windows 电脑局域网极速互传，免费开箱即用，输入激活码原地解锁 Pro 专业版（大文件、ZIP 打包、共享库安全锁、断点续传）。
 keywords:
-  - FileBeam Lite
+  - FileBeam
+  - FileBeam Pro
   - 局域网文件互传
   - 手机电脑传文件
   - 扫码传文件
-  - 免费开源
-  - LocalSend替代
-  - 离线文件传输
+  - 大文件传输
+  - ZIP打包
+  - 断点续传
 features:
-  - 手机零安装，扫码即用
+  - 手机免装 App，扫码即连
   - 局域网直连，不经过公网
-  - Windows 免费开源
-  - 支持上传与共享下载
+  - 免费开箱即用
+  - Pro 原地解锁专业版
 ---
 
-## 一句话认识 FileBeam Lite
+## 为什么升级到 FileBeam Pro？（¥19.9 一次买断，解决 5 大刚需）
 
-**FileBeam Lite** 是一款免费开源的局域网文件互传工具。电脑端启动服务后，屏幕会显示局域网访问地址与二维码；手机连接同一个 Wi-Fi，用相机或浏览器扫码，就能打开轻量文件页面，把照片、文档或安装包直接传给电脑。
+<ol class="pro-upgrade-list">
+<li><strong>🚀 突破大小限制，GB 级大视频/压缩包秒传</strong><p>免费基础版限制单文件上限；Pro 专业版彻底解除限制，支持高清视频、设计工程、大型安装包极速直传。</p></li>
+<li><strong>🔒 电脑端「共享库安全锁」，防止他人扫码偷看隐私</strong><p>第 1 台扫码的手机自动绑定为专属主设备；第 2 台及后续访客手机扫码仅可向电脑发送文件，完全不可见也无法下载您 shared/ 和 received/ 中的文件。电脑端支持一键逐台授权/锁定或设置独立解锁密码。</p></li>
+<li><strong>📦 文件夹打包 ZIP & 一键全部接收</strong><p>支持目录打包为 ZIP 一键下载，或一键批量接收全部文件，告别几十个文件逐一点下载的繁琐。</p></li>
+<li><strong>🗑️ 接收清单一键清空（不删本地文件）</strong><p>电脑端「接收」清单太长时支持一键清空列表，100% 保留 received/ 磁盘文件不删除，新收文件正常显示，随时可一键恢复查看历史文件。</p></li>
+<li><strong>⚡ 代理环境原生兼容 + 断网续传 + 手机防锁屏</strong><p>自动屏蔽 Sing-Box / Clash / WireGuard 等虚拟 TUN 网卡，支持 PNA 跨域放行，开着代理也能用；512KB~8MB 自适应分片 + 断点续传 + Screen Wake Lock 防息屏。</p></li>
+</ol>
 
-电脑发往手机的流程同样简单：把文件放进共享目录，手机刷新页面即可下载。整个过程不需要在手机安装 App，不需要登录账号，也不把文件上传到第三方公网服务器。
+<div id="compare"></div>
 
-<div class="feature-grid">
-  <div class="feature-item"><strong>📱 手机零安装</strong><span>安卓与 iPhone 均可直接使用浏览器访问。</span></div>
-  <div class="feature-item"><strong>🔗 局域网直连</strong><span>同一 Wi-Fi 或手机热点下即可传输，不依赖公网。</span></div>
-  <div class="feature-item"><strong>📤 双向互传</strong><span>手机上传到电脑，电脑共享文件给手机下载。</span></div>
-  <div class="feature-item"><strong>🛡️ 数据少中转</strong><span>文件只在当前局域网设备之间传递。</span></div>
-</div>
+## 免费基础版 vs FileBeam Pro（¥19.9 终身版）
 
-## 为什么做 FileBeam
-
-临时传几张照片或一份 PDF，经常会遇到额外成本：
-
-- 聊天软件会压缩图片，文件过大时还会限制发送。
-- 登录微信、QQ 或网盘账号需要双方配合，临时设备尤其麻烦。
-- LocalSend 等工具体验不错，但接收端通常也要安装 App。
-- 企业 Wi-Fi 可能关闭设备发现或组播，导致部分工具搜不到设备。
-
-FileBeam 选择 HTTP + 浏览器作为基础通道。只要手机能访问电脑的局域网 IP，就可以打开页面。它不追求变成完整网盘，而是把“临时互传”这个动作做得足够直接。
-
-## 使用流程
-
-1. 从 GitHub Release 下载 Windows 压缩包并解压。
-2. 运行 `FileBeam_Lite.exe`，等待本地服务启动并打开浏览器。
-3. 让手机和电脑连接同一个 Wi-Fi，或让电脑连接手机热点。
-4. 用手机相机扫描电脑页面上的二维码。
-5. 手机页面即可上传文件到 `received`，或从 `shared` 下载电脑共享文件。
-
-<div class="notice"><strong>网络要求：</strong>FileBeam Lite 通过局域网 HTTP 服务工作。请仅在可信的家庭、个人热点或办公网络中使用，不要把端口直接暴露到公网。</div>
-
-## 免费 Lite 版下载
-
-FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校验文件统一归档在 GitHub：
-
-<div class="inline-cta">
-  <div><strong>免费 Lite 版</strong><span>Windows 10 / 11 · 解压即用 · 手机端无需安装。</span></div>
-  <a class="button accent" href="https://github.com/Amerstrong/FileBeam_Lite/releases/latest" target="_blank" rel="noopener noreferrer">前往 GitHub Release →</a>
-</div>
-
-下载后建议核对 Release 中的 `SHA256SUMS.txt`，确认安装包完整且与官方发布一致。
-
-## 免费版 vs 专业版（19.9 元）
-
-| 能力 | FileBeam Lite（免费） | FileBeam Pro（¥19.9） |
+| 核心能力 | 免费基础版 / GitHub Lite | FileBeam Pro（¥19.9 终身） |
 | --- | --- | --- |
-| 单文件大小 | 10 MB | 大文件传输，面向数百 MB、GB 乃至更大文件 |
-| 单文件发送 | 支持 | 支持 |
-| 文件夹批量传输 | 不支持，仅按文件传输 | 支持文件夹选择、目录浏览与批量传输 |
-| 批量下载 / ZIP | 逐个文件下载 | 支持批量接收与目录打包 ZIP |
-| 断点续传 | 不支持 | 支持分块传输、断网续传与弱网重试 |
-| 手机屏幕常亮 | 不支持 | 传输期间自动保持屏幕常亮，降低锁屏中断风险 |
-| 传输历史 | 当前浏览器最近记录 | 完整历史与 24 小时 / 3 天 / 7 天 / 会话清理策略 |
-| 自定义固定端口 | 不支持可视化设置 | 支持自定义并固定局域网服务端口 |
-| 使用场景 | 日常照片、PDF、Word 与小文档 | 视频、设计素材、批量图片、开发资源与团队办公 |
-| 授权方式 | 免费开源，MIT 许可证 | 个人终身买断授权，支持个人多设备使用，重装系统/换机不失效 |
+| 手机免装 App 扫码直连 | 支持 | 支持 |
+| 局域网免流量高速互传 | 支持 | 支持 |
+| 代理 / VPN 环境兼容 & 自动端口避让 | 支持 | 支持 |
+| 单文件大小上限 | 受限（Lite 10MB / 基础版 100MB） | 无限制（支持数 GB 大文件） |
+| 电脑端共享库安全锁（防他人扫码偷看） | 默认保护 | 完整设备权限管理 + 独立解锁密码 |
+| 文件夹打包 ZIP 下载 / 一键全量接收 | 不支持 | 支持 |
+| 自适应大分片 & 断点续传 | 基础分片 | 512KB~8MB 自适应 + 秒级断点续传 |
+| 接收清单一键清空（不删文件） | 基础记录 | 支持清空与随时恢复显示 |
+| 授权方式 | 免费使用 | 个人多设备终身买断（换机/重装不失效） |
 
-> Lite 版继续免费开放，适合轻量互传；Pro 版面向大文件、批量素材和长期使用场景。购买前建议先确认 Lite 版是否已满足需求。
+## 购买与原地激活流程（30 秒完成）
 
-## 在线购买与激活
+1. 在上方**在线收银台**选择套餐并完成支付宝付款。
+2. 查收您的专属 `FB-XXXXXXXX-XXXXXXXX` 激活码（如通过邮箱或订单页获取）。
+3. 回到已打开的 FileBeam 软件，点击右上角**「未激活 / 激活专业版」**，粘贴激活码点击验证，**无需重启软件，即刻原地解锁 Pro 终身版**。
 
-FileBeam Pro 已切换为在线收银台购买流程。请在下方收银台选择套餐和支付宝电脑网站支付方式，确认订单后即可完成付款。
+> **授权与离线说明**：FileBeam Pro 采用无状态 HMAC-SHA256 验签，不绑定硬件机器码。首次联网验签后，授权凭证保存在本地用户目录 `~/.filebeam/license.json`（兼容旧版 `license.dat`），后续纯离线也可永久使用；重装系统或更换电脑只需重新输入原激活码即可。
 
-购买与激活流程：
+## 双子星捆绑包（¥29.8）
 
-1. 在收银台选择 FileBeam Pro 终身版或双子星组合包。
-2. 选择「支付宝（电脑网站支付）」并确认订单。
-3. 后台核验后，将【FileBeam Pro 123云盘高速下载链接 + 专属激活码】发送至您的邮箱（不需要提供硬件机器码）。
-4. 下载解压并打开 FileBeam Pro 客户端，点击右上角钥匙/激活按钮输入激活码并完成首次联网验签。
-5. 首次联网验证通过后，客户端在软件同级目录保存带签名的 `license.dat` 授权凭证，后续离线启动无需再次联网。
-
-<div class="notice"><strong>首次运行提示：</strong>首次下载运行时极易触发浏览器拦截或 Windows Defender 的蓝色“已保护你的电脑”弹窗。首次打开若遇 Windows 安全中心提示，点击【更多信息】→【仍要运行】即可，软件纯本地运行无任何联网后门。</div>
-
-<div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多台电脑通用（家里、单位均可使用），重装系统或换电脑只需重新输入原激活码即可，永久有效。软件采用绿色便携模式，`license.dat` 与 `FileBeam_Pro.exe` 同级保存；把程序目录带到另一台电脑也可继续使用本地授权。激活接口采用无状态 HMAC 验签，不查询 KV，也不记录使用次数。</div>
-
-## 双子星捆绑包
-
-如果同时需要跨设备互传和 AI 内容转 Word，可以选择 **¥29.8 双子星捆绑包**：
+如果您同时需要**跨设备文件互传**与 **AI 内容一键转排版 Word（文匠）**，可直接在上方收银台选择 **¥29.8 双子星组合包**：
 
 <div class="purchase-grid">
-  <div class="price-card featured">
-    <div class="tag-row"><span class="tag warm">双子星 BUNDLE</span></div>
-    <h3>FileBeam Pro + 文匠</h3>
-    <div class="price">¥29.8</div>
-    <ul>
-      <li>FileBeam 专业版：个人多设备终身版，重装系统/换机不失效</li>
-      <li>文匠 Markdown_Office：支持绑定 3 台设备的终身版</li>
-      <li>两套软件分别下发独立激活码</li>
-    </ul>
-    <p><a class="button accent" href="/buy.html">查看双子星购买页 →</a></p>
-  </div>
+<div class="price-card featured">
+<div class="tag-row"><span class="tag warm">双子星 BUNDLE</span></div>
+<h3>FileBeam Pro + 文匠</h3>
+<div class="price">¥29.8</div>
+<ul>
+<li>FileBeam Pro：个人多设备终身版（不限机器）</li>
+<li>文匠 Markdown_Office：支持绑定 3 台设备的终身版</li>
+<li>两套软件分别下发独立永久激活码</li>
+</ul>
+<p><a class="button accent" href="#checkout">回到收银台选择组合包 →</a></p>
+</div>
 </div>
 
-## 免费版功能与边界
+## 免费开源版（FileBeam Lite）与隐私安全
 
-当前 Lite 版定位为日常轻量互传：
-
-| 能力 | FileBeam Lite |
-| --- | --- |
-| 手机端安装 | 无需安装 App |
-| 传输通道 | 同一局域网 HTTP 直连 |
-| 单文件上限 | 10 MB |
-| 手机上传到电脑 | 支持 |
-| 电脑共享文件到手机 | 支持 |
-| Windows 运行 | 解压即用 |
-| 数据经过公网服务器 | 不经过 |
-
-Lite 版适合照片、论文、PDF、Word 文档、发票和小型安装包。超大视频、断点续传和长时间弱网传输属于后续增强方向。
-
-## 隐私与安全
-
-- 文件只在当前局域网设备之间传输。
-- 不需要注册账号，不上传文件到第三方云盘。
-- 接收和共享目录位于解压后的程序目录。
-- 服务关闭后，局域网页面即停止访问。
-- 传输内容不会自动写入公网服务。
-
-## 工程与发布
-
-FileBeam Lite 的 Windows 发布包经过自动启动测试、首页访问测试和文件上传测试。仓库同时提供构建说明、MIT 许可证与每个版本的 SHA256 校验文件。
-
-如果你希望了解从源码到 GitHub Release 的完整工程过程，可以阅读技术专栏中的 [Python 工具打包、测试与 GitHub Release 实战](/posts/filebeam-python-release-pipeline.html)。
-
+- **免费开源下载**：只需要临时传 10MB 以内小文档的用户，也可前往 [GitHub Release →](https://github.com/Amerstrong/FileBeam_Lite/releases/latest) 下载 MIT 开源的 `FileBeam_Lite`（建议核对 `SHA256SUMS.txt`）。
+- **隐私与安全**：所有文件仅在当前局域网设备间直连传输，不经过任何公网服务器或第三方云盘；关闭软件服务即停止访问。
+- **工程实战专栏**：[从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战](/posts/filebeam-python-release-pipeline.html)

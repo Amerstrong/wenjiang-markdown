@@ -1648,6 +1648,84 @@ input {
   }
 }
 
+/* FileBeam 激活页专用样式 */
+.checkout-hint {
+  margin: 22px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 12px;
+  background: #eef8f4;
+  color: #23443a;
+  font-size: 0.9rem;
+}
+
+.checkout-hint code {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: #dcefe7;
+  color: #a33e25;
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.plan-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.plan-name {
+  line-height: 1.35;
+}
+
+.plan-rec {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.plan-desc {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.filebeam-checkout {
+  padding-top: 46px;
+}
+
+.pro-upgrade-list {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pro-upgrade-list li {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+}
+
+.pro-upgrade-list strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.pro-upgrade-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
   </style>
 </head>
 <body>
@@ -1721,19 +1799,26 @@ input {
   <div class="checkout-head">
     <span class="section-kicker">ONLINE CHECKOUT</span>
     <h2>在线收银台</h2>
-    <p>选择套餐后点击确认订单，系统将生成模拟订单并进入支付宝电脑网站支付。</p>
+    <p>选择套餐并完成支付宝电脑网站支付，付款后立即下发专属激活码，无需重新下载安装包。</p>
   </div>
+  <div class="checkout-hint">💡 付款后将立即下发 <code>FB-XXXXXXXX-XXXXXXXX</code> 专属激活码。<strong>无需重新下载安装包</strong>，直接在当前软件右上角输入激活码即可原地解锁全部专业版功能。</div>
   <div class="checkout-plan-list">
     <label class="plan-option selected" data-name="FileBeam Pro 终身版" data-price="19.90">
       <input type="radio" name="checkoutPlan" value="filebeam-pro" checked>
       <span class="plan-radio"></span>
-      <span class="plan-name">FileBeam Pro 终身版</span>
+      <span class="plan-copy">
+        <span class="plan-name">FileBeam Pro 终身版 <span class="plan-rec">推荐</span></span>
+        <small class="plan-desc">个人多设备终身授权 · 解锁无限大文件、ZIP 打包、共享库安全锁</small>
+      </span>
       <strong class="plan-price">¥19.90</strong>
     </label>
     <label class="plan-option" data-name="双子星组合包" data-price="29.80">
       <input type="radio" name="checkoutPlan" value="bundle">
       <span class="plan-radio"></span>
-      <span class="plan-name">双子星组合包</span>
+      <span class="plan-copy">
+        <span class="plan-name">双子星组合包（FileBeam Pro + 文匠 Markdown_Office）</span>
+        <small class="plan-desc">立省，两套软件分别下发独立永久激活码</small>
+      </span>
       <strong class="plan-price">¥29.80</strong>
     </label>
   </div>
