@@ -6,8 +6,7 @@ updated: 2026-11-28
 category: 技术随笔
 tags:
   - github 忘记密码  2FA  账号找回    github账号找回   github 密码恢复
-summary: GitHub 忘记密码且触发 2FA 两步验证拦截怎么办？本文复盘真实账号找回过程，详解邮箱重置为何仍需 2FA 密钥、本机 gho_
-  授权令牌的正确止损用法，以及 github-recovery-codes.txt 恢复码的使用时机，附开发者账号防丢清单。
+summary: GitHub 忘记密码且触发 2FA 两步验证拦截怎么办？本文复盘真实账号找回过程，详解邮箱重置为何仍需 2FA 密钥、本机 gho_授权令牌的正确止损用法，以及 github-recovery-codes.txt 恢复码的使用时机，附开发者账号防丢清单。
 audience: 网站开发，代码维护，独立开发者，程序员，github用户  账号安全  避坑指南
 keywords:
   - GitHub 2FA 找回
