@@ -10,8 +10,7 @@ tags:
   - 账号找回
   - 密码恢复
   - 避坑指南
-summary: GitHub 忘记密码且触发 2FA 两步验证拦截怎么办？本文复盘真实账号找回过程，详解邮箱重置为何仍需 2FA 密钥、本机 gho_
-  授权令牌的正确止损用法，以及 github-recovery-codes.txt 恢复码的使用时机，附开发者账号防丢清单。
+summary: GitHub 忘记密码且触发 2FA 拦截怎么办？复盘账号找回实战与避坑指南
 related_tool: filebeam
 audience: 网站开发，代码维护，独立开发者，程序员，github用户  账号安全  避坑指南
 keywords:
