@@ -97,35 +97,19 @@ FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校�
 
 > Lite 版继续免费开放，适合轻量互传；Pro 版面向大文件、批量素材和长期使用场景。购买前建议先确认 Lite 版是否已满足需求。
 
-## 支付宝扫码购买与激活码获取
+## 在线购买与激活
 
-<div class="qr-grid">
-  <div class="qr-card">
-    <img src="/assets/filebeam-alipay-19.9.png" alt="AI探索者支付宝经营收款码，FileBeam Pro 价格 19.9 元">
-    <span>FileBeam Pro ¥19.9 · 支付宝</span>
-  </div>
-  <div class="qr-card">
-    <img src="/assets/wechat-19.9.png" alt="FileBeam Pro 19.9 元微信收款码">
-    <span>FileBeam Pro ¥19.9 · 微信</span>
-  </div>
-</div>
-
-<div class="notice"><strong>付款备注提醒：</strong>付款时请在【添加备注】填写您的邮箱/微信号；若忘记备注，请将付款截图发至 <a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a>。</div>
+FileBeam Pro 已切换为在线收银台购买流程。请在下方收银台选择套餐和支付宝电脑网站支付方式，确认订单后即可完成付款。
 
 购买与激活流程：
 
-1. 根据支付方式扫描上方二维码，支付 `¥19.9`。
-2. 将付款截图和联系邮箱发送至 [xiaoyu12657@qq.com](mailto:xiaoyu12657@qq.com)。
+1. 在收银台选择 FileBeam Pro 终身版或双子星组合包。
+2. 选择「支付宝（电脑网站支付）」并确认订单。
 3. 后台核验后，将【FileBeam Pro 123云盘高速下载链接 + 专属激活码】发送至您的邮箱（不需要提供硬件机器码）。
 4. 下载解压并打开 FileBeam Pro 客户端，点击右上角钥匙/激活按钮输入激活码并完成首次联网验签。
 5. 首次联网验证通过后，客户端在软件同级目录保存带签名的 `license.dat` 授权凭证，后续离线启动无需再次联网。
 
 <div class="notice"><strong>首次运行提示：</strong>首次下载运行时极易触发浏览器拦截或 Windows Defender 的蓝色“已保护你的电脑”弹窗。首次打开若遇 Windows 安全中心提示，点击【更多信息】→【仍要运行】即可，软件纯本地运行无任何联网后门。</div>
-
-<div class="inline-cta">
-  <div><strong>已经付款但暂未收到激活码？</strong><span>请附付款截图和联系邮箱发送邮件，我们会人工核对并补发。</span></div>
-  <a class="button" href="mailto:xiaoyu12657@qq.com">联系客服 →</a>
-</div>
 
 <div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多台电脑通用（家里、单位均可使用），重装系统或换电脑只需重新输入原激活码即可，永久有效。软件采用绿色便携模式，`license.dat` 与 `FileBeam_Pro.exe` 同级保存；把程序目录带到另一台电脑也可继续使用本地授权。激活接口采用无状态 HMAC 验签，不查询 KV，也不记录使用次数。</div>
 
@@ -145,13 +129,7 @@ FileBeam Lite 以 MIT 许可证免费开源。最新版本、发布说明和校�
     </ul>
     <p><a class="button accent" href="/buy.html">查看双子星购买页 →</a></p>
   </div>
-  <div class="qr-card">
-    <img src="/assets/bundle-alipay-29.8.png" alt="FileBeam 与文匠双子星捆绑包 29.8 元支付宝收款码">
-    <span>双子星捆绑包 ¥29.8 · 支付宝</span>
-  </div>
 </div>
-
-> 微信暂时只提供 FileBeam Pro 19.9 元收款码，复用原有微信收款码；双子星捆绑包请使用支付宝 29.8 元经营码。
 
 ## 免费版功能与边界
 

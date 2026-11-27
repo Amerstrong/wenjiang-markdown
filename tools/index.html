@@ -1189,6 +1189,209 @@ input {
   font-size: 0.79rem;
 }
 
+.checkout-card {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid #bed7cd;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.checkout-head h2 {
+  margin: 8px 0 8px;
+}
+
+.checkout-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.checkout-plan-list {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.plan-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+  cursor: pointer;
+}
+
+.plan-option.selected {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.plan-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.plan-radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9bb4a9;
+  border-radius: 50%;
+}
+
+.plan-option.selected .plan-radio {
+  border-color: var(--brand);
+  background: radial-gradient(circle, var(--brand) 42%, transparent 46%);
+}
+
+.plan-name {
+  font-weight: 750;
+}
+
+.plan-price {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1.05rem;
+}
+
+.checkout-payment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 13px;
+  background: #f5fbf8;
+  font-weight: 700;
+}
+
+.checkout-payment small {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+.alipay-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.checkout-total {
+  margin: 22px 0 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.checkout-total strong {
+  margin-left: 6px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1.7rem;
+}
+
+.checkout-submit {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #1677ff, #0b5ed7);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.checkout-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(13, 25, 21, 0.56);
+  backdrop-filter: blur(6px);
+}
+
+.checkout-modal.open {
+  display: flex;
+}
+
+.checkout-modal-panel {
+  position: relative;
+  width: min(440px, 100%);
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+
+.checkout-modal-panel h3 {
+  margin: 14px 0 18px;
+  font-size: 1.25rem;
+}
+
+.checkout-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.checkout-order {
+  display: grid;
+  gap: 10px;
+}
+
+.checkout-order div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+
+.checkout-order span {
+  color: var(--muted);
+}
+
+.checkout-order strong {
+  text-align: right;
+  word-break: break-all;
+}
+
+.checkout-pending {
+  margin-top: 18px;
+  padding: 13px;
+  border: 1px dashed #f2b45b;
+  border-radius: 12px;
+  background: #fff8ec;
+  color: #8a5b12;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
 .inline-cta {
   display: flex;
   margin: 24px 0;
@@ -1294,6 +1497,9 @@ input {
   margin: 0 auto;
   padding: 17px 0 28px;
   border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
   font-family: var(--mono);
   font-size: 0.72rem;
 }
@@ -1545,6 +1751,11 @@ input {
     </div>
   </div>
   <div class="footer-copy">© 2026 AI探索者 · 本站使用无 CDN 的静态 HTML 构建 · woJingFang.cn</div>
+  <div class="footer-copy">
+    <span>版权主体：张店区沃境坊电子商务工作室（个体工商户）</span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">鲁ICP备2025138763号</a>
+    <span>售后邮箱：xiaoyu12657@qq.com</span>
+  </div>
 </footer>
 
 </body>

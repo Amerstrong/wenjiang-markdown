@@ -2,6 +2,7 @@
 # 允许搜索引擎与 AI 检索爬虫读取公开内容。
 
 User-agent: *
+Disallow: /admin/
 Allow: /
 
 User-agent: Baiduspider

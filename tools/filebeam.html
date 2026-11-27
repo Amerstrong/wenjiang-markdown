@@ -1189,6 +1189,209 @@ input {
   font-size: 0.79rem;
 }
 
+.checkout-card {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid #bed7cd;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.checkout-head h2 {
+  margin: 8px 0 8px;
+}
+
+.checkout-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.checkout-plan-list {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.plan-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-soft);
+  cursor: pointer;
+}
+
+.plan-option.selected {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.plan-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.plan-radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9bb4a9;
+  border-radius: 50%;
+}
+
+.plan-option.selected .plan-radio {
+  border-color: var(--brand);
+  background: radial-gradient(circle, var(--brand) 42%, transparent 46%);
+}
+
+.plan-name {
+  font-weight: 750;
+}
+
+.plan-price {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1.05rem;
+}
+
+.checkout-payment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 16px;
+  border: 1px solid #cfe2da;
+  border-radius: 13px;
+  background: #f5fbf8;
+  font-weight: 700;
+}
+
+.checkout-payment small {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+.alipay-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #1677ff;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.checkout-total {
+  margin: 22px 0 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.checkout-total strong {
+  margin-left: 6px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1.7rem;
+}
+
+.checkout-submit {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #1677ff, #0b5ed7);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.checkout-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(13, 25, 21, 0.56);
+  backdrop-filter: blur(6px);
+}
+
+.checkout-modal.open {
+  display: flex;
+}
+
+.checkout-modal-panel {
+  position: relative;
+  width: min(440px, 100%);
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+}
+
+.checkout-modal-panel h3 {
+  margin: 14px 0 18px;
+  font-size: 1.25rem;
+}
+
+.checkout-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.checkout-order {
+  display: grid;
+  gap: 10px;
+}
+
+.checkout-order div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+
+.checkout-order span {
+  color: var(--muted);
+}
+
+.checkout-order strong {
+  text-align: right;
+  word-break: break-all;
+}
+
+.checkout-pending {
+  margin-top: 18px;
+  padding: 13px;
+  border: 1px dashed #f2b45b;
+  border-radius: 12px;
+  background: #fff8ec;
+  color: #8a5b12;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
 .inline-cta {
   display: flex;
   margin: 24px 0;
@@ -1294,6 +1497,9 @@ input {
   margin: 0 auto;
   padding: 17px 0 28px;
   border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
   font-family: var(--mono);
   font-size: 0.72rem;
 }
@@ -1481,7 +1687,7 @@ input {
         <a class="button accent" href="https://github.com/Amerstrong/FileBeam_Lite/releases/latest" target="_blank" rel="noopener noreferrer">下载 FileBeam Lite →</a>
         <a class="button outline" href="#details">查看功能与说明</a>
       </div>
-      
+
     </div>
     <aside class="fact-panel" aria-label="FileBeam Lite关键信息">
       <div class="tag-row" style="margin-bottom:18px"><span class="tag warm">Lite 免费 / Pro 个人终身 ¥19.9</span></div>
@@ -1526,25 +1732,11 @@ input {
 <h2 id="免费版-vs-专业版（199-元）">免费版 vs 专业版（19.9 元）</h2>
 <div class="table-scroll"><table><thead><tr><th>能力</th><th>FileBeam Lite（免费）</th><th>FileBeam Pro（¥19.9）</th></tr></thead><tbody><tr><td>单文件大小</td><td>10 MB</td><td>大文件传输，面向数百 MB、GB 乃至更大文件</td></tr><tr><td>单文件发送</td><td>支持</td><td>支持</td></tr><tr><td>文件夹批量传输</td><td>不支持，仅按文件传输</td><td>支持文件夹选择、目录浏览与批量传输</td></tr><tr><td>批量下载 / ZIP</td><td>逐个文件下载</td><td>支持批量接收与目录打包 ZIP</td></tr><tr><td>断点续传</td><td>不支持</td><td>支持分块传输、断网续传与弱网重试</td></tr><tr><td>手机屏幕常亮</td><td>不支持</td><td>传输期间自动保持屏幕常亮，降低锁屏中断风险</td></tr><tr><td>传输历史</td><td>当前浏览器最近记录</td><td>完整历史与 24 小时 / 3 天 / 7 天 / 会话清理策略</td></tr><tr><td>自定义固定端口</td><td>不支持可视化设置</td><td>支持自定义并固定局域网服务端口</td></tr><tr><td>使用场景</td><td>日常照片、PDF、Word 与小文档</td><td>视频、设计素材、批量图片、开发资源与团队办公</td></tr><tr><td>授权方式</td><td>免费开源，MIT 许可证</td><td>个人终身买断授权，支持个人多设备使用，重装系统/换机不失效</td></tr></tbody></table></div>
 <blockquote><p>Lite 版继续免费开放，适合轻量互传；Pro 版面向大文件、批量素材和长期使用场景。购买前建议先确认 Lite 版是否已满足需求。</p></blockquote>
-<h2 id="支付宝扫码购买与激活码获取">支付宝扫码购买与激活码获取</h2>
-<div class="qr-grid">
-  <div class="qr-card">
-    <img src="/assets/filebeam-alipay-19.9.png" alt="AI探索者支付宝经营收款码，FileBeam Pro 价格 19.9 元">
-    <span>FileBeam Pro ¥19.9 · 支付宝</span>
-  </div>
-  <div class="qr-card">
-    <img src="/assets/wechat-19.9.png" alt="FileBeam Pro 19.9 元微信收款码">
-    <span>FileBeam Pro ¥19.9 · 微信</span>
-  </div>
-</div>
-<div class="notice"><strong>付款备注提醒：</strong>付款时请在【添加备注】填写您的邮箱/微信号；若忘记备注，请将付款截图发至 <a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a>。</div>
+<h2 id="在线购买与激活">在线购买与激活</h2>
+<p>FileBeam Pro 已切换为在线收银台购买流程。请在下方收银台选择套餐和支付宝电脑网站支付方式，确认订单后即可完成付款。</p>
 <p>购买与激活流程：</p>
-<ol><li>根据支付方式扫描上方二维码，支付 <code>¥19.9</code>。</li><li>将付款截图和联系邮箱发送至 <a href="mailto:xiaoyu12657@qq.com">xiaoyu12657@qq.com</a>。</li><li>后台核验后，将【FileBeam Pro 123云盘高速下载链接 + 专属激活码】发送至您的邮箱（不需要提供硬件机器码）。</li><li>下载解压并打开 FileBeam Pro 客户端，点击右上角钥匙/激活按钮输入激活码并完成首次联网验签。</li><li>首次联网验证通过后，客户端在软件同级目录保存带签名的 <code>license.dat</code> 授权凭证，后续离线启动无需再次联网。</li></ol>
+<ol><li>在收银台选择 FileBeam Pro 终身版或双子星组合包。</li><li>选择「支付宝（电脑网站支付）」并确认订单。</li><li>后台核验后，将【FileBeam Pro 123云盘高速下载链接 + 专属激活码】发送至您的邮箱（不需要提供硬件机器码）。</li><li>下载解压并打开 FileBeam Pro 客户端，点击右上角钥匙/激活按钮输入激活码并完成首次联网验签。</li><li>首次联网验证通过后，客户端在软件同级目录保存带签名的 <code>license.dat</code> 授权凭证，后续离线启动无需再次联网。</li></ol>
 <div class="notice"><strong>首次运行提示：</strong>首次下载运行时极易触发浏览器拦截或 Windows Defender 的蓝色“已保护你的电脑”弹窗。首次打开若遇 Windows 安全中心提示，点击【更多信息】→【仍要运行】即可，软件纯本地运行无任何联网后门。</div>
-<div class="inline-cta">
-  <div><strong>已经付款但暂未收到激活码？</strong><span>请附付款截图和联系邮箱发送邮件，我们会人工核对并补发。</span></div>
-  <a class="button" href="mailto:xiaoyu12657@qq.com">联系客服 →</a>
-</div>
 <div class="notice"><strong>授权说明：</strong>FileBeam Pro 为个人终身买断授权，支持个人多台电脑通用（家里、单位均可使用），重装系统或换电脑只需重新输入原激活码即可，永久有效。软件采用绿色便携模式，`license.dat` 与 `FileBeam_Pro.exe` 同级保存；把程序目录带到另一台电脑也可继续使用本地授权。激活接口采用无状态 HMAC 验签，不查询 KV，也不记录使用次数。</div>
 <h2 id="双子星捆绑包">双子星捆绑包</h2>
 <p>如果同时需要跨设备互传和 AI 内容转 Word，可以选择 <strong>¥29.8 双子星捆绑包</strong>：</p>
@@ -1560,12 +1752,7 @@ input {
     </ul>
     <p><a class="button accent" href="/buy.html">查看双子星购买页 →</a></p>
   </div>
-  <div class="qr-card">
-    <img src="/assets/bundle-alipay-29.8.png" alt="FileBeam 与文匠双子星捆绑包 29.8 元支付宝收款码">
-    <span>双子星捆绑包 ¥29.8 · 支付宝</span>
-  </div>
 </div>
-<blockquote><p>微信暂时只提供 FileBeam Pro 19.9 元收款码，复用原有微信收款码；双子星捆绑包请使用支付宝 29.8 元经营码。</p></blockquote>
 <h2 id="免费版功能与边界">免费版功能与边界</h2>
 <p>当前 Lite 版定位为日常轻量互传：</p>
 <div class="table-scroll"><table><thead><tr><th>能力</th><th>FileBeam Lite</th></tr></thead><tbody><tr><td>手机端安装</td><td>无需安装 App</td></tr><tr><td>传输通道</td><td>同一局域网 HTTP 直连</td></tr><tr><td>单文件上限</td><td>10 MB</td></tr><tr><td>手机上传到电脑</td><td>支持</td></tr><tr><td>电脑共享文件到手机</td><td>支持</td></tr><tr><td>Windows 运行</td><td>解压即用</td></tr><tr><td>数据经过公网服务器</td><td>不经过</td></tr></tbody></table></div>
@@ -1574,7 +1761,52 @@ input {
 <ul><li>文件只在当前局域网设备之间传输。</li><li>不需要注册账号，不上传文件到第三方云盘。</li><li>接收和共享目录位于解压后的程序目录。</li><li>服务关闭后，局域网页面即停止访问。</li><li>传输内容不会自动写入公网服务。</li></ul>
 <h2 id="工程与发布">工程与发布</h2>
 <p>FileBeam Lite 的 Windows 发布包经过自动启动测试、首页访问测试和文件上传测试。仓库同时提供构建说明、MIT 许可证与每个版本的 SHA256 校验文件。</p>
-<p>如果你希望了解从源码到 GitHub Release 的完整工程过程，可以阅读技术专栏中的 <a href="/posts/filebeam-python-release-pipeline.html">Python 工具打包、测试与 GitHub Release 实战</a>。</p></article>
+<p>如果你希望了解从源码到 GitHub Release 的完整工程过程，可以阅读技术专栏中的 <a href="/posts/filebeam-python-release-pipeline.html">Python 工具打包、测试与 GitHub Release 实战</a>。</p>
+<div class="checkout-card" id="checkout">
+  <div class="checkout-head">
+    <span class="section-kicker">ONLINE CHECKOUT</span>
+    <h2>在线收银台</h2>
+    <p>选择套餐后点击确认订单，系统将生成模拟订单并进入支付宝电脑网站支付。</p>
+  </div>
+  <div class="checkout-plan-list">
+    <label class="plan-option selected" data-name="FileBeam Pro 终身版" data-price="19.90">
+      <input type="radio" name="checkoutPlan" value="filebeam-pro" checked>
+      <span class="plan-radio"></span>
+      <span class="plan-name">FileBeam Pro 终身版</span>
+      <strong class="plan-price">¥19.90</strong>
+    </label>
+    <label class="plan-option" data-name="双子星组合包" data-price="29.80">
+      <input type="radio" name="checkoutPlan" value="bundle">
+      <span class="plan-radio"></span>
+      <span class="plan-name">双子星组合包</span>
+      <strong class="plan-price">¥29.80</strong>
+    </label>
+  </div>
+  <div class="checkout-payment">
+    <span class="alipay-badge">支付宝</span>
+    <span>支付宝（电脑网站支付）</span>
+    <small>官方网页支付渠道</small>
+  </div>
+  <div class="checkout-total">应付金额 <strong id="checkoutTotal">¥19.90</strong></div>
+  <button type="button" class="checkout-submit" id="checkoutSubmit">确认订单并前往支付宝付款</button>
+</div>
+<div class="checkout-modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+  <div class="checkout-modal-panel">
+    <button type="button" class="checkout-modal-close" id="checkoutModalClose" aria-label="关闭">×</button>
+    <span class="alipay-badge">支付宝</span>
+    <h3 id="checkoutModalTitle">订单确认</h3>
+    <div class="checkout-order">
+      <div><span>商品名称</span><strong id="modalProduct">FileBeam Pro 终身版</strong></div>
+      <div><span>订单号</span><strong id="modalOrder">-</strong></div>
+      <div><span>应付金额</span><strong id="modalAmount">¥19.90</strong></div>
+      <div><span>支付方式</span><strong>支付宝</strong></div>
+    </div>
+    <div class="checkout-pending">支付通道审核中，即将开放</div>
+  </div>
+</div>
+<script>
+(function(){var list=document.querySelector('.checkout-plan-list');var total=document.getElementById('checkoutTotal');var submit=document.getElementById('checkoutSubmit');var modal=document.getElementById('checkoutModal');var name='FileBeam Pro 终身版';var amount='19.90';list.addEventListener('change',function(e){var item=e.target.closest('.plan-option');if(!item)return;list.querySelectorAll('.plan-option').forEach(function(x){x.classList.remove('selected')});item.classList.add('selected');name=item.dataset.name;amount=item.dataset.price;total.textContent='¥'+amount;});submit.addEventListener('click',function(){var stamp=Date.now().toString(36).toUpperCase();var rand=Math.random().toString(36).slice(2,6).toUpperCase();document.getElementById('modalProduct').textContent=name;document.getElementById('modalOrder').textContent='WOJF-'+stamp+'-'+rand;document.getElementById('modalAmount').textContent='¥'+amount;modal.classList.add('open');});document.getElementById('checkoutModalClose').addEventListener('click',function(){modal.classList.remove('open')});modal.addEventListener('click',function(e){if(e.target===modal)modal.classList.remove('open')});})();
+</script></article>
       <aside class="article-aside">
         <strong>快速判断</strong>
         <p>适合同一 Wi-Fi 下快速传照片、PDF、Word 和安装包。手机端无需安装 App，数据通过局域网直连；免费 Lite 版单文件上限 10 MB。</p>
@@ -1587,7 +1819,7 @@ input {
       </aside>
     </div>
   </section>
-  
+
 <section class="section" aria-labelledby="related-posts-title">
   <div class="section-head"><div><span class="section-kicker">RELATED NOTES</span><h2 id="related-posts-title">与 FileBeam Lite 相关的实战记录</h2></div></div>
   <div class="post-grid">
@@ -1633,6 +1865,11 @@ input {
     </div>
   </div>
   <div class="footer-copy">© 2026 AI探索者 · 本站使用无 CDN 的静态 HTML 构建 · woJingFang.cn</div>
+  <div class="footer-copy">
+    <span>版权主体：张店区沃境坊电子商务工作室（个体工商户）</span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">鲁ICP备2025138763号</a>
+    <span>售后邮箱：xiaoyu12657@qq.com</span>
+  </div>
 </footer>
 
 </body>

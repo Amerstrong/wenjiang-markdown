@@ -23,6 +23,9 @@ SITE_URL = "https://wojingfang.cn"
 SITE_NAME = "AI探索者"
 SITE_AUTHOR = "AI探索者"
 CONTACT_EMAIL = "xiaoyu12657@qq.com"
+ICP_BEIAN = "鲁ICP备2025138763号"
+ICP_URL = "https://beian.miit.gov.cn/"
+LEGAL_NAME = "张店区沃境坊电子商务工作室（个体工商户）"
 
 
 @dataclass(slots=True)
@@ -345,6 +348,11 @@ def footer_html() -> str:
     </div>
   </div>
   <div class="footer-copy">© 2026 {SITE_NAME} · 本站使用无 CDN 的静态 HTML 构建 · woJingFang.cn</div>
+  <div class="footer-copy">
+    <span>版权主体：{LEGAL_NAME}</span>
+    <a href="{ICP_URL}" target="_blank" rel="nofollow noopener">{ICP_BEIAN}</a>
+    <span>售后邮箱：{CONTACT_EMAIL}</span>
+  </div>
 </footer>
 """
 
@@ -740,7 +748,7 @@ def build_tool_detail(tool: Document, posts: list[Document]) -> tuple[str, str]:
   </header>
   <section class="section" id="details">
     <div class="article-layout">
-      <article class="tool-content">{body_html}</article>
+      <article class="tool-content">{body_html}{checkout_html() if tool.slug == 'filebeam' else ''}</article>
       <aside class="article-aside">
         <strong>快速判断</strong>
         <p>{html.escape(text_value(tool.meta, "quick_take", summary))}</p>
@@ -785,6 +793,7 @@ def build_posts_index(posts: list[Document]) -> str:
     <span class="section-kicker">FIELD NOTES</span>
     <h1>技术专栏：把踩过的坑写成下一次的捷径</h1>
     <p>记录本地 AI、跨设备工具、边缘硬件、软件打包与发布的真实工程过程。文章优先给出可复现步骤、取舍原因和失败边界。</p>
+    <a class="button outline small" href="/admin/" rel="nofollow">管理员发布入口 →</a>
   </header>
   <section class="section" aria-label="全部技术文章">
     <div class="post-grid">{cards}</div>
@@ -976,13 +985,62 @@ def build_about() -> str:
     )
 
 
+def checkout_html() -> str:
+    return f"""
+<div class="checkout-card" id="checkout">
+  <div class="checkout-head">
+    <span class="section-kicker">ONLINE CHECKOUT</span>
+    <h2>在线收银台</h2>
+    <p>选择套餐后点击确认订单，系统将生成模拟订单并进入支付宝电脑网站支付。</p>
+  </div>
+  <div class="checkout-plan-list">
+    <label class="plan-option selected" data-name="FileBeam Pro 终身版" data-price="19.90">
+      <input type="radio" name="checkoutPlan" value="filebeam-pro" checked>
+      <span class="plan-radio"></span>
+      <span class="plan-name">FileBeam Pro 终身版</span>
+      <strong class="plan-price">¥19.90</strong>
+    </label>
+    <label class="plan-option" data-name="双子星组合包" data-price="29.80">
+      <input type="radio" name="checkoutPlan" value="bundle">
+      <span class="plan-radio"></span>
+      <span class="plan-name">双子星组合包</span>
+      <strong class="plan-price">¥29.80</strong>
+    </label>
+  </div>
+  <div class="checkout-payment">
+    <span class="alipay-badge">支付宝</span>
+    <span>支付宝（电脑网站支付）</span>
+    <small>官方网页支付渠道</small>
+  </div>
+  <div class="checkout-total">应付金额 <strong id="checkoutTotal">¥19.90</strong></div>
+  <button type="button" class="checkout-submit" id="checkoutSubmit">确认订单并前往支付宝付款</button>
+</div>
+<div class="checkout-modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+  <div class="checkout-modal-panel">
+    <button type="button" class="checkout-modal-close" id="checkoutModalClose" aria-label="关闭">×</button>
+    <span class="alipay-badge">支付宝</span>
+    <h3 id="checkoutModalTitle">订单确认</h3>
+    <div class="checkout-order">
+      <div><span>商品名称</span><strong id="modalProduct">FileBeam Pro 终身版</strong></div>
+      <div><span>订单号</span><strong id="modalOrder">-</strong></div>
+      <div><span>应付金额</span><strong id="modalAmount">¥19.90</strong></div>
+      <div><span>支付方式</span><strong>支付宝</strong></div>
+    </div>
+    <div class="checkout-pending">支付通道审核中，即将开放</div>
+  </div>
+</div>
+<script>
+(function(){{var list=document.querySelector('.checkout-plan-list');var total=document.getElementById('checkoutTotal');var submit=document.getElementById('checkoutSubmit');var modal=document.getElementById('checkoutModal');var name='FileBeam Pro 终身版';var amount='19.90';list.addEventListener('change',function(e){{var item=e.target.closest('.plan-option');if(!item)return;list.querySelectorAll('.plan-option').forEach(function(x){{x.classList.remove('selected')}});item.classList.add('selected');name=item.dataset.name;amount=item.dataset.price;total.textContent='¥'+amount;}});submit.addEventListener('click',function(){{var stamp=Date.now().toString(36).toUpperCase();var rand=Math.random().toString(36).slice(2,6).toUpperCase();document.getElementById('modalProduct').textContent=name;document.getElementById('modalOrder').textContent='WOJF-'+stamp+'-'+rand;document.getElementById('modalAmount').textContent='¥'+amount;modal.classList.add('open');}});document.getElementById('checkoutModalClose').addEventListener('click',function(){{modal.classList.remove('open')}});modal.addEventListener('click',function(e){{if(e.target===modal)modal.classList.remove('open')}});}})();
+</script>"""
+
+
 def build_buy() -> str:
     content = f"""
 <div class="page-shell">
   <header class="page-heading">
     <span class="section-kicker">LICENSES</span>
     <h1>FileBeam 与文匠授权购买</h1>
-    <p>两套软件可以单独购买，也可以选择双子星捆绑包。付款后请发送付款截图与联系邮箱，我们会下发对应激活码；首次联网校验通过后即可离线使用。</p>
+    <p>两套软件可以单独购买，也可以选择双子星捆绑包。在线收银台正在接入支付宝电脑网站支付，付款成功后由系统自动进入发卡流程。</p>
   </header>
   <section class="section" aria-labelledby="plans-title">
     <div class="section-head">
@@ -1017,31 +1075,16 @@ def build_buy() -> str:
   </section>
   <section class="section" aria-labelledby="payment-title">
     <div class="section-head">
-      <div><span class="section-kicker">PAYMENT</span><h2 id="payment-title">扫码付款</h2></div>
-      <p>请按商品金额选择二维码，付款备注可填写你的邮箱或订单说明。</p>
+      <div><span class="section-kicker">PAYMENT</span><h2 id="payment-title">在线收银台</h2></div>
+      <p>当前为支付宝电脑网站支付的合规收银台界面，支付通道审核通过后即可完成真实扣款。</p>
     </div>
-    <div class="qr-grid">
-      <div class="qr-card">
-        <img src="/assets/filebeam-alipay-19.9.png" alt="FileBeam Pro 19.9 元支付宝收款码">
-        <span>FileBeam Pro ¥19.9 · 支付宝</span>
-      </div>
-      <div class="qr-card">
-        <img src="/assets/bundle-alipay-29.8.png" alt="FileBeam 与文匠双子星捆绑包 29.8 元支付宝收款码">
-        <span>双子星捆绑包 ¥29.8 · 支付宝</span>
-      </div>
-      <div class="qr-card">
-        <img src="/assets/wechat-19.9.png" alt="FileBeam Pro 19.9 元微信收款码">
-        <span>FileBeam Pro ¥19.9 · 微信</span>
-      </div>
-    </div>
-    <div class="notice"><strong>付款备注提醒：</strong>付款时请在【添加备注】填写您的邮箱/微信号；若忘记备注，请将付款截图发至 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>。</div>
-    <div class="notice"><strong>微信说明：</strong>目前微信只有 FileBeam Pro 19.9 元收款码，复用原有收款码；双子星捆绑包请使用支付宝 29.8 元经营码。</div>
+    {checkout_html()}
   </section>
   <section class="section" aria-labelledby="activate-title">
     <div class="answer-box">
       <strong id="activate-title">购买后如何激活？</strong>
       <ol>
-        <li>完成付款后，把付款截图和联系邮箱发送至 <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>。</li>
+        <li>在收银台确认订单并完成支付宝付款。</li>
         <li>后台核验后，将【FileBeam Pro 123云盘高速下载链接 + 专属激活码】发送至您的邮箱，不需要提供硬件机器码。</li>
         <li>下载解压并打开 FileBeam Pro 客户端，点击右上角钥匙/激活按钮输入激活码并完成首次联网验签。</li>
         <li>激活服务确认激活码有效后，客户端会在 `FileBeam_Pro.exe` 同级目录写入带签名的 `license.dat`。</li>
@@ -1080,7 +1123,7 @@ def build_buy() -> str:
     return page_html(
         route="buy.html",
         title="FileBeam 与文匠授权购买｜AI探索者",
-        description="购买 FileBeam Pro 个人多设备终身授权19.9元，或选择 FileBeam 与文匠双子星捆绑包29.8元。支持支付宝与微信扫码付款，激活后离线使用。",
+        description="购买 FileBeam Pro 个人多设备终身授权19.9元，或选择 FileBeam 与文匠双子星捆绑包29.8元。通过支付宝电脑网站支付在线下单，激活后离线使用。",
         keywords="FileBeam Pro购买,FileBeam授权,文匠购买,双子星捆绑包,FileBeam 19.9,文匠29.8,局域网互传软件",
         content=content,
         active="",
@@ -1125,6 +1168,7 @@ def robots_txt() -> str:
         "Applebot",
     ]
     blocks = [f"User-agent: {agent}\nAllow: /" for agent in agents]
+    blocks[0] = "User-agent: *\nDisallow: /admin/\nAllow: /"
     return (
         "# AI探索者 · https://wojingfang.cn\n"
         "# 允许搜索引擎与 AI 检索爬虫读取公开内容。\n\n"
@@ -1379,6 +1423,12 @@ def build() -> None:
         + "\n",
         encoding="utf-8",
     )
+
+    for _route, path in generated:
+        text = path.read_text(encoding="utf-8")
+        cleaned = re.sub(r"(?m)[ \t]+$", "", text)
+        if cleaned != text:
+            path.write_text(cleaned, encoding="utf-8")
 
     validate_outputs(generated, tools, posts)
     print(f"Built {len(generated)} HTML pages from {len(tools)} tools and {len(posts)} posts.")

@@ -4,6 +4,8 @@ backend:
   branch: main
   base_url: https://api.wojingfang.cn
   auth_endpoint: auth
+  site_domain: wojingfang.cn
+publish_mode: editorial_workflow
 
 # 媒体文件存储位置
 media_folder: "images"
@@ -11,41 +13,68 @@ public_folder: "/images"
 
 # 内容集合
 collections:
-  # ─── 博客文章 ───
-  - name: "blog"
-    label: "博客文章"
+  # ─── 技术专栏文章 ───
+  - name: "posts"
+    label: "技术专栏"
     label_singular: "文章"
-    folder: "blog"
+    folder: "content/posts"
     create: true
     slug: "{{slug}}"
-    preview_path: "blog/{{slug}}.html"
+    preview_path: "posts/{{slug}}.html"
     fields:
-      - { label: "标题", name: "title", widget: "string", hint: "文章标题，用于页面 <title>" }
-      - { label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - { label: "摘要", name: "summary", widget: "text", hint: "100字以内，用于列表页和 meta description" }
-      - { label: "正文（Markdown）", name: "body", widget: "markdown" }
+      - label: "标题"
+        name: "title"
+        widget: "string"
+        hint: "文章标题，用于页面 <title>"
+      - label: "Slug"
+        name: "slug"
+        widget: "string"
+        hint: "英文短链接，例如 filebeam-python-release-pipeline"
+      - label: "发布日期"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - label: "更新时间"
+        name: "updated"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        required: false
+      - label: "栏目"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "本地 AI", value: "本地AI" }
+          - { label: "跨设备效率", value: "跨设备效率" }
+          - { label: "边缘硬件", value: "边缘硬件" }
+          - { label: "工程自动化", value: "工程自动化" }
+          - { label: "技术随笔", value: "技术随笔" }
       - label: "标签"
         name: "tags"
         widget: "list"
         allow_add: true
-        hint: "如：GPT转Word、Markdown、排版技巧"
-
-  # ─── 产品公告 ───
-  - name: "notices"
-    label: "产品公告"
-    label_singular: "公告"
-    folder: "notices"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - { label: "标题", name: "title", widget: "string" }
-      - { label: "日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - label: "类型"
-        name: "type"
+      - label: "摘要"
+        name: "summary"
+        widget: "text"
+        hint: "用于列表页和 meta description"
+      - label: "关联工具"
+        name: "related_tool"
         widget: "select"
+        required: false
         options:
-          - { label: "版本更新", value: "update" }
-          - { label: "重要公告", value: "notice" }
-          - { label: "活动信息", value: "promo" }
-      - { label: "内容", name: "body", widget: "markdown" }
-      - { label: "是否显示", name: "visible", widget: "boolean", default: true }
+          - { label: "FileBeam Lite", value: "filebeam" }
+          - { label: "文匠 Markdown_Office", value: "wenjiang" }
+      - label: "适合读者"
+        name: "audience"
+        widget: "text"
+        required: false
+      - label: "SEO 关键词"
+        name: "keywords"
+        widget: "list"
+        allow_add: true
+      - label: "正文"
+        name: "body"
+        widget: "markdown"
