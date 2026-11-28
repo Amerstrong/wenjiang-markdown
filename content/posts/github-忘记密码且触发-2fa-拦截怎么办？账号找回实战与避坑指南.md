@@ -39,13 +39,13 @@ keywords:
 
 在 Windows 凭据管理器中，IDE 或 Git Credential Manager 可能会保存一个依然有效的 `gho_` 开头令牌。需要注意的是：
 
-* `gho_` 属于 OAuth 授权令牌，而 GitHub 账号恢复页面只认 PAT（`ghp_` 或 `github_pat_` 开头） 或已绑定的 SSH 私钥。
-* 正确用法： 虽然不能用 `gho_` 直接解锁账号，但可以趁它还没过期，通过 GitHub API（`/user/keys`）查询账号是否绑定过 SSH Key，或者直接用它把所有私有仓库 `git clone --mirror` 备份到本地止损。
+`gho_` 属于 OAuth 授权令牌，而 GitHub 账号恢复页面只认 PAT（`ghp_` 或 `github_pat_` 开头） 或已绑定的 SSH 私钥。
+ 正确用法： 虽然不能用 `gho_` 直接解锁账号，但可以趁它还没过期，通过 GitHub API（`/user/keys`）查询账号是否绑定过 SSH Key，或者直接用它把所有私有仓库 `git clone --mirror` 备份到本地止损。
 
 #### 三、两类核心保命凭证的区别
 
-* 2FA 密钥（TOTP Secret）： 绑定验证器 App 时的二维码或 Base32 字符串。日常重置密码、异地登录全靠它生成 6 位动态码。
-* 恢复码（`github-recovery-codes.txt`）： 开启 2FA 时系统生成的一组一次性代码。只有当你弄丢手机或遗失 2FA 密钥时，在验证界面选择“Use a recovery code”填入即可救急。
+ 2FA 密钥（TOTP Secret）： 绑定验证器 App 时的二维码或 Base32 字符串。日常重置密码、异地登录全靠它生成 6 位动态码。
+ 恢复码（`github-recovery-codes.txt`）： 开启 2FA 时系统生成的一组一次性代码。只有当你弄丢手机或遗失 2FA 密钥时，在验证界面选择“Use a recovery code”填入即可救急。
 
 #### 四、给开发者的账号防丢清单
 
