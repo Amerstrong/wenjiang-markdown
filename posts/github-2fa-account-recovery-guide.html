@@ -1777,9 +1777,9 @@ input {
 <p>#### 二、避坑：本机有效的 <code>gho_</code> 令牌能用来找回账号吗？</p>
 <p>不能直接用于恢复。</p>
 <p>在 Windows 凭据管理器中，IDE 或 Git Credential Manager 可能会保存一个依然有效的 <code>gho_</code> 开头令牌。需要注意的是：</p>
-<ul><li><code>gho_</code> 属于 OAuth 授权令牌，而 GitHub 账号恢复页面只认 PAT（<code>ghp_</code> 或 <code>github_pat_</code> 开头） 或已绑定的 SSH 私钥。</li><li>正确用法： 虽然不能用 <code>gho_</code> 直接解锁账号，但可以趁它还没过期，通过 GitHub API（<code>/user/keys</code>）查询账号是否绑定过 SSH Key，或者直接用它把所有私有仓库 <code>git clone --mirror</code> 备份到本地止损。</li></ul>
+<p><code>gho_</code> 属于 OAuth 授权令牌，而 GitHub 账号恢复页面只认 PAT（<code>ghp_</code> 或 <code>github_pat_</code> 开头） 或已绑定的 SSH 私钥。 正确用法： 虽然不能用 <code>gho_</code> 直接解锁账号，但可以趁它还没过期，通过 GitHub API（<code>/user/keys</code>）查询账号是否绑定过 SSH Key，或者直接用它把所有私有仓库 <code>git clone --mirror</code> 备份到本地止损。</p>
 <p>#### 三、两类核心保命凭证的区别</p>
-<ul><li>2FA 密钥（TOTP Secret）： 绑定验证器 App 时的二维码或 Base32 字符串。日常重置密码、异地登录全靠它生成 6 位动态码。</li><li>恢复码（<code>github-recovery-codes.txt</code>）： 开启 2FA 时系统生成的一组一次性代码。只有当你弄丢手机或遗失 2FA 密钥时，在验证界面选择“Use a recovery code”填入即可救急。</li></ul>
+<p>2FA 密钥（TOTP Secret）： 绑定验证器 App 时的二维码或 Base32 字符串。日常重置密码、异地登录全靠它生成 6 位动态码。 恢复码（<code>github-recovery-codes.txt</code>）： 开启 2FA 时系统生成的一组一次性代码。只有当你弄丢手机或遗失 2FA 密钥时，在验证界面选择“Use a recovery code”填入即可救急。</p>
 <p>#### 四、给开发者的账号防丢清单</p>
 <ol><li>双地备份 2FA 密钥： 不仅存在手机验证器里，务必在本地离线加密文档或密码管理器中留存一份原始密钥。</li><li>妥善保存 <code>github-recovery-codes.txt</code>： 下载后单独存放，切勿与手机绑定在同一单点风险上。</li><li>绑定至少一把 SSH Key： 在常用开发机上配置好 SSH Key，关键时刻它就是账号恢复的“替代验证因子”。</li></ol>
     </article>
