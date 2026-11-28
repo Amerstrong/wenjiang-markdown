@@ -2158,6 +2158,55 @@ input {
   font-size: 0.88rem;
 }
 
+.checkout-recover-row {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.checkout-recover-link {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.84rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.checkout-recover-link:hover {
+  color: var(--brand);
+}
+
+.checkout-lookup-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.checkout-lookup-box .checkout-email-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+}
+
+.checkout-lookup-box .button {
+  flex-shrink: 0;
+}
+
+.checkout-polling-body {
+  display: grid;
+  gap: 10px;
+}
+
+.checkout-pay-link-wrap {
+  margin-top: 2px;
+}
+
+.license-key-box code {
+  font-size: 1.22rem;
+}
+
 .pro-upgrade-list {
   display: grid;
   gap: 12px;
@@ -2278,19 +2327,31 @@ input {
   <div class="checkout-total">应付金额 <strong id="checkoutTotal">¥19.90</strong></div>
   <div class="checkout-error" id="checkoutError" style="display:none"></div>
   <button type="button" class="checkout-submit" id="checkoutSubmit">前往支付宝付款</button>
+  <div class="checkout-recover-row">
+    <button type="button" class="checkout-recover-link" id="recoverOrderBtn">已付款未看到激活码？点击查询</button>
+  </div>
 </div>
 <div class="checkout-modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
   <div class="checkout-modal-panel">
     <button type="button" class="checkout-modal-close" id="checkoutModalClose" aria-label="关闭">×</button>
     <span class="alipay-badge">支付宝</span>
-    <h3 id="checkoutModalTitle">支付结果查询</h3>
+    <h3 id="checkoutModalTitle">等待支付中</h3>
+    <div class="checkout-lookup-box" id="modalLookupBox" style="display:none">
+      <input type="text" id="lookupOrderInput" class="checkout-email-input" placeholder="输入或粘贴订单号（如 FB20261128...）">
+      <button type="button" class="button small" id="lookupOrderSubmit">查询订单</button>
+    </div>
     <div class="checkout-order">
       <div><span>订单号</span><strong id="modalOrder">-</strong></div>
       <div><span>商品套餐</span><strong id="modalProduct">-</strong></div>
     </div>
     <div class="checkout-polling" id="modalPollingBox">
       <div class="checkout-spinner" aria-hidden="true"></div>
-      <p id="modalPollingText">正在查询支付宝入账状态，请稍候...</p>
+      <div class="checkout-polling-body">
+        <p id="modalPollingText">正在等待支付，每 2 秒自动查询入账状态...</p>
+        <div class="checkout-pay-link-wrap" id="modalPayLinkWrap" style="display:none">
+          <a id="modalPayDirectLink" class="button accent small" href="#" target="_blank" rel="noopener noreferrer">如未自动跳转，点此打开支付宝 →</a>
+        </div>
+      </div>
     </div>
     <div class="checkout-success-box" id="modalSuccessBox" style="display:none">
       <div class="success-banner">✅ 支付成功！专属激活码已生成</div>
@@ -2313,6 +2374,7 @@ input {
 <script>
 (function(){
   var API_BASE = 'https://wojingfang.cn';
+  var STORAGE_KEY = 'last_filebeam_order_no';
   var PRODUCT_NAMES = {
     filebeam_pro: 'FileBeam Pro 终身版',
     bundle_pack: '双子星组合包（FileBeam Pro + 文匠）',
@@ -2323,14 +2385,22 @@ input {
   var submit = document.getElementById('checkoutSubmit');
   var emailInput = document.getElementById('checkoutEmail');
   var errBox = document.getElementById('checkoutError');
+  var recoverBtn = document.getElementById('recoverOrderBtn');
   var modal = document.getElementById('checkoutModal');
+  var modalTitle = document.getElementById('checkoutModalTitle');
   var modalClose = document.getElementById('checkoutModalClose');
+  var lookupBox = document.getElementById('modalLookupBox');
+  var lookupInput = document.getElementById('lookupOrderInput');
+  var lookupSubmit = document.getElementById('lookupOrderSubmit');
   var modalOrder = document.getElementById('modalOrder');
   var modalProduct = document.getElementById('modalProduct');
   var pollingBox = document.getElementById('modalPollingBox');
   var pollingText = document.getElementById('modalPollingText');
+  var payLinkWrap = document.getElementById('modalPayLinkWrap');
+  var payDirectLink = document.getElementById('modalPayDirectLink');
   var successBox = document.getElementById('modalSuccessBox');
   var timeoutBox = document.getElementById('modalTimeoutBox');
+  var timeoutText = document.getElementById('modalTimeoutText');
   var licenseKeyEl = document.getElementById('modalLicenseKey');
   var copyBtn = document.getElementById('copyLicenseBtn');
   var retryBtn = document.getElementById('retryStatusBtn');
@@ -2367,7 +2437,17 @@ input {
       clearError();
       var email = emailInput ? emailInput.value.trim() : '';
       submit.disabled = true;
-      submit.textContent = '正在创建订单，跳转支付宝...';
+      submit.textContent = '正在创建订单...';
+
+      var payWin = null;
+      try {
+        payWin = window.open('', '_blank');
+        if (payWin && payWin.document) {
+          payWin.document.write('<!doctype html><meta charset="utf-8"><title>正在前往支付宝...</title><p style="font-family:sans-serif;padding:40px;text-align:center;color:#333;">正在安全跳转至支付宝官方收银台，请稍候...</p>');
+        }
+      } catch (e) {
+        payWin = null;
+      }
 
       fetch(API_BASE + '/api/pay/create', {
         method: 'POST',
@@ -2376,25 +2456,38 @@ input {
       })
       .then(function(res){ return res.json(); })
       .then(function(data){
-        if (data && data.ok && data.pay_url) {
-          window.location.href = data.pay_url;
+        submit.disabled = false;
+        submit.textContent = '前往支付宝付款';
+        if (data && data.ok && data.pay_url && data.order_no) {
+          try { localStorage.setItem(STORAGE_KEY, data.order_no); } catch (e) {}
+          if (payWin && !payWin.closed) {
+            payWin.location.href = data.pay_url;
+          }
+          if (payDirectLink && payLinkWrap) {
+            payDirectLink.href = data.pay_url;
+            payLinkWrap.style.display = 'block';
+          }
+          if (lookupBox) lookupBox.style.display = 'none';
+          startPolling(data.order_no, true);
         } else {
+          if (payWin && !payWin.closed) payWin.close();
           showError((data && data.message) || '创建支付订单失败，请稍后重试');
-          submit.disabled = false;
-          submit.textContent = '前往支付宝付款';
         }
       })
       .catch(function(){
-        showError('网络请求失败，请检查网络连接后重试');
+        if (payWin && !payWin.closed) payWin.close();
         submit.disabled = false;
         submit.textContent = '前往支付宝付款';
+        showError('网络请求失败，请检查网络连接后重试');
       });
     });
   }
 
-  function startPolling(orderNo) {
+  function startPolling(orderNo, showPayLink) {
     if (!modal || !orderNo) return;
     if (pollTimer) clearInterval(pollTimer);
+    if (modalTitle) modalTitle.textContent = showPayLink ? '等待支付中' : '支付结果查询';
+    if (payLinkWrap && !showPayLink) payLinkWrap.style.display = 'none';
     modalOrder.textContent = orderNo;
     modalProduct.textContent = '查询中...';
     pollingBox.style.display = 'flex';
@@ -2407,7 +2500,7 @@ input {
 
     function checkOnce() {
       attempts += 1;
-      pollingText.textContent = '正在查询支付宝入账状态（' + attempts + '/' + maxAttempts + '）...';
+      pollingText.textContent = (showPayLink ? '请在新标签页完成支付宝付款，' : '') + '正在查询入账状态（' + attempts + '/' + maxAttempts + '）...';
       fetch(API_BASE + '/api/pay/status?order_no=' + encodeURIComponent(orderNo))
         .then(function(res){ return res.json(); })
         .then(function(data){
@@ -2417,14 +2510,22 @@ input {
           if (data && data.status === 'PAID' && data.license_key) {
             clearInterval(pollTimer);
             pollTimer = null;
+            if (modalTitle) modalTitle.textContent = '支付成功';
             pollingBox.style.display = 'none';
             timeoutBox.style.display = 'none';
             licenseKeyEl.textContent = data.license_key;
             successBox.style.display = 'block';
+          } else if (data && data.status === 'NOT_FOUND') {
+            clearInterval(pollTimer);
+            pollTimer = null;
+            pollingBox.style.display = 'none';
+            if (timeoutText) timeoutText.textContent = '未找到订单号 ' + orderNo + '，请核对订单号是否正确。';
+            timeoutBox.style.display = 'block';
           } else if (attempts >= maxAttempts) {
             clearInterval(pollTimer);
             pollTimer = null;
             pollingBox.style.display = 'none';
+            if (timeoutText) timeoutText.textContent = '暂未检测到入账确认。如果您已完成付款，请点击下方重新查询。';
             timeoutBox.style.display = 'block';
           }
         })
@@ -2433,6 +2534,7 @@ input {
             clearInterval(pollTimer);
             pollTimer = null;
             pollingBox.style.display = 'none';
+            if (timeoutText) timeoutText.textContent = '查询请求超时，请点击下方重新查询。';
             timeoutBox.style.display = 'block';
           }
         });
@@ -2440,6 +2542,37 @@ input {
 
     checkOnce();
     pollTimer = setInterval(checkOnce, 2000);
+  }
+
+  if (recoverBtn) {
+    recoverBtn.addEventListener('click', function(){
+      var saved = '';
+      try { saved = localStorage.getItem(STORAGE_KEY) || ''; } catch (e) {}
+      if (lookupBox) lookupBox.style.display = 'flex';
+      if (lookupInput) lookupInput.value = saved;
+      if (payLinkWrap) payLinkWrap.style.display = 'none';
+      if (saved) {
+        startPolling(saved.trim(), false);
+      } else {
+        if (pollTimer) clearInterval(pollTimer);
+        if (modalTitle) modalTitle.textContent = '找回激活码';
+        modalOrder.textContent = '-';
+        modalProduct.textContent = '-';
+        pollingBox.style.display = 'none';
+        successBox.style.display = 'none';
+        timeoutBox.style.display = 'none';
+        modal.classList.add('open');
+      }
+    });
+  }
+
+  if (lookupSubmit && lookupInput) {
+    lookupSubmit.addEventListener('click', function(){
+      var val = lookupInput.value.trim();
+      if (!val) return;
+      try { localStorage.setItem(STORAGE_KEY, val); } catch (e) {}
+      startPolling(val, false);
+    });
   }
 
   if (copyBtn) {
@@ -2465,15 +2598,16 @@ input {
   }
 
   var urlParams = new URLSearchParams(window.location.search);
-  var initialOrderNo = urlParams.get('order_no');
+  var initialOrderNo = urlParams.get('out_trade_no') || urlParams.get('order_no');
   if (initialOrderNo) {
-    startPolling(initialOrderNo.trim());
+    if (lookupBox) lookupBox.style.display = 'none';
+    startPolling(initialOrderNo.trim(), false);
   }
 
   if (retryBtn) {
     retryBtn.addEventListener('click', function(){
       var orderNo = modalOrder.textContent.trim();
-      if (orderNo && orderNo !== '-') startPolling(orderNo);
+      if (orderNo && orderNo !== '-') startPolling(orderNo, false);
     });
   }
 

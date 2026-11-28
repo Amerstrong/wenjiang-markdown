@@ -61,7 +61,7 @@ export default {
           timestamp,
           version: '1.0',
           notify_url: 'https://wojingfang.cn/api/pay/ali-notify',
-          return_url: `https://wojingfang.cn/tools/filebeam.html?order_no=${encodeURIComponent(outTradeNo)}`,
+          return_url: 'https://wojingfang.cn/tools/filebeam.html',
           biz_content: JSON.stringify({
             out_trade_no: outTradeNo,
             product_code: 'FAST_INSTANT_TRADE_PAY',
@@ -183,13 +183,14 @@ export default {
           .first();
 
         if (!order) {
-          return new Response(JSON.stringify({ status: 'NOT_FOUND', product_id: null, license_key: null }), {
+          return new Response(JSON.stringify({ ok: false, status: 'NOT_FOUND', product_id: null, license_key: null }), {
             status: 404,
             headers,
           });
         }
 
         return new Response(JSON.stringify({
+          ok: true,
           status: order.status,
           product_id: order.product_id,
           license_key: order.status === 'PAID' ? order.license_key : null,
