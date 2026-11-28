@@ -1112,12 +1112,12 @@ def checkout_html() -> str:
   <div class="checkout-head">
     <span class="section-kicker">ONLINE CHECKOUT</span>
     <h2>在线收银台</h2>
-    <p>选择套餐并完成支付宝电脑网站支付，付款后立即下发专属激活码，无需重新下载安装包。</p>
+    <p>选择套餐并完成支付宝电脑网站支付，付款后自动秒级下发专属激活码，无需重新下载安装包。</p>
   </div>
   <div class="checkout-hint">💡 付款后将立即下发 <code>FB-XXXXXXXX-XXXXXXXX</code> 专属激活码。<strong>无需重新下载安装包</strong>，直接在当前软件右上角输入激活码即可原地解锁全部专业版功能。</div>
   <div class="checkout-plan-list">
     <label class="plan-option selected" data-name="FileBeam Pro 终身版" data-price="19.90">
-      <input type="radio" name="checkoutPlan" value="filebeam-pro" checked>
+      <input type="radio" name="checkoutPlan" value="filebeam_pro" checked>
       <span class="plan-radio"></span>
       <span class="plan-copy">
         <span class="plan-name">FileBeam Pro 终身版 <span class="plan-rec">推荐</span></span>
@@ -1126,7 +1126,7 @@ def checkout_html() -> str:
       <strong class="plan-price">¥19.90</strong>
     </label>
     <label class="plan-option" data-name="双子星组合包" data-price="29.80">
-      <input type="radio" name="checkoutPlan" value="bundle">
+      <input type="radio" name="checkoutPlan" value="bundle_pack">
       <span class="plan-radio"></span>
       <span class="plan-copy">
         <span class="plan-name">双子星组合包（FileBeam Pro + 文匠 Markdown_Office）</span>
@@ -1135,30 +1135,232 @@ def checkout_html() -> str:
       <strong class="plan-price">¥29.80</strong>
     </label>
   </div>
+  <div class="checkout-email-row">
+    <label for="checkoutEmail" class="checkout-email-label">联系邮箱（选填，用于订单留档）</label>
+    <input type="email" id="checkoutEmail" class="checkout-email-input" placeholder="name@example.com（选填）" autocomplete="email">
+  </div>
   <div class="checkout-payment">
     <span class="alipay-badge">支付宝</span>
     <span>支付宝（电脑网站支付）</span>
-    <small>官方网页支付渠道</small>
+    <small>官方网页收银台 · 支付后自动返回发码</small>
   </div>
   <div class="checkout-total">应付金额 <strong id="checkoutTotal">¥19.90</strong></div>
-  <button type="button" class="checkout-submit" id="checkoutSubmit">确认订单并前往支付宝付款</button>
+  <div class="checkout-error" id="checkoutError" style="display:none"></div>
+  <button type="button" class="checkout-submit" id="checkoutSubmit">前往支付宝付款</button>
 </div>
 <div class="checkout-modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
   <div class="checkout-modal-panel">
     <button type="button" class="checkout-modal-close" id="checkoutModalClose" aria-label="关闭">×</button>
     <span class="alipay-badge">支付宝</span>
-    <h3 id="checkoutModalTitle">订单确认</h3>
+    <h3 id="checkoutModalTitle">支付结果查询</h3>
     <div class="checkout-order">
-      <div><span>商品名称</span><strong id="modalProduct">FileBeam Pro 终身版</strong></div>
       <div><span>订单号</span><strong id="modalOrder">-</strong></div>
-      <div><span>应付金额</span><strong id="modalAmount">¥19.90</strong></div>
-      <div><span>支付方式</span><strong>支付宝</strong></div>
+      <div><span>商品套餐</span><strong id="modalProduct">-</strong></div>
     </div>
-    <div class="checkout-pending">支付通道审核中，即将开放</div>
+    <div class="checkout-polling" id="modalPollingBox">
+      <div class="checkout-spinner" aria-hidden="true"></div>
+      <p id="modalPollingText">正在查询支付宝入账状态，请稍候...</p>
+    </div>
+    <div class="checkout-success-box" id="modalSuccessBox" style="display:none">
+      <div class="success-banner">✅ 支付成功！专属激活码已生成</div>
+      <div class="license-key-box">
+        <code id="modalLicenseKey">FB-XXXXXXXX-XXXXXXXX</code>
+        <button type="button" class="copy-license-btn" id="copyLicenseBtn">一键复制</button>
+      </div>
+      <ol class="activation-guide">
+        <li>打开 <strong>FileBeam Pro</strong> 客户端，点击右上角「🔑 激活」按钮；</li>
+        <li>粘贴上方 <code>FB-</code> 激活码并提交，完成首次联网验签；</li>
+        <li>验签成功后自动写入本地授权凭证，支持多设备与永久离线使用。</li>
+      </ol>
+    </div>
+    <div class="checkout-timeout-box" id="modalTimeoutBox" style="display:none">
+      <p id="modalTimeoutText">暂未检测到入账确认。如果您已完成付款，请点击下方重新查询。</p>
+      <button type="button" class="checkout-submit" id="retryStatusBtn">重新查询支付结果</button>
+    </div>
   </div>
 </div>
 <script>
-(function(){{var list=document.querySelector('.checkout-plan-list');var total=document.getElementById('checkoutTotal');var submit=document.getElementById('checkoutSubmit');var modal=document.getElementById('checkoutModal');var name='FileBeam Pro 终身版';var amount='19.90';list.addEventListener('change',function(e){{var item=e.target.closest('.plan-option');if(!item)return;list.querySelectorAll('.plan-option').forEach(function(x){{x.classList.remove('selected')}});item.classList.add('selected');name=item.dataset.name;amount=item.dataset.price;total.textContent='¥'+amount;}});submit.addEventListener('click',function(){{var stamp=Date.now().toString(36).toUpperCase();var rand=Math.random().toString(36).slice(2,6).toUpperCase();document.getElementById('modalProduct').textContent=name;document.getElementById('modalOrder').textContent='WOJF-'+stamp+'-'+rand;document.getElementById('modalAmount').textContent='¥'+amount;modal.classList.add('open');}});document.getElementById('checkoutModalClose').addEventListener('click',function(){{modal.classList.remove('open')}});modal.addEventListener('click',function(e){{if(e.target===modal)modal.classList.remove('open')}});}})();
+(function(){{
+  var API_BASE = 'https://wojingfang.cn';
+  var PRODUCT_NAMES = {{
+    filebeam_pro: 'FileBeam Pro 终身版',
+    bundle_pack: '双子星组合包（FileBeam Pro + 文匠）',
+    test_001: 'FileBeam 支付闭环测试'
+  }};
+  var list = document.querySelector('.checkout-plan-list');
+  var total = document.getElementById('checkoutTotal');
+  var submit = document.getElementById('checkoutSubmit');
+  var emailInput = document.getElementById('checkoutEmail');
+  var errBox = document.getElementById('checkoutError');
+  var modal = document.getElementById('checkoutModal');
+  var modalClose = document.getElementById('checkoutModalClose');
+  var modalOrder = document.getElementById('modalOrder');
+  var modalProduct = document.getElementById('modalProduct');
+  var pollingBox = document.getElementById('modalPollingBox');
+  var pollingText = document.getElementById('modalPollingText');
+  var successBox = document.getElementById('modalSuccessBox');
+  var timeoutBox = document.getElementById('modalTimeoutBox');
+  var licenseKeyEl = document.getElementById('modalLicenseKey');
+  var copyBtn = document.getElementById('copyLicenseBtn');
+  var retryBtn = document.getElementById('retryStatusBtn');
+
+  var selectedId = 'filebeam_pro';
+  var pollTimer = null;
+
+  if (list) {{
+    list.addEventListener('change', function(e){{
+      var item = e.target.closest('.plan-option');
+      if (!item) return;
+      list.querySelectorAll('.plan-option').forEach(function(x){{ x.classList.remove('selected'); }});
+      item.classList.add('selected');
+      var radio = item.querySelector('input[name="checkoutPlan"]');
+      if (radio) selectedId = radio.value;
+      if (total) total.textContent = '¥' + item.dataset.price;
+    }});
+  }}
+
+  function showError(msg) {{
+    if (!errBox) return;
+    errBox.textContent = msg;
+    errBox.style.display = 'block';
+  }}
+
+  function clearError() {{
+    if (!errBox) return;
+    errBox.textContent = '';
+    errBox.style.display = 'none';
+  }}
+
+  if (submit) {{
+    submit.addEventListener('click', function(){{
+      clearError();
+      var email = emailInput ? emailInput.value.trim() : '';
+      submit.disabled = true;
+      submit.textContent = '正在创建订单，跳转支付宝...';
+
+      fetch(API_BASE + '/api/pay/create', {{
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{ product_id: selectedId, email: email }})
+      }})
+      .then(function(res){{ return res.json(); }})
+      .then(function(data){{
+        if (data && data.ok && data.pay_url) {{
+          window.location.href = data.pay_url;
+        }} else {{
+          showError((data && data.message) || '创建支付订单失败，请稍后重试');
+          submit.disabled = false;
+          submit.textContent = '前往支付宝付款';
+        }}
+      }})
+      .catch(function(){{
+        showError('网络请求失败，请检查网络连接后重试');
+        submit.disabled = false;
+        submit.textContent = '前往支付宝付款';
+      }});
+    }});
+  }}
+
+  function startPolling(orderNo) {{
+    if (!modal || !orderNo) return;
+    if (pollTimer) clearInterval(pollTimer);
+    modalOrder.textContent = orderNo;
+    modalProduct.textContent = '查询中...';
+    pollingBox.style.display = 'flex';
+    successBox.style.display = 'none';
+    timeoutBox.style.display = 'none';
+    modal.classList.add('open');
+
+    var attempts = 0;
+    var maxAttempts = 30;
+
+    function checkOnce() {{
+      attempts += 1;
+      pollingText.textContent = '正在查询支付宝入账状态（' + attempts + '/' + maxAttempts + '）...';
+      fetch(API_BASE + '/api/pay/status?order_no=' + encodeURIComponent(orderNo))
+        .then(function(res){{ return res.json(); }})
+        .then(function(data){{
+          if (data && data.product_id) {{
+            modalProduct.textContent = PRODUCT_NAMES[data.product_id] || data.product_id;
+          }}
+          if (data && data.status === 'PAID' && data.license_key) {{
+            clearInterval(pollTimer);
+            pollTimer = null;
+            pollingBox.style.display = 'none';
+            timeoutBox.style.display = 'none';
+            licenseKeyEl.textContent = data.license_key;
+            successBox.style.display = 'block';
+          }} else if (attempts >= maxAttempts) {{
+            clearInterval(pollTimer);
+            pollTimer = null;
+            pollingBox.style.display = 'none';
+            timeoutBox.style.display = 'block';
+          }}
+        }})
+        .catch(function(){{
+          if (attempts >= maxAttempts) {{
+            clearInterval(pollTimer);
+            pollTimer = null;
+            pollingBox.style.display = 'none';
+            timeoutBox.style.display = 'block';
+          }}
+        }});
+    }}
+
+    checkOnce();
+    pollTimer = setInterval(checkOnce, 2000);
+  }}
+
+  if (copyBtn) {{
+    copyBtn.addEventListener('click', function(){{
+      var code = licenseKeyEl.textContent.trim();
+      if (!code) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {{
+        navigator.clipboard.writeText(code).then(function(){{
+          copyBtn.textContent = '已复制 ✓';
+          setTimeout(function(){{ copyBtn.textContent = '一键复制'; }}, 2000);
+        }});
+      }} else {{
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = '已复制 ✓';
+        setTimeout(function(){{ copyBtn.textContent = '一键复制'; }}, 2000);
+      }}
+    }});
+  }}
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var initialOrderNo = urlParams.get('order_no');
+  if (initialOrderNo) {{
+    startPolling(initialOrderNo.trim());
+  }}
+
+  if (retryBtn) {{
+    retryBtn.addEventListener('click', function(){{
+      var orderNo = modalOrder.textContent.trim();
+      if (orderNo && orderNo !== '-') startPolling(orderNo);
+    }});
+  }}
+
+  if (modalClose) {{
+    modalClose.addEventListener('click', function(){{
+      if (pollTimer) clearInterval(pollTimer);
+      modal.classList.remove('open');
+    }});
+  }}
+  if (modal) {{
+    modal.addEventListener('click', function(e){{
+      if (e.target === modal) {{
+        if (pollTimer) clearInterval(pollTimer);
+        modal.classList.remove('open');
+      }}
+    }});
+  }}
+}})();
 </script>"""
 
 

@@ -19,6 +19,190 @@ export default {
     };
 
     // ────────────────────────────────────────
+    // Alipay PC Website Payment (alipay.trade.page.pay)
+    // 1. POST /api/pay/create
+    // 2. POST /api/pay/ali-notify
+    // 3. GET  /api/pay/status?order_no=xxx
+    // ────────────────────────────────────────
+    if (url.pathname === '/api/pay/create' && request.method === 'POST') {
+      try {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, message: 'D1 数据库未绑定' }), { status: 500, headers });
+        }
+        if (!env.ALI_APP_ID || !env.ALI_PRIVATE_KEY) {
+          return new Response(JSON.stringify({ ok: false, message: '支付宝商户配置缺失' }), { status: 500, headers });
+        }
+
+        const body = await request.json();
+        const productId = String(body.product_id || '').trim();
+        const email = String(body.email || '').trim().slice(0, 120);
+        const product = PAY_PRODUCTS[productId];
+
+        if (!product) {
+          return new Response(JSON.stringify({ ok: false, message: '无效的商品 ID' }), { status: 400, headers });
+        }
+
+        const outTradeNo = generateOutTradeNo();
+        const { timestamp } = getBeijingTimeParts();
+        const createdAt = new Date().toISOString();
+
+        await env.DB.prepare(
+          'INSERT INTO orders (out_trade_no, product_id, amount, email, status, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+        )
+          .bind(outTradeNo, productId, Number(product.amount), email, 'PENDING', createdAt)
+          .run();
+
+        const aliParams = {
+          app_id: env.ALI_APP_ID,
+          method: 'alipay.trade.page.pay',
+          format: 'JSON',
+          charset: 'utf-8',
+          sign_type: 'RSA2',
+          timestamp,
+          version: '1.0',
+          notify_url: 'https://wojingfang.cn/api/pay/ali-notify',
+          return_url: `https://wojingfang.cn/tools/filebeam.html?order_no=${encodeURIComponent(outTradeNo)}`,
+          biz_content: JSON.stringify({
+            out_trade_no: outTradeNo,
+            product_code: 'FAST_INSTANT_TRADE_PAY',
+            total_amount: product.amount,
+            subject: product.subject,
+          }),
+        };
+
+        const signContent = buildAlipaySignContent(aliParams, ['sign']);
+        const sign = await signAlipayRSA2(signContent, env.ALI_PRIVATE_KEY);
+        const query = new URLSearchParams({ ...aliParams, sign });
+        const payUrl = `https://openapi.alipay.com/gateway.do?${query.toString()}`;
+
+        return new Response(JSON.stringify({
+          ok: true,
+          order_no: outTradeNo,
+          pay_url: payUrl,
+        }), { headers });
+      } catch (e) {
+        return new Response(JSON.stringify({ ok: false, message: '创建订单失败: ' + e.message }), {
+          status: 500,
+          headers,
+        });
+      }
+    }
+
+    if (url.pathname === '/api/pay/ali-notify' && request.method === 'POST') {
+      const textHeaders = { 'Content-Type': 'text/plain; charset=utf-8' };
+      try {
+        if (!env.DB || !env.ALI_PUBLIC_KEY || !env.ALI_APP_ID || !env.FILEBEAM_SECRET_KEY) {
+          return new Response('failure', { status: 500, headers: textHeaders });
+        }
+
+        const rawBody = await request.text();
+        const formParams = new URLSearchParams(rawBody);
+        const paramsObj = {};
+        for (const [k, v] of formParams.entries()) {
+          paramsObj[k] = v;
+        }
+
+        const sign = paramsObj.sign || '';
+        const verifyContent = buildAlipaySignContent(paramsObj, ['sign', 'sign_type']);
+        const isValidSig = await verifyAlipayRSA2(verifyContent, sign, env.ALI_PUBLIC_KEY);
+        if (!isValidSig) {
+          return new Response('failure', { status: 400, headers: textHeaders });
+        }
+
+        if (paramsObj.app_id !== env.ALI_APP_ID) {
+          return new Response('failure', { status: 400, headers: textHeaders });
+        }
+
+        if (paramsObj.trade_status !== 'TRADE_SUCCESS' && paramsObj.trade_status !== 'TRADE_FINISHED') {
+          return new Response('success', { status: 200, headers: textHeaders });
+        }
+
+        const outTradeNo = paramsObj.out_trade_no;
+        if (!outTradeNo) {
+          return new Response('failure', { status: 400, headers: textHeaders });
+        }
+
+        const order = await env.DB.prepare(
+          'SELECT out_trade_no, product_id, amount, status, license_key FROM orders WHERE out_trade_no = ?'
+        )
+          .bind(outTradeNo)
+          .first();
+
+        if (!order) {
+          return new Response('failure', { status: 404, headers: textHeaders });
+        }
+
+        const expectedAmount = Number(order.amount).toFixed(2);
+        const actualAmount = Number(paramsObj.total_amount).toFixed(2);
+        if (expectedAmount !== actualAmount) {
+          return new Response('failure', { status: 400, headers: textHeaders });
+        }
+
+        // 幂等处理：已是 PAID 直接返回 success
+        if (order.status === 'PAID') {
+          return new Response('success', { status: 200, headers: textHeaders });
+        }
+
+        if (order.status === 'PENDING') {
+          const licenseKey = await generateFileBeamCode(env.FILEBEAM_SECRET_KEY);
+          const tradeNo = paramsObj.trade_no || '';
+          const paidAt = new Date().toISOString();
+
+          await env.DB.prepare(
+            'UPDATE orders SET status = ?, license_key = ?, trade_no = ?, paid_at = ? WHERE out_trade_no = ? AND status = ?'
+          )
+            .bind('PAID', licenseKey, tradeNo, paidAt, outTradeNo, 'PENDING')
+            .run();
+
+          await sendFeishu(
+            env,
+            `💰【支付宝自动成单】\n订单号: ${outTradeNo}\n商品: ${order.product_id}\n金额: ¥${expectedAmount}\n激活码: ${licenseKey}\n支付宝流水: ${tradeNo}`
+          );
+        }
+
+        return new Response('success', { status: 200, headers: textHeaders });
+      } catch (e) {
+        return new Response('failure', { status: 500, headers: textHeaders });
+      }
+    }
+
+    if (url.pathname === '/api/pay/status' && request.method === 'GET') {
+      try {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, message: 'D1 数据库未绑定' }), { status: 500, headers });
+        }
+        const orderNo = String(url.searchParams.get('order_no') || '').trim();
+        if (!orderNo) {
+          return new Response(JSON.stringify({ ok: false, message: '缺少 order_no 参数' }), { status: 400, headers });
+        }
+
+        const order = await env.DB.prepare(
+          'SELECT status, product_id, license_key FROM orders WHERE out_trade_no = ?'
+        )
+          .bind(orderNo)
+          .first();
+
+        if (!order) {
+          return new Response(JSON.stringify({ status: 'NOT_FOUND', product_id: null, license_key: null }), {
+            status: 404,
+            headers,
+          });
+        }
+
+        return new Response(JSON.stringify({
+          status: order.status,
+          product_id: order.product_id,
+          license_key: order.status === 'PAID' ? order.license_key : null,
+        }), { headers });
+      } catch (e) {
+        return new Response(JSON.stringify({ ok: false, message: '查询订单失败: ' + e.message }), {
+          status: 500,
+          headers,
+        });
+      }
+    }
+
+    // ────────────────────────────────────────
     // FileBeam stateless activation-code verification
     // POST /api/activate { activation_code }
     // Format: FB-<8 payload chars>-<8 HMAC-SHA256 chars>
@@ -429,6 +613,157 @@ export default {
 // ════════════════════════════════════════
 // 工具函数
 // ════════════════════════════════════════
+
+const PAY_PRODUCTS = {
+  filebeam_pro: { amount: '19.90', subject: 'FileBeam Pro 终身版' },
+  bundle_pack: { amount: '29.80', subject: '双子星组合包（FileBeam Pro + 文匠）' },
+  test_001: { amount: '0.01', subject: 'FileBeam 支付闭环测试' },
+};
+
+/**
+ * 获取北京时间 (UTC+8) 格式化时间与紧凑时间戳
+ */
+function getBeijingTimeParts(date = new Date()) {
+  const bj = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  const pad = (n) => String(n).padStart(2, '0');
+  const yyyy = bj.getUTCFullYear();
+  const mm = pad(bj.getUTCMonth() + 1);
+  const dd = pad(bj.getUTCDate());
+  const hh = pad(bj.getUTCHours());
+  const mi = pad(bj.getUTCMinutes());
+  const ss = pad(bj.getUTCSeconds());
+  return {
+    timestamp: `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`,
+    compact: `${yyyy}${mm}${dd}${hh}${mi}${ss}`,
+  };
+}
+
+/**
+ * 生成唯一商户订单号，如 FB20261128163012A1B2C3
+ */
+function generateOutTradeNo() {
+  const { compact } = getBeijingTimeParts();
+  const randBytes = crypto.getRandomValues(new Uint8Array(3));
+  const randHex = Array.from(randBytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+  return `FB${compact}${randHex}`;
+}
+
+/**
+ * 兼容带/不带 PEM 头尾及换行符的 Base64 密钥转 ArrayBuffer
+ */
+function pemToArrayBuffer(pem) {
+  const cleaned = String(pem || '')
+    .replace(/-----BEGIN [A-Z0-9 ]+-----/g, '')
+    .replace(/-----END [A-Z0-9 ]+-----/g, '')
+    .replace(/\s+/g, '');
+  const binary = atob(cleaned);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+/**
+ * 按参数名 ASCII 升序拼接待签名/待验签字符串
+ */
+function buildAlipaySignContent(params, excludeKeys = ['sign', 'sign_type']) {
+  const excluded = new Set(excludeKeys);
+  return Object.keys(params)
+    .filter((k) => !excluded.has(k) && params[k] !== undefined && params[k] !== null && params[k] !== '')
+    .sort()
+    .map((k) => `${k}=${params[k]}`)
+    .join('&');
+}
+
+/**
+ * 纯 Web Crypto API 支付宝 RSA2 (PKCS8 + RSASSA-PKCS1-v1_5 + SHA-256) 签名
+ */
+async function signAlipayRSA2(content, privateKeyPem) {
+  const keyBuffer = pemToArrayBuffer(privateKeyPem);
+  const cryptoKey = await crypto.subtle.importKey(
+    'pkcs8',
+    keyBuffer,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5',
+    cryptoKey,
+    new TextEncoder().encode(content)
+  );
+  const bytes = new Uint8Array(signature);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+/**
+ * 纯 Web Crypto API 支付宝 RSA2 (SPKI + RSASSA-PKCS1-v1_5 + SHA-256) 验签
+ */
+async function verifyAlipayRSA2(content, signBase64, publicKeyPem) {
+  if (!signBase64 || !publicKeyPem) return false;
+  try {
+    const keyBuffer = pemToArrayBuffer(publicKeyPem);
+    const cryptoKey = await crypto.subtle.importKey(
+      'spki',
+      keyBuffer,
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+    const sigBinary = atob(String(signBase64).replace(/\s+/g, ''));
+    const sigBytes = new Uint8Array(sigBinary.length);
+    for (let i = 0; i < sigBinary.length; i++) {
+      sigBytes[i] = sigBinary.charCodeAt(i);
+    }
+    return await crypto.subtle.verify(
+      'RSASSA-PKCS1-v1_5',
+      cryptoKey,
+      sigBytes,
+      new TextEncoder().encode(content)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 生成 FileBeam 无状态激活码：FB-<8位随机Hex>-<8位HMAC-SHA256>
+ */
+async function generateFileBeamCode(secretKey) {
+  const payloadBytes = crypto.getRandomValues(new Uint8Array(4));
+  const payload = Array.from(payloadBytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secretKey),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    new TextEncoder().encode(`FB-${payload}`)
+  );
+  const sig = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .slice(0, 8)
+    .toUpperCase();
+
+  return `FB-${payload}-${sig}`;
+}
 
 /**
  * HMAC-SHA256 确定性算号
