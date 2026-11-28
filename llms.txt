@@ -28,6 +28,13 @@ AI探索者专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文
 
 ## 技术专栏
 
+### 静态网站 + GitHub CMS 发布文章避坑指南：5 个导致前台不显示的原因
+
+- 发布日期：2026-11-28
+- 栏目：技术随笔
+- 标签：Cloudflare Pages 构建失败, GitHub Actions 报错, Frontmatter 解析失败, 静态网站 CMS 避坑, Editorial Workflow
+- 摘要：网站后台发布文章同步到github构建时出错无法显示在网站前台如何处理
+- 直达链接：https://wojingfang.cn/posts/static-site-github-cms-publishing-pitfalls.html
 ### 从 FileBeam Lite 到可复现发布：Python 工具打包、测试与 GitHub Release 实战
 
 - 发布日期：2026-11-21
