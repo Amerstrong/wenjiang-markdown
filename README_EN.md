@@ -276,6 +276,20 @@ convert(
 
 ---
 
+## 🛠️ Maintenance & Deployment Skill (`site-deploy`)
+
+This project includes a dedicated Agent / developer skill definition file [`SKILL.md`](SKILL.md) to standardize website maintenance and release workflows:
+
+- **Skill Name**: `site-deploy`
+- **Role & Purpose**: Responsible for content updates, frontend redesigns, local build verification, and deployment for the static site (`wojingfang.cn`).
+- **Trigger**: Used whenever updating web pages, adding/editing articles, modifying frontend styles, or publishing new releases.
+- **Core Guidelines**:
+  1. **Modification Rules**: Modify only source directories (e.g., `content/`, `templates/`, or `src/`). **Never modify HTML output files directly**. Always verify locally after editing styles or content.
+  2. **Build & Verification**: Run build scripts locally, inspect logs for Frontmatter errors or missing assets, and verify layout in local preview before Git commit/push.
+  3. **Restrictions**: Never push code directly to the remote repository without passing local build and preview checks.
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions from the community:

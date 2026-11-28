@@ -486,40 +486,94 @@ def build_home(tools: list[Document], posts: list[Document]) -> str:
     latest_posts = sorted(posts, key=post_date, reverse=True)[:3]
     content = f"""
 <div class="page-shell">
-  <section class="hero" aria-labelledby="home-title">
-    <div class="hero-grid">
-      <div>
-        <span class="eyebrow">LOCAL-FIRST · EDGE AI · OPEN TOOLS</span>
-        <h1 id="home-title">AI 探索者 <span class="accent">·</span><br>AI 与实用工具解决真实生活中的小麻烦</h1>
-        <p class="lead">专注本地离线 AI 应用、跨设备效率工具（FileBeam / 文匠）与自动化脚本实战。本地大模型、边缘硬件（Jetson/树莓派）与极简桌面效率工具。所有自研免费/开源软件与实战踩坑记录均在此归档。</p>
-        <div class="hero-actions">
-          <a class="button accent" href="/tools/">进入工具库 <span aria-hidden="true">→</span></a>
-          <a class="button light" href="/posts/">阅读技术专栏</a>
+  <section class="hero-clean" aria-labelledby="home-title">
+    <div class="hero-clean-grid">
+      <!-- 左侧：价值主张与核心动作 -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>LOCAL-FIRST · EDGE AI · OPEN TOOLS</span>
         </div>
-        <div class="hero-stats" aria-label="网站方向">
-          <div class="hero-stat"><strong>LOCAL</strong><span>离线运行，数据留在本机</span></div>
-          <div class="hero-stat"><strong>EDGE</strong><span>Jetson / 树莓派实验</span></div>
-          <div class="hero-stat"><strong>OPEN</strong><span>免费开源与公开记录</span></div>
+        
+        <h1 id="home-title">
+          AI 探索者 <span class="brand-dot">·</span><br>
+          <span class="gradient-text">用实用工具</span> 解决真实生活中的小麻烦
+        </h1>
+        
+        <p class="hero-desc">
+          专注本地离线 AI、跨设备互传（FileBeam / 文匠）与自动化脚本实战。<br>
+          拒绝华而不实的演示，所有免费/开源软件与工程踩坑记录均在此归档。
+        </p>
+
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="/tools/">
+            进入工具库 <span class="arrow">→</span>
+          </a>
+          <a class="btn btn-secondary" href="/posts/">
+            阅读技术专栏
+          </a>
         </div>
-      </div>
-      <aside class="hero-terminal" aria-label="AI探索者工作方式">
-        <div class="terminal-bar">
-          <span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span>
-          <span class="terminal-title">explorer_lab.log</span>
-        </div>
-        <div class="terminal-body">
-          <p class="terminal-line"><span class="prompt">$</span> find problem --real-life</p>
-          <p class="terminal-line"><span class="ok">✓</span> 识别高频小麻烦</p>
-          <p class="terminal-line"><span class="ok">✓</span> 优先本地与离线方案</p>
-          <p class="terminal-line"><span class="ok">✓</span> 做成可复用的工具</p>
-          <p class="terminal-line"><span class="ok">✓</span> 测试、发布、公开踩坑</p>
-          <div class="signal-map">
-            <div class="signal-device"><strong>IDEA</strong>真实需求</div>
-            <div class="signal-link">→</div>
-            <div class="signal-device"><strong>TOOL</strong>可用软件</div>
+
+        <!-- 提炼后的特征卡片：扁平精致化 -->
+        <div class="feature-strip">
+          <div class="feature-item">
+            <span class="feature-tag">LOCAL</span>
+            <span class="feature-label">离线运行，数据本机</span>
+          </div>
+          <div class="feature-sep"></div>
+          <div class="feature-item">
+            <span class="feature-tag">EDGE</span>
+            <span class="feature-label">Jetson / 树莓派实验</span>
+          </div>
+          <div class="feature-sep"></div>
+          <div class="feature-item">
+            <span class="feature-tag">OPEN</span>
+            <span class="feature-label">免费开源，踩坑记录</span>
           </div>
         </div>
-      </aside>
+      </div>
+
+      <!-- 右侧：高质感极客终端 -->
+      <div class="hero-visual">
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-controls">
+              <span class="dot close"></span>
+              <span class="dot min"></span>
+              <span class="dot max"></span>
+            </div>
+            <span class="terminal-name">explorer_lab.log</span>
+            <span class="status-indicator">ONLINE</span>
+          </div>
+          
+          <div class="terminal-content">
+            <p class="cmd-line"><span class="cmd-prompt">$</span> run pipeline --real-problem</p>
+            
+            <div class="step-list">
+              <div class="step-item"><span class="check">✓</span> 锁定高频繁琐需求</div>
+              <div class="step-item"><span class="check">✓</span> 优先本地单机与隐私保护</div>
+              <div class="step-item"><span class="check">✓</span> 封装为开箱即用工具</div>
+              <div class="step-item"><span class="check">✓</span> 完整记录踩坑与发布过程</div>
+            </div>
+
+            <div class="terminal-flow">
+              <div class="flow-node">
+                <span class="node-title">IDEA</span>
+                <span class="node-sub">真实痛点</span>
+              </div>
+              <div class="flow-arrow">
+                <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+                  <path d="M0 6H20M20 6L15 1M20 6L15 11" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+              </div>
+              <div class="flow-node active">
+                <span class="node-title">TOOL</span>
+                <span class="node-sub">落地软件</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
